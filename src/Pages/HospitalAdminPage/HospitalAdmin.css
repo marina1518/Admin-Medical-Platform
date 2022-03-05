@@ -1,0 +1,6 @@
+.profile_img {
+  object-fit: cover;
+  margin: 10px auto;
+  border: 10px solid #ccc;
+  border-radius: 50%;
+}
