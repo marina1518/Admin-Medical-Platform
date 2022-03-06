@@ -7,18 +7,19 @@ import axios from 'axios';
 import {useSelector,useDispatch} from 'react-redux'
 import EditIcon from '@material-ui/icons/Edit'; 
 import {Button,ButtonGroup,Row,Col,Form} from 'react-bootstrap';
-
+import Adddoctor from '../../Components/Doctors/AddDoctor';
+import Editdoctor from '../../Components/Doctors/EditDoctor';
 
 const Clinic_admin =()=>{
   const token = useSelector(state => state.auth);
-  console.log(token.token);
+  console.log(token);
   var [dr,setdr] = useState([])
 
 
-
+const[dr_details,setDr_details]=useState([]);
 var doctors_list = JSON.parse(JSON.stringify(dr));
 let doctor = {} ;
-    const Get_Doctors_Api = (clinic_name)=>{
+    /*const Get_Doctors_Api = (clinic_name)=>{
       return new Promise ((resolve,reject)=>{
       axios.get(`https://future-medical.herokuapp.com/doctors/${clinic_name}`).then((res)=>{
 
@@ -45,22 +46,42 @@ let doctor = {} ;
       })
 
       
-    }
+    }*/
+    const Get_Doctors_Api = async (clinicname)=>{
+      try {
+             const res = await axios.get(`https://future-medical.herokuapp.com/entity/${clinicname}/doctors`)
+             const data = await res.data;
+             console.log(data)
+             if (data === 'this entity has no doctors right now') 
+             {return }
+             data.forEach((x) => {
+                     
+                     doctor.name = x.username;
+                     doctor.id = x.email;                
+                     doctor.Email = x.email;
+                     doctor.specialization = x.specialization;
+                     doctors_list.push(doctor);
+                     doctor={}
+               });
+               setDr_details(doctors_list);  
+         } 
+         catch (err) {
+             console.error(err);
+         }
+     } 
 
 const [info , setinfo] = useState({
   email:"",
   username:"",
- 
   gender:"",
   clinic_name:"",
   clinic_phone:"",
-
   pic:"https://source.unsplash.com/600x300/?student",
   address:""
 });
 
 let admin_data={};
-const Get_Admin_info =()=>{  
+/*const Get_Admin_info =()=>{  
 
 //console.log(token.token)
 return new Promise ((resolve,reject)=>{
@@ -84,23 +105,20 @@ console.log(dr);
 .catch((error) => {
 console.error(error)
 reject(error);
-})})}
+})})}*/
 
 useEffect(()=>{
-Get_Admin_info().then((res)=>{console.log(res); setinfo(res)})   
+/*Get_Admin_info().then((res)=>{console.log(res); setinfo(res)})   */
+Get_Doctors_Api(token.entity.name);
 },[])   
 
 
 const [edit_photo,setEdit_photo]=useState(false);
 const [edit,setEdit] = useState(false);
-
 const [clinic_add, setclinic] = useState(null);
 const [clinic_name,setclinic_name] = useState(null);
-
 const [gender, setGender] = useState(null);
-
 const [p_ph, setp_ph] = useState(null);
-
 const [edit_data,seteditdata]=useState(admin_data);
 const editted = {...admin_data};
 const setdata=()=>{
@@ -134,7 +152,7 @@ const data = [
   {email: "", password : "" , specialization:"", gender:"", phone:"",  username:"",id:""}
 ];
 
-const Add_doctor_api = ()=>{
+/*const Add_doctor_api = ()=>{
 
 axios.post('https://future-medical.herokuapp.com/registration/doctor',
 {
@@ -157,7 +175,41 @@ console.log(error.response.status);
 
 }
 })
-}  
+}  */
+/*const changeadd = () =>{
+  setview(true);
+  setadd_dr(false);
+}*/
+const changeadd = (newhospital)=>{
+  //WHEN SUBMIT ADD HOSPITAL FORM 
+    var updatedlist = JSON.parse(JSON.stringify(dr_details));
+    const lastid = updatedlist[updatedlist.length - 1].id;
+    console.log(lastid);
+    newhospital.id=(parseInt(lastid)+1).toString();
+    updatedlist.push(newhospital);
+    //Static update list       
+    setDr_details(updatedlist); 
+    setview(true);
+    setadd_dr(false); //AFTER SUBMIT ADD FORM [GET BACK TO HOSPITALS LIST]
+} 
+const goback = () =>{
+  setview(true);
+  setadd_dr(false);
+}
+const changeedit = (editedhospital)=>{
+  //WHEN SUBMIT EDIT HOSPITAL FORM 
+   var requiredid = editedhospital.id ;
+   console.log(requiredid);
+   var updatedlist = JSON.parse(JSON.stringify(dr_details));
+   updatedlist = updatedlist.filter((item) => item.id !== requiredid) //delete first
+   //console.log(updatedlist);
+   updatedlist.push(editedhospital); //add edited one 
+  // console.log(updatedlist);
+   //Static update list       
+   setDr_details(updatedlist); 
+   setview(true);
+    setadd_dr(false); //AFTER SUBMIT EDIT FORM [GET BACK TO HOSPITALS LIST]
+}
 
 
 const [email_d, setEmail_d] = useState("");
@@ -166,17 +218,11 @@ const [phone_d,setphone_d]=useState("");
 const [username_d,setusername_d]=useState("");
 const [spec_d,setspec_d] = useState("");
 const [gender_d, setgender_d] = useState("");
-
-
-
-
 const [e_u,sete_u] = useState("");
 const [e_p,sete_p] = useState("");
-
 const [e_s,sete_s] = useState("");
 const [e_g,sete_g] = useState("");
 const [e_e,sete_e] = useState("");
-
 const [e_ph,sete_ph] = useState("");
 // const [flag,setflag] = useState("false");
 //const [newdata,setnewdata] = useState(doctors_list);
@@ -255,7 +301,7 @@ const submit_value =(e) => {
        setadd_dr(false);
       // seteditdata(false);
       
-        Add_doctor_api();
+        //Add_doctor_api();
         
     }      
     
@@ -316,11 +362,6 @@ const submit_edit =(e) => {
 };
 
 
-
-
-
-
-
 const [editdr,seteditdr] = useState(false);
 const [rowdata, setrow] =useState("");
 const edit_dr=(row)=>{
@@ -331,9 +372,6 @@ const edit_dr=(row)=>{
    
   //             setf(0);
   // }
- 
-          
-
     seteditdr(true);
     setview(false);
 }
@@ -348,20 +386,20 @@ const remove=(id)=>{
 const columns = [
 
   {
-    field: 'username',
+    field: 'name',
     headerName: 'Doctor Name',
     width: 220,
     editable: true,
   },
   {
-    field: 'phone',
+    field: 'number',
     headerName: 'Contact Number',
     width: 190,
     editable: true,
   },
     {
-    field: 'email',
-    headerName:"Email",
+    field: 'Email',
+    headerName: 'Doctor Email',
     width: 230,
     editable: true,
   },
@@ -395,30 +433,30 @@ const columns = [
   <div className="container">       
         <div className="card shadow-sm">             
           <div className="card-header bg-transparent text-center">
-          <Avatar style={{ cursor: "pointer" , height:'150px' , width: '150px'}} className="profile_img" src="/broken-image.jpg" onClick={(e)=>setEdit_photo(true)} />
-           {edit_photo ? <input type="file"></input>:""}
+          <Avatar style={{ cursor: "pointer" , height:'150px' , width: '150px'}} className="profile_img" src={token.profilePic} onClick={(e)=>setEdit_photo(true)} />
+           {!token.profilePic ? <input type="file"></input>:""}
                 
-          <h3>{info.username} </h3>
+          <h3>{token.username} </h3>
           </div>
           <div className="card-body">
           <EditIcon style={{ cursor: "pointer" }} onClick={(e)=>setEdit(true)}></EditIcon>
        
-          <p className="mb-0"><strong className="pr-1">Email:  </strong> {info.email} </p>  
+          <p className="mb-0"><strong className="pr-1">Email:  </strong> {token.email} </p>  
           <p className="mb-0"><strong className="pr-1">Clinic Name: </strong>
-          {edit ? <input type="text" placeholder={edit_data.clinic_name} onChange={(e)=>setclinic_name(e.target.value)}></input>
-          : edit_data.clinic_name }</p>
-            <p className="mb-0"><strong className="pr-1">Clinic Phone Number: </strong>  {edit ? <input type="text" placeholder={edit_data.clinic_phone} onChange={(e)=>setp_ph(e.target.value)}></input>
-          : edit_data.clinic_phone } </p>               
+          {edit ? <input type="text" placeholder={token.entity.name} onChange={(e)=>setclinic_name(e.target.value)}></input>
+          : token.entity.name }</p>
+            <p className="mb-0"><strong className="pr-1">Clinic Phone Number: </strong>  {edit ? <input type="text" placeholder={token.entity.telephone[0]} onChange={(e)=>setp_ph(e.target.value)}></input>
+          : token.entity.telephone[0] } </p>               
            
-            <p className="mb-0"><strong className="pr-1">Clinic Address: </strong> {edit ? <input type="text" placeholder={edit_data.clinic_add} onChange={(e)=>setclinic(e.target.value)}></input>
-          : edit_data.clinic_add }</p>
+            <p className="mb-0"><strong className="pr-1">Clinic Address: </strong> {edit ? <input type="text" placeholder={token.entity.address[0]} onChange={(e)=>setclinic(e.target.value)}></input>
+          : token.entity.address[0] }</p>
                      <p className="mb-0"><strong className="pr-1">Gender: </strong> 
                      {edit ? <div>
                     <input style={{ cursor: "pointer"}} type="radio" id="gender1" name="gender" value="Male" onChange={(e)=>setGender(e.target.value)} />
                     <label for="gender1"> Male</label><br/>
                     <input style={{ cursor: "pointer"}} type="radio" id="gender2" name="gender" value="Female"  onChange={(e)=>setGender(e.target.value)}></input>
                     <label for="gender2"> Female</label>
-                </div>:edit_data.gender}
+                </div>:token.gender}
                       </p>  
                       <br/>
                       {edit ? 
@@ -444,7 +482,7 @@ const columns = [
      {view ? 
      
      <>
-        <Table rows={dr} columns={columns}></Table>
+        <Table rows={dr_details} columns={columns}></Table>
         <Button variant="primary" onClick={(e)=>{setadd_dr(true); setview(false);}} style={{marginTop:'10px'}}>Add Doctor</Button>
          </>
      :""}
@@ -452,7 +490,7 @@ const columns = [
     {
         add_dr ? 
         
-        <div>
+       /* <div>
         <Form className="rounded p-4" style={{ margin : '80px 80px' ,borderWidth:'1px',borderColor:'#06a3da' , borderStyle:'solid',width:'90%'} }>
          <Row>
            <p style={{textAlign: 'center',fontSize:'27px' , color :'#06a3da'} }> Add Doctor </p>
@@ -527,8 +565,8 @@ const columns = [
          </Col>
          </Row>
          </Form>
-               </div>
-        
+               </div>*/
+               <Adddoctor changeadd={changeadd} goback={goback} entityname={token.entity.name} />
         : ""}
         
 
@@ -536,7 +574,7 @@ const columns = [
         {
         editdr ? 
         
-        <div>
+        /*<div>
         <Form className="rounded p-4" style={{ margin : '80px 80px' ,borderWidth:'1px',borderColor:'#06a3da' , borderStyle:'solid',width:'90%'} }>
          <Row>
            <p style={{textAlign: 'center',fontSize:'27px' , color :'#06a3da'} }> Edit Doctor </p>
@@ -607,7 +645,8 @@ const columns = [
          </Col>
          </Row>
          </Form>
-               </div>
+               </div>*/
+               <Editdoctor editdata={rowdata} changeedit={changeedit} goback={goback}/>
         
         : ""}
         
