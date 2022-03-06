@@ -12,7 +12,29 @@ export default function Pharmacies() {
     const [data,setdata] = useState([]) //FROM API PHARMACIES LIST 
     var pharmacies_list = JSON.parse(JSON.stringify(data));
 let pharmacy = {} ;
-    const Get_Pharmacies_Api = ()=>{
+
+const Get_Pharmacies_Api = async ()=>{
+ try {
+        const res = await axios.get('https://future-medical.herokuapp.com/pharmacies')
+        const data = await res.data;
+        data.forEach((x) => {
+                console.log(x.name)
+                pharmacy.pharmacyname = x.name;
+                pharmacy.id = x.name;
+                pharmacy.number = x.telephone[0];
+                pharmacy.Admin = x.admin.username;
+                pharmacy.Email = x.admin.email;
+                pharmacy.Location = x.address;
+                pharmacies_list.push(pharmacy);
+                pharmacy={}
+          });
+        setdata(pharmacies_list);  
+    } 
+    catch (err) {
+        console.error(err);
+    }
+}
+    /*const Get_Pharmacies_Api = ()=>{
       return new Promise ((resolve,reject)=>{
       axios.get('https://future-medical.herokuapp.com/pharmacies').then((res)=>{
 
@@ -41,10 +63,11 @@ let pharmacy = {} ;
       })
 
       
-    }
+    }*/
 
     useEffect(()=>{
-      Get_Pharmacies_Api().then((res)=>{ setdata(res)}).catch((err)=>{console.log(err)})      
+      //Get_Pharmacies_Api().then((res)=>{ setdata(res)}).catch((err)=>{console.log(err)})
+      Get_Pharmacies_Api()      
     },[])
 
     const [viewedit,setedit]=useState(true) //WHEN FALSE SHOW COMPONENT EDIT PHARMACY

@@ -8,42 +8,34 @@ import AddClinic from './AddClinic';
 import EditClinic from './EditClinic';
 export default function Clinics() {
 
-    const [data,setdata] = useState([]) //FROM API CLINICS LIST
+const [data,setdata] = useState([]) //FROM API CLINICS LIST
 var clinics_list = JSON.parse(JSON.stringify(data));
 let clinic = {} ;
-    const Get_Clinics_Api = ()=>{
-      return new Promise ((resolve,reject)=>{
-      axios.get('https://future-medical.herokuapp.com/clinics').then((res)=>{
-
-            console.log(res.data)
-            for(var i = 0 ; i < res.data.length ; i++ )
-            {
-                console.log(res.data[i].name)
-               clinic.clinicname = res.data[i].name;
-                clinic.id = res.data[i]._id;
-                clinic.number = res.data[i].telephone[0];
-                clinic.Admin = res.data[i].admin.username;
-                clinic.Email = res.data[i].admin.email;
-                clinic.Location = res.data[i].address;
+const Get_Clinics_Api = async ()=>{
+ try {
+        const res = await axios.get('https://future-medical.herokuapp.com/clinics')
+        const data = await res.data;
+        data.forEach((x) => {
+                console.log(x.name)
+                clinic.clinicname = x.name; 
+                clinic.id = x.admin.email;
+                clinic.number = x.telephone[0];
+                clinic.Admin = x.admin.username;
+                clinic.Email = x.admin.email;
+                clinic.Location = x.address;
                 clinics_list.push(clinic);
                 clinic={}
-                //setdata(hospitals_list);
-            }
-            resolve(clinics_list);
-            
-            //console.log(hospitals_list)
-            
-      }).catch((err)=>{
-        console.log(err)
-        reject(err)
-      })
-      })
-
-      
+          });
+        setdata(clinics_list);  
+    } 
+    catch (err) {
+        console.error(err);
     }
+}
 
     useEffect(()=>{
-      Get_Clinics_Api().then((res)=>{ setdata(res)}).catch((err)=>{console.log(err)})      
+      //Get_Clinics_Api().then((res)=>{ setdata(res)}).catch((err)=>{console.log(err)})
+      Get_Clinics_Api()      
     },[])
     
     const [viewedit,setedit]=useState(true) //WHEN FALSE SHOW COMPONENT EDIT CLINIC

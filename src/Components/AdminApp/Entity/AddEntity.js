@@ -11,17 +11,19 @@ export default function AddEntity(props) {
     
 
 const Add_hospital_api = ()=>{
-        
-            axios.post('https://future-medical.herokuapp.com/registration/hospitalAdmin',
+        console.log(FormValues.Adminl)  
+            axios.post('https://future-medical.herokuapp.com/register/hospitalAdmin',
          {
+                   
                     username: FormValues.Admin,
                     email : FormValues.Email,
                     password : FormValues.Password,
                     gender : FormValues.Gender,
+                    profilePic : FormValues.imageurl,
                     hospitalname : FormValues.Hospitalname,
                     address : FormValues.Location ,
                     telephone : FormValues.number ,
-                    //image : FormValues.imageurl
+                   
          }).then((res)=>{
            console.log(res.data);
            props.changeadd(FormValues);  //go to all hospitals
@@ -39,13 +41,14 @@ const Add_hospital_api = ()=>{
 })
     }  
 
-const Add_pharmacy_api = (FormValues)=>{
-            axios.post('https://future-medical.herokuapp.com/registration/pharmacyAdmin',
+const Add_pharmacy_api = ()=>{
+            axios.post('https://future-medical.herokuapp.com/register/pharmacyAdmin',
          {
                     username: FormValues.Admin,
                     email : FormValues.Email,
                     password : FormValues.Password,
                     gender : FormValues.Gender,
+                    profilePic : FormValues.imageurl,
                     pharmacyname : FormValues.pharmacyname,
                     address : FormValues.Location ,
                     telephone : FormValues.number
@@ -65,14 +68,15 @@ const Add_pharmacy_api = (FormValues)=>{
 })
     }
 
-const Add_clinic_api = (FormValues)=>{
+const Add_clinic_api = ()=>{
      
-            axios.post('https://future-medical.herokuapp.com/registration/clinicAdmin',
+            axios.post('https://future-medical.herokuapp.com/register/clinicAdmin',
          {
                     username: FormValues.Admin,
                     email : FormValues.Email,
                     password : FormValues.Password,
                     gender : FormValues.Gender,
+                    profilePic : FormValues.imageurl,
                     clinicname : FormValues.clinicname,
                     address : FormValues.Location ,
                     telephone : FormValues.number
@@ -172,40 +176,49 @@ const Add_clinic_api = (FormValues)=>{
         //console.log(values.Gender)
         return errors ;
     }
-const uploadFiles = (file) =>{
+const uploadFiles =  (file) =>{
 if (!file) return
 const storageRef = ref(storage,`/files/${file.name}`);
 const uploadTask = uploadBytesResumable(storageRef,file);
-uploadTask.on("state_changed",()=>{
+ uploadTask.on("state_changed",()=>{
     getDownloadURL(uploadTask.snapshot.ref).then((url)=>{
         console.log(url); // saved in database
         FormValues.imageurl = url; 
+        
+        if (props.entity === 'hospitals')
+        {Add_hospital_api();  }//API ADD HOSPITAL
+        else if (props.entity === 'clinics') 
+        {Add_clinic_api() ;} //API ADD CLINIC
+        else if (props.entity === 'pharmacies')
+        {Add_pharmacy_api() ;} //API ADD PHARMACY
     }).catch((err)=>{console.log(err)})
 })
 }
 
 
-        const submithandle =(e)=>{
+        const submithandle = async (e)=>{
         //when submit the form     
         e.preventDefault();
         console.log(e);
-        //console.log(e.target[7].files[0]) 
-        
         setFormerrors(validate(FormValues)) //check the errors 
         setissubmit(true);
         if(Object.keys(validate(FormValues)).length === 0)
         {
             //empty
             //setfile(e.target[7].files[0]); //The image
-            uploadFiles(e.target[7].files[0]) //The image
+            if (FormValues.Image)
+            {uploadFiles(e.target[7].files[0])} //The image[Calling The Api(ada entity)]
+            else {
+                      if (props.entity === 'hospitals')
+                      {Add_hospital_api() ; }//API ADD HOSPITAL
+                       else if (props.entity === 'clinics') 
+                      {Add_clinic_api() ;} //API ADD CLINIC
+                       else if (props.entity === 'pharmacies')
+                       {Add_pharmacy_api() ;} //API ADD PHARMACY
+            }
             setissubmit(true);            
             console.log(FormValues)
-            if (props.entity === 'hospitals')
-            {Add_hospital_api() ; }//API ADD HOSPITAL
-            else if (props.entity === 'clinics') 
-            {Add_clinic_api() ;} //API ADD CLINIC
-            else if (props.entity === 'pharmacies')
-            {Add_pharmacy_api() ;} //API ADD PHARMACY
+            
             
         }
       }
@@ -279,7 +292,7 @@ uploadTask.on("state_changed",()=>{
   </Form.Group>
  <Form.Group  className="mb-3" controlId="formGridimage">
     <Form.Label>Admin Image</Form.Label>
-    <Form.Control  value={FormValues.Image} name="Image" type="file" placeholder="Enter Admin image " />
+    <Form.Control onChange={(e)=>handlechange(e)} value={FormValues.Image} name="Image" type="file" placeholder="Enter Admin image " />
   </Form.Group>
 
   </Col>

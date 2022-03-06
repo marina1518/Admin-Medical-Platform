@@ -14,15 +14,15 @@ var hospitals_list = JSON.parse(JSON.stringify(data));
 let hospital = {} ;
 
 
-/*
+
 const Get_Hospitals_Api = async ()=>{
  try {
         const res = await axios.get('https://future-medical.herokuapp.com/hospitals')
-        const data = await resp.data;
+        const data = await res.data;
         data.forEach((x) => {
                 console.log(x.name)
                 hospital.Hospitalname = x.name;
-                hospital.id = x._id;
+                hospital.id = x.name;
                 hospital.number = x.telephone[0];
                 hospital.Admin = x.admin.username;
                 hospital.Email = x.admin.email;
@@ -31,15 +31,13 @@ const Get_Hospitals_Api = async ()=>{
                 hospital={}
           });
         setdata(hospitals_list);  
-       // setresponse(data); 
-        //console.log(data);
     } 
     catch (err) {
         console.error(err);
     }
 }
-*/ 
-    const Get_Hospitals_Api = ()=>{
+
+    /*const Get_Hospitals_Api = ()=>{
       return new Promise ((resolve,reject)=>{
       axios.get('https://future-medical.herokuapp.com/hospitals').then((res)=>{
 
@@ -48,7 +46,7 @@ const Get_Hospitals_Api = async ()=>{
             {
                 console.log(res.data[i].name)
                 hospital.Hospitalname = res.data[i].name;
-                hospital.id = res.data[i]._id;
+                hospital.id = res.data[i].name; //ID
                 hospital.number = res.data[i].telephone[0];
                 hospital.Admin = res.data[i].admin.username;
                 hospital.Email = res.data[i].admin.email;
@@ -68,11 +66,11 @@ const Get_Hospitals_Api = async ()=>{
       })
 
       
-    }
+    }*/
 
     useEffect(()=>{
-      Get_Hospitals_Api().then((res)=>{ setdata(res)}).catch((err)=>{console.log(err)})  
-      // Get_Hospitals_Api()    
+      //Get_Hospitals_Api().then((res)=>{ setdata(res)}).catch((err)=>{console.log(err)})  
+       Get_Hospitals_Api()    
     },[])
     
 

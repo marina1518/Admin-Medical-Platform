@@ -2,7 +2,6 @@ import React,{useState} from "react";
 import { Form,Button,Container,Row,Col,Figure,Carousel } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {FaUser,FaLock} from 'react-icons/fa';
-import {MdMedicalServices} from 'react-icons/md';
 import { Link , useNavigate} from "react-router-dom";
 import {useSelector,useDispatch} from 'react-redux'
 import axios from "axios";
@@ -17,7 +16,6 @@ const Login=()=>{
     let navigate = useNavigate();
     const routing_login =(type)=>{
       if (type === "owner"){navigate ('/appadmin')}
-      else if (type === "user"){navigate ('/')}
       else if (type === "c_admin"){navigate('/clinicdoctor')}
       else if (type === "p_admin"){navigate('/pharmacyadmin')}
       else if (type === "h_admin"){navigate('/hospitaladmin')}
@@ -30,22 +28,15 @@ const Login=()=>{
     const [error_pass, setp_error]=useState("");
     const dispatch = useDispatch();
     const login_api = ()=>{
-            axios.post('https://future-medical.herokuapp.com/login',
+            axios.post('https://future-medical.herokuapp.com/login/doctor',
          {
                     email : data.email ,
                     pass : data.password ,  
-                    type : data.type
          }).then((res)=>{
-           console.log(res.data);
-           if (data.type === "admin"){
-           dispatch(signin(res.data.token,res.data.adminRole));
+           console.log(res.data);           
+           dispatch(signin(res.data.token,res.data.role));
            console.log(token)
-           routing_login(res.data.adminRole);}
-           else {
-            dispatch(signin(res.data.token,data.type));
-           console.log(token)
-           routing_login(data.type);
-           }
+           routing_login(res.data.role);
            
          }).catch(function (error) {
     if (error.response) {
@@ -110,7 +101,7 @@ const Login=()=>{
 
     return(
         
-        <Container>
+        <Container style={{marginTop:'100px'}}>
         {/* <h1 className="shadow-sm text-primary mt-5 p-3 text-center rounded">Login</h1> */}
         
       
@@ -181,18 +172,6 @@ const Login=()=>{
                         <h6 style={{color:"red"}}>{error_pass}</h6> 
                         <h6 style={{color:"red"}}>{error_p}</h6>
                     </Form.Group>
-                    {/* <br/>
-                    <Form.Group >
-                    <MdMedicalServices style={{color:"#06a3da"}}/> <Form.Label>Type</Form.Label>
-                    <div>
-                    <input type="radio" id="gender1" name="gender" value="doctor" onChange={(e)=>setType(e.target.value)} />
-                    <label for="gender1">  Dr</label><br/>
-                    <input type="radio" id="gender2" name="gender" value="user"  onChange={(e)=>setType(e.target.value)}></input>
-                    <label for="gender2">  Patient</label><br/>
-                    <input type="radio" id="gender3" name="gender" value="admin"  onChange={(e)=>setType(e.target.value)}></input>
-                    <label for="gender3">  Admin</label>
-                </div>
-                </Form.Group> */}
                     <br></br>
                     <div className="d-grid">
                     <Button variant="primary btn-block" type="submit" onSubmit={submit_value}>
@@ -201,15 +180,6 @@ const Login=()=>{
                     </div>
                     
                 </Form>
-                {/* <br/>
-                <div className="text-center">
-                <p >
-                    join us now   
-                    <Link to={'/signup'}>
-                    <a className="ml-1 text-blue-900 ">  <u>Register here</u></a>
-                    </Link>
-                </p>
-            </div> */}
             </Col>
         </Row>
         
