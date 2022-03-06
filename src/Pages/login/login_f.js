@@ -16,14 +16,14 @@ const Login=()=>{
     let navigate = useNavigate();
     const routing_login =(type)=>{
       if (type === "owner"){navigate ('/appadmin')}
-      else if (type === "c_admin"){navigate('/clinicdoctor')}
+      else if (type === "c_admin"){navigate('/clinicadmin')}
       else if (type === "p_admin"){navigate('/pharmacyadmin')}
       else if (type === "h_admin"){navigate('/hospitaladmin')}
       else if (type === "doctor"){navigate('/doctor')}
     }
     const token = useSelector(state => state.auth) //state of token 
     //console.log(token)
-    const { decodedToken, isExpired } = useJwt(token);
+    //const { decodedToken, isExpired } = useJwt(token);
     const [error_email,sete_error]=useState("");
     const [error_pass, setp_error]=useState("");
     const dispatch = useDispatch();
@@ -34,7 +34,7 @@ const Login=()=>{
                     pass : data.password ,  
          }).then((res)=>{
            console.log(res.data);           
-           dispatch(signin(res.data.token,res.data.role));
+           dispatch(signin(res.data)); //save all the state
            console.log(token)
            routing_login(res.data.role);
            
