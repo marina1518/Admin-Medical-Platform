@@ -151,7 +151,7 @@ export const data = [
 
     export const Announcements = [
     { id:'1',
-      announcmentname:"Vaccine",
+     announcmentname:"Vaccine",
      Description : "Vaccine is released",
     },
     

@@ -1,5 +1,5 @@
 import React,{useState} from 'react'
-import {Form,Button} from 'react-bootstrap'
+import {Form,Button,Row,Col} from 'react-bootstrap'
 export default function EditAnnouncment(props) {
      const [FormValues, setFormvalues ] = useState(props.editdata);
     const [Formerrors, setFormerrors ] = useState({});
@@ -37,11 +37,6 @@ export default function EditAnnouncment(props) {
         {
             errors.email = "This is not a valid email format";
         }*/
-        
-        if (!values.Image)
-            {
-                errors.Image="Image is required!";  
-            }
 
         
         return errors ;
@@ -85,10 +80,19 @@ export default function EditAnnouncment(props) {
     <Form.Control onChange={(e)=>handlechange(e)} value={FormValues.Image} name="Image" type="file" placeholder="Enter Admin name " />
   <p style={{padding:'0',color:'red',marginTop:'6px'}} >{Formerrors.Image}</p>
     </Form.Group>*/}
-  
-      <Button style={{marginLeft:'190px'}} variant="primary" type="submit">
+  <Row>
+
+<Col>
+      <Button style={{width:'100%'}} variant="primary" type="submit">
     Submit
   </Button>
+  </Col>
+  <Col>
+      <Button style={{width:'100%'}} variant="primary" onClick={props.goback}>
+    Go back
+  </Button>
+  </Col>
+    </Row>
 </Form>
         </div>
     )

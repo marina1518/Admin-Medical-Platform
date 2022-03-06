@@ -11,7 +11,7 @@ export default function AddEntity(props) {
     
 
 const Add_hospital_api = ()=>{
-        console.log(FormValues.Adminl)  
+        console.log(FormValues.Admin)  
             axios.post('https://future-medical.herokuapp.com/register/hospitalAdmin',
          {
                    

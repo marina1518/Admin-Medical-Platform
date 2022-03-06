@@ -43,62 +43,8 @@ const Get_Doctors_Api = async (hospitalname)=>{
         console.error(err);
     }
 } 
-    /*const Get_Doctors_Api =  (hospitalname)=>{
-      return new Promise ((resolve,reject)=>{
-      axios.get(`https://future-medical.herokuapp.com/entity/${hospitalname}/doctors`).then((res)=>{
-
-            console.log(res.data)
-            if (res.data === 'this entity has no doctors right now') 
-            {return }
-            for(var i = 0 ; i < res.data.length ; i++ )
-            {
-                
-                doctor.name = res.data[i].username;
-                doctor.id = res.data[i].email;                
-                doctor.Email = res.data[i].email;
-                doctor.specialization = res.data[i].specialization;
-                doctors_list.push(doctor);
-                doctor={}
-               
-            }
-            resolve(doctors_list);
-            
-            //console.log(hospitals_list)
-            
-      }).catch((err)=>{
-        console.log(err)
-        reject(err)
-      })
-      })   
-}*/
-
-
-/*const Get_Admin_data =()=>{  
-
-  //console.log(token.token)
-return new Promise ((resolve,reject)=>{
-  axios.get('https://future-medical.herokuapp.com/profile', {
-   headers: {
-    'Authorization': `Bearer ${token.token}`
-  }
-})
-.then((res) => {  
-  console.log(res.data)
-  admin.username = res.data.admin.username; 
-  admin.number = res.data.entity.telephone[0];
-  admin.email = res.data.admin.email;
-  admin.hospitalname = res.data.entity.name;
-  admin.address = res.data.entity.address;
-  resolve(admin);
-  Get_Doctors_Api(res.data.entity.name).then((res)=>{console.log(res); setdata(res) }) 
-})
-.catch((error) => {
-  console.error(error)
-  reject(error);
-})})}*/
 
 useEffect(()=>{
- //Get_Admin_data().then((res)=>{console.log(res); setadmindata(res)})   
  Get_Doctors_Api(token.entity.name);
 },[])   
 
