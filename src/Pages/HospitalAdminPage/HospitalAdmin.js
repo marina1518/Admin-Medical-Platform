@@ -8,12 +8,14 @@ import {useSelector,useDispatch} from 'react-redux'
 import Adddoctor from '../../Components/Doctors/AddDoctor';
 import Editdoctor from '../../Components/Doctors/EditDoctor';
 import './HospitalAdmin.css'
-
+import { useJwt } from 'react-jwt';
 export default function Adminhospital() {
   const initstate = {username :"" , email : "" , number : '' , hospitalname : "" , image:""};
   var [admindata,setadmindata] = useState(initstate)
   const token = useSelector(state => state.auth) //state of token 
 console.log(token)
+    const { decodedToken, isExpired } = useJwt(token.token);
+    console.log(decodedToken);
   var [data,setdata] = useState([]) //FROM API HOSPITALS LIST 
 
 //const [data,setdata] = useState([]) 

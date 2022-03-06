@@ -12,7 +12,7 @@ import { useJwt } from "react-jwt";
 
 
 const Login=()=>{
-  
+ 
     let navigate = useNavigate();
     const routing_login =(type)=>{
       if (type === "owner"){navigate ('/appadmin')}
@@ -22,8 +22,12 @@ const Login=()=>{
       else if (type === "doctor"){navigate('/doctor')}
     }
     const token = useSelector(state => state.auth) //state of token 
+  
+    
+     let { decodedToken, isExpired } = useJwt(token.token);
     //console.log(token)
-    //const { decodedToken, isExpired } = useJwt(token);
+    //const { decodedToken, isExpired } = useJwt(token.token);
+    //console.log(decodedToken);
     const [error_email,sete_error]=useState("");
     const [error_pass, setp_error]=useState("");
     const dispatch = useDispatch();
@@ -36,8 +40,15 @@ const Login=()=>{
            console.log(res.data);           
            dispatch(signin(res.data)); //save all the state
            console.log(token)
-           routing_login(res.data.role);
+           //console.log(decodetoken)
            
+           if(decodedToken.type === 'admin')
+           {
+           routing_login(res.data.role); }
+           else if (decodedToken.type === 'doctor')
+           {
+           routing_login('doctor'); }
+
          }).catch(function (error) {
     if (error.response) {
       console.log(error.response.data);

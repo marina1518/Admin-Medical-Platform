@@ -12,14 +12,13 @@ import {AiFillClockCircle,AiOutlineComment} from 'react-icons/ai';
 import {MdAdd} from 'react-icons/md';
 import {MdOutlineDoneOutline,MdOutlineDone,MdCancel} from 'react-icons/md';
 import {RiSubtractLine} from 'react-icons/ri';
-import { Icon123 } from "react-bootstrap-icons";
 import axios from 'axios';
 import { useSelector } from "react-redux";
 import {GiNotebook} from 'react-icons/gi';
 import { useLocation } from 'react-router-dom'
 
 
-const Clinicdoctor =()=>{
+const DoctorProfile =()=>{
   
   const location = useLocation();
   const [Docid, setdoctorid] = useState(location.state ? location.state : "");
@@ -756,4 +755,4 @@ let app2 = [];
 
     )
 }
-export default Clinicdoctor;
+export default DoctorProfile;
