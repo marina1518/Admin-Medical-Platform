@@ -22,7 +22,7 @@ const Get_Hospitals_Api = async ()=>{
         data.forEach((x) => {
                 console.log(x.name)
                 hospital.Hospitalname = x.name;
-                hospital.id = x.name;
+                hospital.id =  x.admin.email;
                 hospital.number = x.telephone[0];
                 hospital.Admin = x.admin.username;
                 hospital.Email = x.admin.email;

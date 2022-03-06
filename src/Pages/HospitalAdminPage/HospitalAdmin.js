@@ -13,23 +13,48 @@ export default function Adminhospital() {
   const initstate = {username :"" , email : "" , number : '' , hospitalname : "" , image:""};
   var [admindata,setadmindata] = useState(initstate)
   const token = useSelector(state => state.auth) //state of token 
-
+console.log(token)
   var [data,setdata] = useState([]) //FROM API HOSPITALS LIST 
 
 //const [data,setdata] = useState([]) 
 let admin = {};
 var doctors_list = JSON.parse(JSON.stringify(data));
 let doctor = {} ;
-    const Get_Doctors_Api = (hospitalname)=>{
+
+const Get_Doctors_Api = async (hospitalname)=>{
+ try {
+        const res = await axios.get(`https://future-medical.herokuapp.com/entity/${hospitalname}/doctors`)
+        const data = await res.data;
+        console.log(data)
+        if (data === 'this entity has no doctors right now') 
+        {return }
+        data.forEach((x) => {
+                
+                doctor.name = x.username;
+                doctor.id = x.email;                
+                doctor.Email = x.email;
+                doctor.specialization = x.specialization;
+                doctors_list.push(doctor);
+                doctor={}
+          });
+        setdata(doctors_list);  
+    } 
+    catch (err) {
+        console.error(err);
+    }
+} 
+    /*const Get_Doctors_Api =  (hospitalname)=>{
       return new Promise ((resolve,reject)=>{
-      axios.get(`https://future-medical.herokuapp.com/doctors/${hospitalname}`).then((res)=>{
+      axios.get(`https://future-medical.herokuapp.com/entity/${hospitalname}/doctors`).then((res)=>{
 
             console.log(res.data)
+            if (res.data === 'this entity has no doctors right now') 
+            {return }
             for(var i = 0 ; i < res.data.length ; i++ )
             {
                 
                 doctor.name = res.data[i].username;
-                doctor.id = res.data[i]._id;                
+                doctor.id = res.data[i].email;                
                 doctor.Email = res.data[i].email;
                 doctor.specialization = res.data[i].specialization;
                 doctors_list.push(doctor);
@@ -44,13 +69,11 @@ let doctor = {} ;
         console.log(err)
         reject(err)
       })
-      })
-
-      
-    }
+      })   
+}*/
 
 
-const Get_Admin_data =()=>{  
+/*const Get_Admin_data =()=>{  
 
   //console.log(token.token)
 return new Promise ((resolve,reject)=>{
@@ -72,10 +95,11 @@ return new Promise ((resolve,reject)=>{
 .catch((error) => {
   console.error(error)
   reject(error);
-})})}
+})})}*/
 
 useEffect(()=>{
- Get_Admin_data().then((res)=>{console.log(res); setadmindata(res)})   
+ //Get_Admin_data().then((res)=>{console.log(res); setadmindata(res)})   
+ Get_Doctors_Api(token.entity.name);
 },[])   
 
     const [viewedit,setedit]=useState(true) //WHEN FALSE SHOW COMPONENT ADD HOSPITAL 
@@ -172,15 +196,15 @@ useEffect(()=>{
   <div className="container">       
         <div className="card shadow-sm">             
           <div className="card-header bg-transparent text-center">
-           <Avatar className="profile_img" style={{height:'150px',width:'150px'}} src={admindata.image}  />
-           {!admindata.image && <input type="file"></input>}           
-          <h3>{admindata.username} </h3>
+           <Avatar className="profile_img" style={{height:'150px',width:'150px'}} src={token.profilePic}  />
+           {!token.profilePic && <input type="file"></input>}           
+          <h3>{token.username} </h3>
           </div>
           <div className="card-body">
-            <p className="mb-0"><strong className="pr-1">Contact Number: </strong> {admindata.number} </p>               
-            <p className="mb-0"><strong className="pr-1">Hospital Name: </strong>{admindata.hospitalname}</p>
-            {<p className="mb-0"><strong className="pr-1">Hospital Address: </strong>{admindata.address}</p>}   
-            <p className="mb-0"><strong className="pr-1">Email:  </strong>{admindata.email}</p>          
+            <p className="mb-0"><strong className="pr-1">Contact Number: </strong> {token.entity.telephone[0]} </p>               
+            <p className="mb-0"><strong className="pr-1">Hospital Name: </strong>{token.entity.name}</p>
+            {<p className="mb-0"><strong className="pr-1">Hospital Address: </strong>{token.entity.address[0]}</p>}   
+            <p className="mb-0"><strong className="pr-1">Email:  </strong>{token.email}</p>          
           </div>     
       </div>
      </div>
@@ -191,7 +215,7 @@ useEffect(()=>{
     <div style={{ height: 540, width: '80%' , margin: '0 auto' ,marginBottom:'60px' }}>
      {viewedit && viewadd && <Table rows={data} columns={columns}></Table> }
     {!viewedit && <Editdoctor editdata={editdata} changeedit={changeedit} goback={goback}/>}
-    {!viewadd && <Adddoctor changeadd={changeadd} goback={goback} entityname={admindata.hospitalname}/>}      
+    {!viewadd && <Adddoctor changeadd={changeadd} goback={goback} entityname={token.entity.name}/>}      
     {viewedit && viewadd &&<Button variant="primary" onClick={()=>{setadd(false)}} style={{marginTop:'10px'}}>Add Doctor</Button>  }
 
     </div>

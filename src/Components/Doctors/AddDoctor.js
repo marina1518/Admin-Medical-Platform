@@ -8,16 +8,18 @@ export default function Adddoctor(props) {
 
 const Add_doctor_api = ()=>{
    //console.log("in api")
-            axios.post('https://future-medical.herokuapp.com/registration/doctor',
+            axios.post('https://future-medical.herokuapp.com/register/doctor',
          {
                     username: FormValues.name,
                     email : FormValues.Email,
                     password : FormValues.Password,
                     gender : FormValues.Gender,
                     specialization : FormValues.specialization,
-                    entityName: props.entityname //Added
+                    entityName: props.entityname ,//Added
+                    profilePic: FormValues.imageurl
          }).then((res)=>{
            console.log(res.data);
+           console.log(props.changeadd)
            props.changeadd(FormValues);  //go to the list
                      
          }).catch(function (error) {
@@ -32,7 +34,7 @@ const Add_doctor_api = ()=>{
     }  
 
 
-     const [FormValues, setFormvalues ] = useState({});
+    const [FormValues, setFormvalues ] = useState({});
     const [Formerrors, setFormerrors ] = useState({});
     const [issubmit, setissubmit ] = useState(false);
     
@@ -108,6 +110,7 @@ uploadTask.on("state_changed",()=>{
     getDownloadURL(uploadTask.snapshot.ref).then((url)=>{
         console.log(url); // saved in database
         FormValues.imageurl = url; 
+        Add_doctor_api(); 
     }).catch((err)=>{console.log(err)})
 })
 }
@@ -120,10 +123,14 @@ uploadTask.on("state_changed",()=>{
         if(Object.keys(validate(FormValues)).length === 0)
         {
             //empty
-            uploadFiles(e.target[3].files[0]) //The image
-            //console.log(FormValues)
+            if(FormValues.Image)
+            {
+            uploadFiles(e.target[3].files[0]) }//The image
+            else{Add_doctor_api()}
+            console.log(FormValues)
             setissubmit(true);
-            Add_doctor_api();     
+
+            //Add_doctor_api();     
             
         }
       }
@@ -165,8 +172,9 @@ uploadTask.on("state_changed",()=>{
     </Form.Group>
  <Form.Group  className="mb-3" controlId="formGridimage">
     <Form.Label>Doctor Image</Form.Label>
-    <Form.Control  value={FormValues.Image} name="Image" type="file" placeholder="Enter Admin image " />
+    <Form.Control onChange={(e)=>handlechange(e)} value={FormValues.Image} name="Image" type="file" placeholder="Enter Admin image " />
   </Form.Group>
+
 
   </Col>
   <Col>

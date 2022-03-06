@@ -20,7 +20,7 @@ const Get_Pharmacies_Api = async ()=>{
         data.forEach((x) => {
                 console.log(x.name)
                 pharmacy.pharmacyname = x.name;
-                pharmacy.id = x.name;
+                pharmacy.id = x.admin.email;
                 pharmacy.number = x.telephone[0];
                 pharmacy.Admin = x.admin.username;
                 pharmacy.Email = x.admin.email;

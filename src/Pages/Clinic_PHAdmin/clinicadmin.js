@@ -395,7 +395,7 @@ const columns = [
   <div className="container">       
         <div className="card shadow-sm">             
           <div className="card-header bg-transparent text-center">
-          <Avatar style={{ cursor: "pointer"}} className="profile_img" src="/broken-image.jpg" onClick={(e)=>setEdit_photo(true)} />
+          <Avatar style={{ cursor: "pointer" , height:'150px' , width: '150px'}} className="profile_img" src="/broken-image.jpg" onClick={(e)=>setEdit_photo(true)} />
            {edit_photo ? <input type="file"></input>:""}
                 
           <h3>{info.username} </h3>
