@@ -62,8 +62,8 @@ let user_data2 = {};
 let app3 = {};
 let app2 = [];
   const token = useSelector(state => state.auth);
-  console.log(token.token);
-  const Get_info_api=()=>{
+  console.log(token);
+  /*const Get_info_api=()=>{
     return new Promise ((resolve,reject)=> {
       axios.get("https://future-medical.herokuapp.com/profile",
       {
@@ -101,10 +101,10 @@ let app2 = [];
      });
     })
     
-  };
-  useEffect(()=>{
-    Get_info_api().then((res)=>{console.log(res); setuser_data(res);})   
-   },[]) 
+  };*/
+  // useEffect(()=>{
+  //   //Get_info_api().then((res)=>{console.log(res); setuser_data(res);})   
+  //  },[]) 
 
 
 
@@ -308,15 +308,15 @@ let app2 = [];
            {edit_photo ? <input type="file"></input>:""}
            
            </div> */}
-           <Avatar style={{ cursor: "pointer"}} className="profile_img" src="/broken-image.jpg" onClick={(e)=>{
-             if (token.usertype === "user") 
-             {
-               setenlarge(true);
-             }
-             else 
-            { setEdit_photo(true);}
+           <Avatar style={{ cursor: "pointer"}} className="profile_img" src={token.profilePic} onClick={(e)=>{setEdit_photo(true)}}/>
+            {/*if (token.usertype === "user") */}
+            {/*
+            //    setenlarge(true);
+            //  }
+            //  else 
+            // { setEdit_photo(true);}
 
-            } } />
+          // } */}
            
            {edit_photo ? <input type="file"></input>:""}
            { enlarge ? 
@@ -335,10 +335,10 @@ let app2 = [];
           }
             
           
-          { (token.usertype=== "doctor") ? <h3>Dr {user_data.username}</h3> : <h3>Dr</h3>}
+            <h3>Dr {token.username}</h3>
           </div>
           <div className="card-body">
-            { (token.usertype=== "doctor") ?<p className="mb-0"><strong className="pr-1">Email: </strong>{user_data.email}</p> : <p className="mb-0"><strong className="pr-1">Email: </strong></p>}    
+            <p className="mb-0"><strong className="pr-1">Email: </strong>{token.email}</p>
             
           </div>
           </div>
@@ -386,9 +386,9 @@ let app2 = [];
         <div className="card shadow-sm">
           <div className="card-header bg-transparent border-0">
             <h3 className="mb-0"><BsInfoCircleFill /> Personal Information 
-            {
-              token.usertype === "patient" ? "" : <EditIcon style={{ cursor: "pointer"}} onClick={(e)=>setEdit(true)}></EditIcon>
-            }
+            
+              <EditIcon style={{ cursor: "pointer"}} onClick={(e)=>setEdit(true)}></EditIcon>
+            
             </h3>  
             {/* <Button variant="outline-secondary">Secondary</Button> 
             <svg data-testid="EditIcon"></svg>
@@ -400,7 +400,7 @@ let app2 = [];
               <tr>
                 <th width="30%">Specialization   </th>
                 <td width="2%">:</td>
-                <td>{edit ? <input type="text" placeholder={edit_data.edu} onChange={(e)=>setspec(e.target.value)}></input>:edit_data.edu}</td>
+                <td>{edit ? <input type="text" placeholder={token.specialization} onChange={(e)=>setspec(e.target.value)}></input>:token.specialization}</td>
               </tr>
               <tr>
                 <th width="30%">University	</th>
@@ -410,7 +410,7 @@ let app2 = [];
               <tr>
                 <th width="30%">Hospital	</th>
                 <td width="2%">:</td>
-                <td>{edit ? <input placeholder={edit_data.name_hospital} type="text" onChange={(e)=>sethosp(e.target.value)}></input>:edit_data.name_hospital}</td>
+                <td>{edit ? <input placeholder={token.entity_id.name} type="text" onChange={(e)=>sethosp(e.target.value)}></input>:token.entity_id.name}</td>
               </tr>
               {
                 token.usertype === "doctor" ? 
@@ -452,7 +452,7 @@ let app2 = [];
                 <tr>
                 <th width="30%">Personal Phone Number	</th>
                 <td width="2%">:</td>
-                <td>{edit ? <input placeholder={edit_data.personal_phone} type="text" onChange={(e)=>setp_ph(e.target.value)}></input>:edit_data.personal_phone}</td>
+                <td>{edit ? <input placeholder={token.telephone[0]} type="text" onChange={(e)=>setp_ph(e.target.value)}></input>:token.telephone[0]}</td>
               </tr>
               <tr>
                 <th width="30%">Date of Birth	</th>
@@ -467,7 +467,7 @@ let app2 = [];
                     <label for="gender1"> Male</label><br/>
                     <input style={{ cursor: "pointer"}} type="radio" id="gender2" name="gender" value="Female"  onChange={(e)=>setGender(e.target.value)}></input>
                     <label for="gender2"> Female</label>
-                </div>:edit_data.gender}</td>
+                </div>:token.gender}</td>
               </tr>
               
               
