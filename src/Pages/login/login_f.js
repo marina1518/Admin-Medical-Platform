@@ -112,7 +112,7 @@ const Login=()=>{
 
     return(
         
-        <Container style={{marginTop:'100px'}}>
+        <Container>
         {/* <h1 className="shadow-sm text-primary mt-5 p-3 text-center rounded">Login</h1> */}
         
       

@@ -14,13 +14,19 @@ const token = useSelector((state) => state.auth); //state of token
   return (
     <div >
       {token.token && <Header/>}
+      
+        {/*<Routes>
+        <Route path="/" element={<Login/>}> </Route>
+  </Routes>*/}
+         <div className='body'>
       <Routes>
-        <Route path="/" element={<Login />}> </Route>
-        <Route path="/AppAdmin" element={<AppAdmin />}> </Route>
+        <Route path="/" element={<Login/>}> </Route>
+        <Route path="/AppAdmin" element={<AppAdmin style={{marginTop:'200px'}}/>}> </Route>
         <Route path="/HospitalAdmin" element={<Adminhospital />}> </Route>
         <Route path='/ClinicAdmin' element={<Clinic_admin />}> </Route>
         <Route path='/Doctor' element={<DoctorProfile />}> </Route>
       </Routes>
+      </div>
     </div>
   );
 }

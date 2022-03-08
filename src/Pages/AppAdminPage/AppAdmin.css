@@ -1,3 +1,7 @@
 .otherpages {
   flex: 6;
 }
+/*.wholepage {
+  //height: calc(100vh-100);
+  marign-top: 500px;
+}*/

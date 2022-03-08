@@ -63,7 +63,7 @@ const Header = () => {
       <div className="nav-center"> 
           <div className="login-container" ref={loginContainerRef}>
             {/* <div className="profile-icon"> */}
-            <ul className="login-data" ref={loginRef}>
+           <ul className="login-data" ref={loginRef}>
               <li
                 className="profile-icon"
                 onClick={() => {

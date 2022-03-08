@@ -18,7 +18,7 @@ const token = useSelector(state => state.auth) //state of token
 console.log(token)
   return (
    
-         <div style={{display:'flex' , margin:'0'}}>       
+         <div  style={{display:'flex' , margin:'0'}}>       
         <Slidebar/>
         <div className='otherpages'>
            { (chosencomp==='chart') && <Piechart/>}

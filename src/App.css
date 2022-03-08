@@ -2,6 +2,14 @@
   text-align: center;
 }
 
+.body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  top: 4.5rem;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
