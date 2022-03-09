@@ -41,13 +41,13 @@ const Login=()=>{
            dispatch(signin(res.data)); //save all the state
            console.log(token)
            //console.log(decodetoken)
-           
-           if(decodedToken.type === 'admin')
+           routing_login(res.data.role);
+           /*if(decodedToken.type === 'admin')
            {
            routing_login(res.data.role); }
            else if (decodedToken.type === 'doctor')
            {
-           routing_login('doctor'); }
+           routing_login('doctor'); }*/
 
          }).catch(function (error) {
     if (error.response) {
@@ -128,7 +128,7 @@ const Login=()=>{
        
         </Figure> */}
 
-<Carousel>
+{/*<Carousel>
   <Carousel.Item>
     <img
       className="d-block w-100"
@@ -155,7 +155,7 @@ const Login=()=>{
 
    
   </Carousel.Item>
-</Carousel>
+      </Carousel>*/}
 
         </Col>
         

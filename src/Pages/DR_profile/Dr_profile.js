@@ -408,12 +408,13 @@ let app2 = [];
                 <td>{edit ? <input placeholder={edit_data.university} type="text" onChange={(e)=>setuni(e.target.value)}></input>:edit_data.university}</td>
               </tr>
               <tr>
-                <th width="30%">Hospital	</th>
+                {token.entity_id.flag === 'H' && <th width="30%">Hospital	Name</th>}
+                {token.entity_id.flag === 'C' && <th width="30%">Clinic	Name</th>}
                 <td width="2%">:</td>
                 <td>{edit ? <input placeholder={token.entity_id.name} type="text" onChange={(e)=>sethosp(e.target.value)}></input>:token.entity_id.name}</td>
               </tr>
               {
-                token.usertype === "doctor" ? 
+               /* token.usertype === "doctor" ? 
                 
                 <tr>
                 <th width="30%">Clinic Name	</th>
@@ -422,8 +423,8 @@ let app2 = [];
               </tr>
 
                 :""
-              }
-               {
+              */}
+               {/*
                 token.usertype === "doctor" ? 
                 
                 <tr>
@@ -432,10 +433,10 @@ let app2 = [];
                 <td>{edit ? <input placeholder={edit_data.clinic_add} type="text" onChange={(e)=>setclinic(e.target.value)}></input>:edit_data.clinic_add}</td>
               </tr>
 
-                :""
+                :""*/
               }
 
-              {
+              {/*
                 token.usertype === "doctor" ? 
                 
                 <tr>
@@ -444,7 +445,7 @@ let app2 = [];
                 <td>{edit ? <input placeholder={edit_data.clinic_phone}  type="tel" name="telefono" pattern="\([0-9]{3}\) [0-9]{3}[ -][0-9]{4}" onChange={(e)=>setc_ph(e.target.value)}></input>:edit_data.clinic_phone}</td>
               </tr>
 
-                :""
+                :""*/
               }
 
 
