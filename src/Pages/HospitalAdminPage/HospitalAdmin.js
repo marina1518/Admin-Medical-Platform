@@ -36,6 +36,7 @@ const Get_Doctors_Api = async (hospitalname)=>{
                 doctor.id = x.email;                
                 doctor.Email = x.email;
                 doctor.specialization = x.specialization;
+                doctor.number = x.telephone[0];
                 doctors_list.push(doctor);
                 doctor={}
           });

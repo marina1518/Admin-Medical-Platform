@@ -14,6 +14,7 @@ const Add_doctor_api = ()=>{
                     email : FormValues.Email,
                     password : FormValues.Password,
                     gender : FormValues.Gender,
+                    telephone: FormValues.number,
                     specialization : FormValues.specialization,
                     entityName: props.entityname ,//Added
                     profilePic: FormValues.imageurl
