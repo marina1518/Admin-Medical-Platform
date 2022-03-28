@@ -12,7 +12,7 @@ import { useJwt } from 'react-jwt';
 export default function Adminhospital() {
   const initstate = {username :"" , email : "" , number : '' , hospitalname : "" , image:""};
   var [admindata,setadmindata] = useState(initstate)
-  const token = useSelector(state => state.auth) //state of token 
+  const token = JSON.parse(useSelector(state => state.auth)) //state of token 
 console.log(token)
     const { decodedToken, isExpired } = useJwt(token.token);
     console.log(decodedToken);

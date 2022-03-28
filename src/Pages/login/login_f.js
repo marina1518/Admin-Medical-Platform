@@ -21,7 +21,7 @@ const Login=()=>{
       else if (type === "h_admin"){navigate('/hospitaladmin')}
       else if (type === "doctor"){navigate('/doctor')}
     }
-    const token = useSelector(state => state.auth) //state of token 
+    const token = JSON.parse(useSelector(state => state.auth)) //state of token 
   
     
      let { decodedToken, isExpired } = useJwt(token.token);

@@ -9,13 +9,14 @@ default :
      return state ;
 }
 }*/
-const auth_reducer = (state = {} , action)=>{ //APP ADMIN
+const entry_state = JSON.stringify({})
+const auth_reducer = (state = entry_state , action)=>{ //APP ADMIN
 switch(action.type){
 case "Signin":
-    return action.state ;
+    return JSON.stringify(action.state) ;
     //return action.token,action.usertype ; 
 case "logout" :
-    return {}      //remove token 
+    return entry_state      //remove token 
 default :
      return state ;
 }

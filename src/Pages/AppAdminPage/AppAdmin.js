@@ -14,7 +14,7 @@ import Announcemts from '../../Components/AdminApp/Announcments/Announcments';
 function AppAdmin() {
   const chosencomp = useSelector(state => state.sidebarcomp)
    console.log(chosencomp);
-const token = useSelector(state => state.auth) //state of token 
+const token = JSON.parse(useSelector(state => state.auth)); //state of token 
 console.log(token)
   return (
    

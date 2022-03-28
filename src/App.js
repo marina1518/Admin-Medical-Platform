@@ -10,7 +10,7 @@ import Clinic_admin from './Pages/Clinic_PHAdmin/clinicadmin'
 import DoctorProfile from './Pages/DR_profile/Dr_profile'
 import { useSelector, useDispatch } from "react-redux";
 function App() {
-const token = useSelector((state) => state.auth); //state of token
+const token = JSON.parse(useSelector((state) => state.auth)); //state of token
   return (
     <div >
       {token.token && <Header/>}

@@ -11,7 +11,7 @@ import Adddoctor from '../../Components/Doctors/AddDoctor';
 import Editdoctor from '../../Components/Doctors/EditDoctor';
 
 const Clinic_admin =()=>{
-  const token = useSelector(state => state.auth);
+  const token = JSON.parse(useSelector(state => state.auth));
   console.log(token);
   var [dr,setdr] = useState([])
 

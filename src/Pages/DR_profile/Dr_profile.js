@@ -61,7 +61,7 @@ const [user_data, setuser_data] = useState(
 let user_data2 = {};
 let app3 = {};
 let app2 = [];
-  const token = useSelector(state => state.auth);
+  const token = JSON.parse(useSelector(state => state.auth));
   console.log(token);
   /*const Get_info_api=()=>{
     return new Promise ((resolve,reject)=> {

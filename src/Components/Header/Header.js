@@ -15,7 +15,8 @@ import { chart } from "../../actions";
 const Header = () => {
   let dispatch = useDispatch();
   let navigate = useNavigate();
-  const token = useSelector((state) => state.auth); //state of token
+  const token = JSON.parse(useSelector(state => state.auth)) //state of token
+  console.log(token)
   const initstate = () => {
     ////GO BACK ALL STATES TO INIT STATES
     dispatch(logout());

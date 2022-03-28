@@ -11,7 +11,7 @@ import { Bar,Line, Pie, Chart } from "react-chartjs-2";
 
 
 const Ph_admin =()=>{
-   
+    const token = JSON.parse(useSelector(state => state.auth));
     const [state,setstate] = useState(null);
     const [edit_photo,setEdit_photo]=useState(false);
     const orders =[
