@@ -1,11 +1,13 @@
-import React , {useState} from "react";
+import React , {useEffect, useState} from "react";
 import './profile.css';
-import { Alert ,Button,ButtonGroup,ListGroup, Stack , Tab, Tabs, Accordion} from "react-bootstrap";
+import { Alert ,Button,ButtonGroup,ListGroup, Stack , Tab, Tabs, Accordion ,Col,Row} from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {MdOutlineDoneOutline,MdOutlineDone,MdCancel} from 'react-icons/md';
 import Avatar from '@material-ui/core/Avatar';
+import {useSelector,useDispatch} from 'react-redux'
+import axios from "axios";
 
-import { Chart as ChartJS } from 'chart.js/auto';
+//import { Chart as ChartJS } from 'chart.js/auto';
 
 import { Bar,Line, Pie, Chart } from "react-chartjs-2";
 
@@ -19,7 +21,145 @@ const Ph_admin =()=>{
         {id:"2",username:"jj" , order:"- k , - p " }
     ];
     const [neworders,setneworders]=useState(orders);
-   
+    var[phorder,setphorder]=useState([]);
+    const[order2_details,setorder2_details]=useState([]);
+    const[pending_orders,setpending_details]=useState([]);
+    var order_list = JSON.parse(JSON.stringify(phorder));
+    var order_details = {};
+    console.log(token.token);
+    const config = {headers: {
+    
+      'Authorization': `Bearer ${token.token}`}};
+    const Get_orders_Api = async ()=>{
+      try {
+             const res = await axios.get(`https://future-medical.herokuapp.com/admin/orders/new`,config)
+             const data = await res.data;
+             console.log(data.order_data);
+             data.forEach((x) => {
+              order_details.form = x.order_data.form;
+              order_details.Date = x.order_data.Date;
+              order_details.address = x.order_data.address;
+              order_details.phone = x.order_data.phone;
+              order_details.price = x.price;
+              order_details.username = x.user.username;
+              order_details.email = x.user.email;
+              order_list.push(order_details); 
+              console.log(order_details);   
+              order_details={};   
+            
+              console.log(order_details);
+               });
+              setorder2_details(order_list); 
+              
+              Get_pending_Api();
+              Get_approved_Api();
+              Get_history_Api();
+         } 
+         catch (err) {
+             console.error(err);
+         }
+
+     }
+     const[phorder2,setphorder2]=useState([]);
+     var order_list2 = JSON.parse(JSON.stringify(phorder2));
+     order_details={};
+     
+     const Get_pending_Api = async ()=>{
+      try {
+             const res = await axios.get(`https://future-medical.herokuapp.com/admin/orders/pending`,config)
+             const data = await res.data;
+             console.log(order_list2);
+             console.log(data);
+              if(data == "there is no pending orders") 
+             {return}
+             data.forEach((x) => {
+              order_details.form = x.order_data.form;
+              order_details.Date = x.order_data.Date;
+              order_details.address = x.order_data.address;
+              order_details.phone = x.order_data.phone;
+              order_details.price = x.price;
+              order_details.username = x.user.username;
+              order_details.email = x.user.email;
+              order_list2.push(order_details); 
+              console.log(order_details);   
+              order_details={};   
+              console.log(order_details);
+               });
+              setpending_details(order_list2);  
+              console.log(pending_orders);
+         } 
+         catch (err) {
+             console.error(err);
+         }
+
+     }
+     const[approved,setapproved]=useState([]);
+     const[phorder3,setphorder3]=useState([]);
+     var order_list3 = JSON.parse(JSON.stringify(phorder3));
+     order_details={};
+     const Get_approved_Api = async ()=>{
+      try {
+             const res = await axios.get(`https://future-medical.herokuapp.com/admin/orders/approved`,config)
+             const data = await res.data;
+             console.log(order_list3);
+             console.log(data);
+              if(data == "there is no approved orders") 
+             {return}
+             data.forEach((x) => {
+              order_details.form = x.order_data.form;
+              order_details.Date = x.order_data.Date;
+              order_details.address = x.order_data.address;
+              order_details.phone = x.order_data.phone;
+              order_details.price = x.price;
+              order_details.username = x.user.username;
+              order_details.email = x.user.email;
+              order_list3.push(order_details); 
+              console.log(order_details);   
+              order_details={};   
+              console.log(order_details);
+               });
+              setapproved(order_list3);  
+              console.log(approved);
+         } 
+         catch (err) {
+             console.error(err);
+         }
+
+     }
+
+     const[history,sethistory]=useState([]);
+     const[phorder4,setphorder4]=useState([]);
+     var order_list4 = JSON.parse(JSON.stringify(phorder4));
+     order_details={};
+     const Get_history_Api = async ()=>{
+      try {
+             const res = await axios.get(`https://future-medical.herokuapp.com/admin/orders/history`,config)
+             const data = await res.data;
+             console.log(order_list4);
+             console.log(data);
+              if(data == "there is no delivered orders") 
+             {return}
+             data.forEach((x) => {
+              order_details.form = x.order_data.form;
+              order_details.Date = x.order_data.Date;
+              order_details.address = x.order_data.address;
+              order_details.phone = x.order_data.phone;
+              order_details.price = x.price;
+              order_details.username = x.user.username;
+              order_details.email = x.user.email;
+              order_list3.push(order_details); 
+              console.log(order_details);   
+              order_details={};   
+              console.log(order_details);
+               });
+              sethistory(order_list4);  
+              console.log(history);
+         } 
+         catch (err) {
+             console.error(err);
+         }
+
+     }
   // console.log(neworders);
    const remove=(e,id)=>{
     const newp = neworders.filter((item)=> item.id !== id );
@@ -51,25 +191,25 @@ const Ph_admin =()=>{
   // console.log(new_app_orders);
 
 
-  const approved =[
-    {id:"1", username:"kk" , order:"- m , - g " },
-    {id:"2",username:"jj" , order:"- k , - p " }
-];
-const [done_list,setdone]=useState(approved);
+//   const approved =[
+//     {id:"1", username:"kk" , order:"- m , - g " },
+//     {id:"2",username:"jj" , order:"- k , - p " }
+// ];
+//const [done_list,setdone]=useState(approved);
 //var history=[];
-let [history,sethistory]=useState([]);
-const done=(e,id)=>{
-    const newp = done_list.filter((item)=> item.id !== id );
-    setdone(newp);
+//let [history,sethistory]=useState([]);
+// const done=(e,id)=>{
+//     const newp = done_list.filter((item)=> item.id !== id );
+//     setdone(newp);
 
-    const newpp = done_list.filter((item)=> item.id === id );
+//     const newpp = done_list.filter((item)=> item.id === id );
    
    
-    for (let i = 0; i < newpp.length; i++) {
-     history.push(newpp[i])
-    }
-   sethistory(history);
-   }
+//     for (let i = 0; i < newpp.length; i++) {
+//      history.push(newpp[i])
+//     }
+//    sethistory(history);
+//    }
 
    
 
@@ -124,8 +264,15 @@ const done=(e,id)=>{
     
     ]
 	};
-
-
+  // const order_api =() =>{
+  //   Get_orders_Api();
+  // }
+  useEffect(()=>{
+    /*Get_Admin_info().then((res)=>{console.log(res); setinfo(res)})   */
+    Get_orders_Api();
+    
+    },[]) 
+    const[price,setPrice]=useState("");
   const [report,setreport] = useState(false);
     return(
 
@@ -183,22 +330,35 @@ const done=(e,id)=>{
         id="noanim-tab-example"
         className="mb-3"
       >
-        <Tab eventKey="Orders" title="Orders">
+        <Tab eventKey="Orders" title="Orders" >
           {/* <Sonnet /> */}
-          {(neworders.length === 0) ?  "No Notifications":
+          {(order2_details.length === 0) ?  "No Notifications":
           <Accordion defaultActiveKey="0" flush>
           {
-                  neworders.map((item)=>
+                  order2_details.map((item)=>
                  
         <Accordion.Item eventKey={item}>
-            <Accordion.Header> {item.username}</Accordion.Header>
+            <Accordion.Header> 
+            <Col>{item.username} </Col>
+            <Col>{item.Date} </Col>
+            </Accordion.Header>
             <Accordion.Body>
-           {item.order}
+           
+           <img src={item.form} width="300px" height="300px"/>
+           <h3>Address : {item.address}</h3>
+           <h3>Phone : {item.phone}</h3>
            <br/>
+           <Row>
+           <Col>
+            <input type="text" placeholder="Price" onChange={(e)=>{setPrice(e.event.target)}}/>
+           </Col>
+          <Col>
             <ButtonGroup>
               <Button variant="outline-success" className="col-md-12 text-right" onClick={(e)=>pending(e,item.id)}><MdOutlineDone/></Button>
               <Button variant="outline-danger" className="col-md-12 text-right" onClick={(e)=>remove(e,item.id)}><MdCancel/></Button>
-              </ButtonGroup>
+            </ButtonGroup>
+          </Col>
+          </Row>
             </Accordion.Body>
         </Accordion.Item>
        
@@ -211,17 +371,21 @@ const done=(e,id)=>{
         </Tab>
         <Tab eventKey="Pending Orders" title="Pending Orders">
           {/* <Sonnet /> */}
-             {(app_orders.length === 0) ?  "No Pending Orders":
+             {(pending_orders.length === 0) ?  "No Pending Orders":
              <Accordion defaultActiveKey="0" flush>
              {
-                     app_orders.map((item)=>
+                     pending_orders.map((item)=>
 
                        
                        <Accordion.Item eventKey={item}>
-               <Accordion.Header> {item.username}</Accordion.Header>
+               <Accordion.Header> 
+            <Col>{item.username} </Col>
+            <Col>{item.Date} </Col>
+            </Accordion.Header>
                <Accordion.Body>
-              {item.order}
-             
+               <img src={item.form} width="300px" height="300px"/>
+                <h3>Address : {item.address}</h3>
+                <h3>Phone : {item.phone}</h3>
                </Accordion.Body>
              
            </Accordion.Item>
@@ -235,19 +399,25 @@ const done=(e,id)=>{
 
         </Tab>
 
-        <Tab eventKey="Approved Orders" title="Approved Orders">
+         <Tab eventKey="Approved Orders" title="Approved Orders">
           {/* <Sonnet /> */}
-          {(done_list.length === 0) ?  "No Orders":
+          {(approved.length === 0) ?  "No Orders":
           <Accordion defaultActiveKey="0" flush>
              {
-                     done_list.map((item)=>
+                    approved.map((item)=>
                     
-           <Accordion.Item eventKey={item}>
-               <Accordion.Header> {item.username}</Accordion.Header>
-               <Accordion.Body>
-              {item.order}
-             <br/>
-             <Button variant="outline-success" className="col-md-12 text-right" onClick={(e)=>done(e,item.id)}>Done <MdOutlineDoneOutline/></Button>
+            <Accordion.Item eventKey={item}>
+               <Accordion.Header> 
+            <Col>{item.username} </Col>
+            <Col>{item.Date} </Col>
+            </Accordion.Header>
+            <Accordion.Body>
+               <img src={item.form} width="300px" height="300px"/>
+                <h3>Address : {item.address}</h3>
+                <h3>Phone : {item.phone}</h3>
+                <h3>Price : {item.price}</h3>
+               <br/>
+             <Button variant="outline-success" className="col-md-12 text-right" >Done <MdOutlineDoneOutline/></Button>
                </Accordion.Body>
            </Accordion.Item>
           
@@ -256,7 +426,7 @@ const done=(e,id)=>{
                   </Accordion>
 }
 
-        </Tab>
+        </Tab> 
 
 
         <Tab eventKey="History" title="History">
@@ -267,11 +437,16 @@ const done=(e,id)=>{
                   history.map((item)=>
                  
         <Accordion.Item eventKey={item}>
-            <Accordion.Header> {item.username}</Accordion.Header>
+             <Accordion.Header> 
+            <Col>{item.username} </Col>
+            <Col>{item.Date} </Col>
+            </Accordion.Header>
             <Accordion.Body>
-           {item.order}
-          
-            </Accordion.Body>
+               <img src={item.form} width="300px" height="300px"/>
+                <h3>Address : {item.address}</h3>
+                <h3>Phone : {item.phone}</h3>
+                <h3>Price : {item.price}</h3>
+               </Accordion.Body>
         </Accordion.Item>
        
                   )
