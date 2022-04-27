@@ -16,7 +16,7 @@ const Login=()=>{
     let navigate = useNavigate();
     const routing_login =(type)=>{
       if (type === "owner"){navigate ('/appadmin')}
-      else if (type === "c_admin"){navigate('/clinicadmin')}
+      else if (type === "c_admin"){navigate('/HospitalAdmin')} //remove clinic admin page same as hospital admin
       else if (type === "p_admin"){navigate('/pharmacyadmin')}
       else if (type === "h_admin"){navigate('/hospitaladmin')}
       else if (type === "doctor"){navigate('/doctor')}

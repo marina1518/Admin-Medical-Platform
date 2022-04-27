@@ -9,6 +9,10 @@ import Header from './Components/Header/Header';
 import Clinic_admin from './Pages/Clinic_PHAdmin/clinicadmin'
 import DoctorProfile from './Pages/DR_profile/Dr_profile'
 import Pharmacy_admin from './Pages/Clinic_PHAdmin/pharmacy_admin';
+import Privatedoctor from './Components/PrivateRoutes/PrivateDoctor';
+import PrivateAdmin from './Components/PrivateRoutes/PrivateAdmin';
+import PrivatePharmacy from './Components/PrivateRoutes/PrivatePharmacy';
+import PrivateEntity from './Components/PrivateRoutes/PrivateEntity';
 import { useSelector, useDispatch } from "react-redux";
 function App() {
 const token = JSON.parse(useSelector((state) => state.auth)); //state of token
@@ -22,11 +26,11 @@ const token = JSON.parse(useSelector((state) => state.auth)); //state of token
          <div className='body'>
       <Routes>
         <Route path="/" element={<Login/>}> </Route>
-        <Route path="/AppAdmin" element={<AppAdmin style={{marginTop:'200px'}}/>}> </Route>
-        <Route path="/HospitalAdmin" element={<Adminhospital />}> </Route>
-        <Route path='/ClinicAdmin' element={<Clinic_admin />}> </Route>
-        <Route path='/PharmacyAdmin' element={<Pharmacy_admin />}> </Route>
-        <Route path='/Doctor' element={<DoctorProfile />}> </Route>
+        <Route path="/AppAdmin" element={<PrivateAdmin><AppAdmin style={{marginTop:'200px'}}/></PrivateAdmin>}> </Route>
+        <Route path="/HospitalAdmin" element={<PrivateEntity> <Adminhospital /> </PrivateEntity>}> </Route>
+        {/*<Route path='/ClinicAdmin' element={<Clinic_admin />}> </Route>*/}
+        <Route path='/PharmacyAdmin' element={<PrivatePharmacy><Pharmacy_admin /> </PrivatePharmacy>}> </Route>
+        <Route path='/Doctor' element={<Privatedoctor><DoctorProfile /> </Privatedoctor> }> </Route>
       </Routes>
       </div>
     </div>
