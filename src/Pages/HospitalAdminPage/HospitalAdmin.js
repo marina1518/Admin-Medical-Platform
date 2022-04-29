@@ -14,8 +14,8 @@ export default function Adminhospital() {
   var [admindata,setadmindata] = useState(initstate)
   const token = JSON.parse(useSelector(state => state.auth)) //state of token 
 console.log(token)
-    const { decodedToken, isExpired } = useJwt(token.token);
-    console.log(decodedToken);
+   //const { decodedToken, isExpired } = useJwt(token.token);
+    //console.log(decodedToken);
   var [data,setdata] = useState([]) //FROM API HOSPITALS LIST 
 
 //const [data,setdata] = useState([]) 
@@ -151,8 +151,8 @@ useEffect(()=>{
           </div>
           <div className="card-body">
             <p className="mb-0"><strong className="pr-1">Contact Number: </strong> {token.entity.telephone[0]} </p>               
-            <p className="mb-0"><strong className="pr-1">Hospital Name: </strong>{token.entity.name}</p>
-            {<p className="mb-0"><strong className="pr-1">Hospital Address: </strong>{token.entity.address[0]}</p>}   
+            <p className="mb-0"><strong className="pr-1">{token.role === "h_admin" ?"Hospital Name :" : "Clinic Name :"} </strong>{token.entity.name}</p>
+            {<p className="mb-0"><strong className="pr-1">{token.role === "h_admin" ?"Hospital Address :" : "Clinic Address :"} </strong>{token.entity.address[0]}</p>}   
             <p className="mb-0"><strong className="pr-1">Email:  </strong>{token.email}</p>          
           </div>     
       </div>

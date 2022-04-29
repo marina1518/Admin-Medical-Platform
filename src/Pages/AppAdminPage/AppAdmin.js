@@ -22,9 +22,9 @@ console.log(token)
         <Slidebar/>
         <div className='otherpages'>
            { (chosencomp==='chart') && <Piechart/>}
-          { (chosencomp==='chart') && <Chart data={data} dataKey={"Active Hospital"} title={"Hospital Analytics"}/>}
-        { (chosencomp==='chart') &&  <Chart data={Clinic} dataKey={"Active Clinic"} title={"Clinic Analytics"}/>}
-        { (chosencomp==='chart') && <Chart data={pharmacy} dataKey={"Active Pharmacy"} title={"Pharmacy Analytics"}/>}
+          { (chosencomp==='chart') && <Chart data={data} dataKey={"Active Hospital profit"} title={"Hospital Analytics"}/>}
+        { (chosencomp==='chart') &&  <Chart data={Clinic} dataKey={"Active Clinic profit"} title={"Clinic Analytics"}/>}
+        { (chosencomp==='chart') && <Chart data={pharmacy} dataKey={"Active Pharmacy profit"} title={"Pharmacy Analytics"}/>}
         { (chosencomp==='hospitals') && <Hospitals/>}
         { (chosencomp==='clinics') && <Clinics/>}
         { (chosencomp==='pharmacies') && <Pharmacies/>}
