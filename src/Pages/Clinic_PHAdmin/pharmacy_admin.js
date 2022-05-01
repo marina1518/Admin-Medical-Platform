@@ -6,7 +6,7 @@ import {MdOutlineDoneOutline,MdOutlineDone,MdCancel} from 'react-icons/md';
 import Avatar from '@material-ui/core/Avatar';
 import {useSelector} from 'react-redux'
 import axios from "axios";
-import { Bar} from "react-chartjs-2";
+// import { Bar} from "react-chartjs-2";
 
 
 const Ph_admin =()=>{
@@ -21,9 +21,7 @@ const Ph_admin =()=>{
     var order_list = JSON.parse(JSON.stringify(phorder));
     var order_details = {};
     
-    const config = {headers: {
-    
-      'Authorization': `Bearer ${token.token}`}};
+    const config = {headers: {'Authorization': `Bearer ${token.token}`}};
 
     const Get_orders_Api = async ()=>{
       try {
@@ -43,14 +41,9 @@ const Ph_admin =()=>{
               order_list.push(order_details); 
               console.log(order_details);   
               order_details={};   
-            
               console.log(order_details);
                });
               setorder2_details(order_list); 
-              
-              // Get_pending_Api();
-              // Get_approved_Api();
-              // Get_history_Api();
          } 
          catch (err) {
              console.error(err);
@@ -164,58 +157,6 @@ const Ph_admin =()=>{
 
      }
  
-  
-  const labels= ['Jan','Feb','Mar','April','May','June','July','Aug','Sep', 'Oct','Nov','Dec'];
-
-   const  data={
-		labels: labels,
-		  datasets: [{
-			label: 'Price',
-			data: [65, 59, 80, 81, 56, 55, 40,90,25,45,89,20],
-			backgroundColor: [
-        'rgb(255, 99, 132)',
-        'rgb(0, 77, 64)',
-        'rgb(210,129,64)',
-        'rgb(183, 28, 28)',
-        'rgb(255, 205, 86)',
-        'rgb(75, 192, 192)',
-        'rgb(73,95,117)',
-        'rgb(54, 162, 235)',
-        'rgb(106,62,115)',
-        'rgb(153, 102, 255)',
-        'rgb(144, 164, 174)',
-        'rgb(0, 0, 0)'
-
-
-			  
-			],
-			hoverOffset: 4
-		  }, 
-      {
-        label: 'Quantity',
-        data: [65, 59, 80, 81, 56, 55, 40,90,25,45,89,20],
-        backgroundColor: [
-         
-			  'rgba(255, 99, 132, 0.5)',
-        'rgba(0, 77, 64,0.5)',
-        'rgba(210,129,64, 0.5)',
-        'rgba(183, 28, 28,0.5)',
-        'rgba(255, 205, 86, 0.5)',
-        'rgba(75, 192, 192, 0.5)',
-        'rgba(73,95,117,0.5)',
-        'rgba(54, 162, 235, 0.5)',
-        'rgba(106,62,115,0.5)',
-        'rgba(153, 102, 255, 0.5)',
-        'rgba(144, 164, 174, 0.5)',
-        'rgba(0, 0, 0, 0.5)'
-          
-        ],
-        hoverOffset: 4
-        }
-    
-    ]
-	};
- 
   useEffect(()=>{
     Get_orders_Api();
     Get_approved_Api();
@@ -229,7 +170,7 @@ const Ph_admin =()=>{
   const [report,setreport] = useState(false);
 const [approve_data, setapprove_data] = useState("");
 const [done_id, setdone_id] = useState("");
-
+const [comment, setComment] = useState("")
   const Approve_api = async ()=>{
     try {
            const res = await axios.patch(`https://future-medical.herokuapp.com/admin/order/approve`, approve_data, config )
@@ -249,10 +190,27 @@ const [done_id, setdone_id] = useState("");
     try {
            const res = await axios.patch(`https://future-medical.herokuapp.com/admin/order/done`, done_id, config )
            const data = await res.data;
+           console.log(data);  
+       } 
+       catch (err) {
+           console.error(err);
+       }
+
+   }
+   const disapprove_order = async (e,id)=>{
+    try {
+           const res = await axios.patch(`https://future-medical.herokuapp.com/admin/order/disapprove`, {id:id}, config )
+           const data = await res.data;
            console.log(data);
-            
-           
-            
+           alert('Order disapproved');
+           var new_orders=[];
+           for(var i=0;i<order2_details.length;i++)
+           {
+             if(order2_details[i].id !== id) new_orders.push(order2_details[i]);
+           }
+           console.log(new_orders);
+           setorder2_details(new_orders);
+           console.log(order2_details);
        } 
        catch (err) {
            console.error(err);
@@ -261,7 +219,7 @@ const [done_id, setdone_id] = useState("");
    }
   const approve=(e,id)=>{
  
-    const o={id:id, price:price};
+    const o={id:id, price:price}; //comment 
    
     setapprove_data(o);
     console.log(approve_data)
@@ -328,11 +286,12 @@ const [done_id, setdone_id] = useState("");
            <Row>
            <Col>
             <input type="text" placeholder="Price" onChange={(e)=>{setPrice(parseFloat(e.target.value))}}/>
+            <input type="text" placeholder="Comment" onChange={(e)=>{setComment(e.target.value)}}/>
            </Col>
           <Col>
             <ButtonGroup>
               <Button variant="outline-success" className="col-md-12 text-right" onClick={(e)=>approve(e,item.id)} ><MdOutlineDone/></Button>
-              <Button variant="outline-danger" className="col-md-12 text-right" ><MdCancel/></Button>
+              <Button variant="outline-danger" className="col-md-12 text-right" onClick={(e)=>disapprove_order(e,item.id)}><MdCancel/></Button>
             </ButtonGroup>
           </Col>
           </Row>
@@ -437,9 +396,9 @@ const [done_id, setdone_id] = useState("");
 
         <br/>
 
-<Button variant="primary" onClick={(e)=>setreport(true)}>Get Report</Button>
+{/* <Button variant="primary" onClick={(e)=>setreport(true)}>Get Report</Button> */}
 
-
+{/* 
 {
   report ? 
   <Stack gap={3} className="p-2"> 
@@ -456,7 +415,7 @@ const [done_id, setdone_id] = useState("");
 			
 				</div>
 				</Stack> :""
-}
+} */}
 
                </Accordion>
 }
