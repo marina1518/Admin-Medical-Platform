@@ -13,7 +13,9 @@ case "announcments" :
 case "appointments" :
     return "appointments"  ;  
 case "orders" :
-    return "orders"  ;          
+    return "orders"  ;   
+case "info" :
+    return "info"  ;            
 default :
      return state ;
 }

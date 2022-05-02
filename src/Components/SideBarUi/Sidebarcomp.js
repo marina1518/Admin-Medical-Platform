@@ -18,7 +18,7 @@ import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
 //import { blueGrey } from "@material-ui/core/colors";
 
 import {useSelector,useDispatch} from 'react-redux'
-import { hospitals,clinics,announcments,pharmacies,chart,appointments, orders } from '../../actions'
+import { hospitals,clinics,announcments,pharmacies,chart,appointments, orders, info } from '../../actions'
 
 export default function Sidebarcomp(props) {
     const dispatch = useDispatch();
@@ -79,7 +79,11 @@ console.log(token)
         }
       { props.page === "app" &&
         <div className="sidebar-links">
-          
+
+          <li onClick={()=>{dispatch(info())}}>
+            <i > <AnnouncementIcon htmlColor='#06a3da' /></i>
+            {compact ? "" : <span> Personnal Info</span>}
+          </li>
           <li onClick={()=>{dispatch(chart())}}>
             <i > <DashboardIcon htmlColor='#06a3da' />
                 </i>

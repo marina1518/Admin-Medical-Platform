@@ -14,6 +14,7 @@ import Announcemts from '../../Components/AdminApp/Announcments/Announcments';
 import Sidebarcomp from '../../Components/SideBarUi/Sidebarcomp';
 import AppAppointments from '../../Components/AdminApp/Appointments/AppAppointments';
 import AppOrders from '../../Components/AdminApp/Orders/AppOrders';
+import Info from '../../Components/AdminApp/PersonalInfo/Info';
 function AppAdmin() {
   const chosencomp = useSelector(state => state.sidebarcomp)
    console.log(chosencomp);
@@ -38,6 +39,7 @@ console.log(token)
         { (chosencomp==='announcments') && <Announcemts/>}
         { (chosencomp==='appointments') && <AppAppointments/>}
         { (chosencomp==='orders') && <AppOrders/>}
+        { (chosencomp==='info') && <Info/>}
          </div>
          </div>
          </main>
