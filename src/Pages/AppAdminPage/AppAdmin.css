@@ -5,3 +5,17 @@
   //height: calc(100vh-100);
   marign-top: 500px;
 }*/
+.main-container {
+  display: grid;
+  grid-template-columns: min-content 1fr;
+  min-height: 100vh;
+  /* background-color: #f6f6f693; */
+  /* background-color: white; */
+  color: black;
+  font-family: "Roboto", sans-serif;
+  /* background-color: #e2e8f0; */
+}
+
+.profile-container {
+  margin: 0rem;
+}

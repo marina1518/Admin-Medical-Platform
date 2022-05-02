@@ -10,6 +10,10 @@ case "clinics" :
     return "clinics"   ;
 case "announcments" :
     return "announcments"  ;     
+case "appointments" :
+    return "appointments"  ;  
+case "orders" :
+    return "orders"  ;          
 default :
      return state ;
 }

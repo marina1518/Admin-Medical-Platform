@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 
 export default function AddAnnouncment(props) {
 
-         const token = useSelector(state => state.auth) //state of token 
+         const token = JSON.parse(useSelector(state => state.auth)) //state of token 
      const [FormValues, setFormvalues ] = useState({});
     const [Formerrors, setFormerrors ] = useState({});
     const [issubmit, setissubmit ] = useState(false);

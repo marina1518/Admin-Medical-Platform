@@ -19,16 +19,18 @@ const Get_Hospitals_Api = async ()=>{
  try {
         const res = await axios.get('https://future-medical.herokuapp.com/hospitals')
         const data = await res.data;
+        let i = 1;
         data.forEach((x) => {
                 console.log(x.name)
                 hospital.Hospitalname = x.name;
-                hospital.id =  x.admin.email;
+                hospital.id =  i;
                 hospital.number = x.telephone[0];
                 hospital.Admin = x.admin.username;
                 hospital.Email = x.admin.email;
                 hospital.Location = x.address;
                 hospitals_list.push(hospital);
                 hospital={}
+                ++i;
           });
         setdata(hospitals_list);  
     } 
@@ -119,34 +121,40 @@ const Get_Hospitals_Api = async ()=>{
      setdata(data.filter((item) => item.id !== id)) //DELETE STATIC
   }
   const columns = [
+      {
+    field: 'id',
+    headerName: 'Number',
+    width: 170,
+    
+  },
   {
     field: 'Hospitalname',
     headerName: 'Hospital Name',
     width: 220,
-    editable: true,
+    
   },
   {
     field: 'number',
     headerName: 'Contact Number',
     width: 190,
-    editable: true,
+   
   },
   {
     field: 'Admin',
     headerName: 'Admain Name',
     width: 190,
-    editable: true,
+    
   },
     {
     field: 'Email',
     headerName: 'Admain Email',
     width: 190,
-    editable: true,
+  
   },
   {
     field: 'Location',
     headerName: 'Location',
-    editable: true,
+   
     width: 190,
 
   },
@@ -157,7 +165,7 @@ const Get_Hospitals_Api = async ()=>{
       renderCell: (params) => {
         return (
           <>       
-              <Button variant="outline-primary" onClick={() => handleEdit(params.row)}>Edit</Button>
+              {/*<Button variant="outline-primary" onClick={() => handleEdit(params.row)}>Edit</Button>*/}
              <DeleteOutline htmlColor='red' style={{cursor:'pointer' , marginLeft:'30px'}} onClick={() => handleDelete(params.row.id)}
                            
             />
@@ -168,11 +176,13 @@ const Get_Hospitals_Api = async ()=>{
 ];
 
   return (
-    <div style={{ height: '75%', width: '100%' }}>
+        <div>
+     <div style={{ height: 540, width: '90%' , margin: '1rem 2rem' ,marginBottom:'60px' }}>
     {viewedit && viewadd && <Table rows={data} columns={columns}></Table>}
     {viewedit && viewadd &&<Button variant="primary" onClick={()=>{setadd(false)}} style={{margin:'15px'}}>Add Hospital</Button>  }
     {!viewedit && <EditHospitals editdata={editdata} changeedit={changeedit} goback={goback}/>}
     {!viewadd &&  <AddHospital changeadd={changeadd} goback={goback} />} 
+    </div>
     </div>
   );
 }
