@@ -1,6 +1,6 @@
 import React , {useState, useEffect} from "react";
-import './profile.css';
-import { Alert ,Button,ButtonGroup,ListGroup, Stack , Table} from "react-bootstrap";
+//import './profile.css';
+import { Alert ,Button,ButtonGroup,ListGroup, Stack , Table,Card, Row, Col} from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import EditIcon from '@material-ui/icons/Edit';
 import CancelIcon from '@material-ui/icons/Cancel';
@@ -17,16 +17,78 @@ import { useSelector, useDispatch } from "react-redux";
 import {GiNotebook} from 'react-icons/gi';
 import { useLocation } from 'react-router-dom';
 import { signin } from "../../actions";
-
+import SideBarUI from "../../Components/SideBarUI/SideBarUI";
+import "./profileui.css";
+import { blueGrey } from "@material-ui/core/colors";
+import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
+import { storage } from '../../Firebase';
 
 const DoctorProfile =()=>{
+  const dispatch = useDispatch();  
+
+  const [showinfo, setShowinfo] = useState(false);
+  const [showreviews, setShowReviews] = useState(false);
+  const [showAppointment, setShowAppointment] = useState(false);
+  const [showtimetable, setshowTimetable] = useState(false);
   
-  const location = useLocation();
+
+  const sideBarhandler = (btn) => {
+    if (btn === "info") {
+      setShowinfo(true);
+      setShowReviews(false);
+      setShowAppointment(false);
+      setshowTimetable(false);
+      
+    } else if (btn === "reviews") {
+      setShowinfo(false);
+      setShowReviews(true);
+      setShowAppointment(false);
+      setshowTimetable(false);
+     
+    } else if (btn === "appointment") {
+      setShowinfo(false);
+      setShowReviews(false);
+      setShowAppointment(true);
+      setshowTimetable(false);
+     
+    }
+    else if (btn === "timetable") {
+      
+      setShowinfo(false);
+      setShowReviews(false);
+      setShowAppointment(false);
+      setshowTimetable(true);
+     
+    }
+    
+  };
+
+  const [compact, setCompact] = useState(false);
+
+  const compacthandler = () => {
+    setCompact(!compact);
+  };
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 1065) {
+        setCompact(true);
+      } else if (window.innerWidth > 1065) {
+        setCompact(false);
+      }
+    };
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+
+const location = useLocation();
   const [Docid, setdoctorid] = useState(location.state ? location.state : "");
   console.log(Docid);
   const token = JSON.parse(useSelector(state => state.auth));
   console.log(token);
-  const dispatch = useDispatch();
+  
 
   const config = {headers: {'Authorization': `Bearer ${token.token}`}};
 
@@ -118,94 +180,368 @@ const DoctorProfile =()=>{
     dispatch(signin(token_copy));  //update the state
     }
 
+    
+  var meetings=[];
+  const current = new Date();
+  let state;
+  for(var i=0;i<token.meetings.length;i++)
+  {
+    const day = (token.meetings[i].Date).split('-');
+    if(parseInt(day[2])<current.getFullYear()) state = 'Done'; //year check
+    else if (parseInt(day[2])>current.getFullYear()) state = 'Pending'; //next year
+    else if ((parseInt(day[1])<current.getMonth()+1) && (parseInt(day[0])<current.getDate()) ) state = 'Done'; //month check
+    else if ((parseInt(day[1])===current.getMonth()+1) && (parseInt(day[0])<current.getDate()) ) state = 'Done'; //month check
+    else if ((parseInt(day[1])===current.getMonth()+1) && (parseInt(day[0])===current.getDate()) && (parseInt(day[2])===current.getFullYear())) state= 'Today'; 
+    else state = 'Pending';
+    meetings.push({id:i, patient:token.meetings[i].user.username, slot:token.meetings[i].slot, date:token.meetings[i].Date, state:state})
+ 
+  }
+
 
 
     //edit
-    let user_data={};
-    let user_data2={};
-    const [clinic_add, setclinic] = useState(null);
-    const [clinic_name,setclinic_name] = useState(null);
-    const [spec, setspec] = useState(null);
-    const [hos, sethosp] = useState(null);
-    const [uni, setuni] = useState(null);
+    const Edit_personal_info = async (info)=>{
+      try {
+             const res = await axios.patch('https://future-medical.herokuapp.com/doctor/edit/info' ,info,config)
+              alert(res.data);
+             console.log(res.data);
+           
+         } 
+         catch (err) {
+             console.error(err);
+         }
+     }
+
+     const Edit_profile_pic = async (url)=>{
+      try {
+             const res = await axios.patch('https://future-medical.herokuapp.com/doctor/edit/info' ,{profilePic:url},config)
+              alert(res.data);
+             console.log(res.data);
+           
+         } 
+         catch (err) {
+             console.error(err);
+         }
+     }
+
+  
+    
+    const [username, setusername] = useState(null);
     const [gender, setGender] = useState(null);
     const [date, setDob] = useState(null);
-    const [c_ph, setc_ph] = useState(null);
-    const [p_ph, setp_ph] = useState(null);
+    const [phone, setphone] = useState(null);
+    const [bio2, setbio] = useState(null);
     //const [history, setHistory] = useState(null);
    const [edit,setEdit]=useState(false);
  
   const [edit_photo,setEdit_photo]=useState(false);
 
-  const [edit_data,seteditdata]=useState(user_data2);
+  //const [edit_data,seteditdata]=useState(to);
  
  
-   const editted = {...user_data2};
-  
+   const editted = {};
+  var Edit_data={};
    const setdata=()=>{
-       
-        editted.clinic_add=clinic_add;
-        editted.clinic_name=clinic_name;
-        editted.edu=spec;
+        editted.username=username;
         editted.gender=gender;
-        editted.name_hospital=hos;
-        editted.university=uni;
+        editted.bio=bio2;
         editted.date=date;
-        editted.clinic_phone=c_ph;
-        editted.personal_phone=p_ph;
-        
+        editted.phone=phone;
        
         
-        if (editted.clinic_add!==null) user_data.clinic_add=editted.clinic_add;
-        if (editted.edu!==null) user_data.edu=editted.edu;
-        if (editted.date!==null) user_data.date=editted.date;
-        if (editted.gender!==null) user_data.gender=editted.gender;
-        if (editted.name_hospital!==null) user_data.name_hospital=editted.name_hospital;
-        if (editted.university!==null) user_data.university=editted.university;
-        if (editted.clinic_phone!==null) user_data.clinic_phone=editted.clinic_phone;
-        if (editted.personal_phone!==null) user_data.personal_phone=editted.personal_phone;
-        console.log(user_data);
-        console.log(editted);
-        //edit=false;
-        seteditdata(user_data); //edit in database
+    if (editted.user_name !== null) {
+      Edit_data.username=editted.user_name; 
+      token_copy.username = editted.user_name;
+    }
+    if (editted.bio !== null) {
+      Edit_data.bio=editted.bio; //user_data.blood = editted.blood;
+      token_copy.bio = editted.bio;
+     
+    }
+    if (editted.date !== null)  
+    {Edit_data.dateOfBirth=editted.date; //user_data.date = editted.date;
+    token_copy.dateOfBirth=editted.date;
+    
+  }
+    if (editted.gender !== null)
+    { Edit_data.gender=editted.gender; //user_data.gender = editted.gender;
+    token_copy.gender=editted.gender;
+    
+    }
+    if (editted.phone !== null)
+    { Edit_data.telephone=editted.phone; //user_data.gender = editted.gender;
+    token_copy.telephone.push(editted.phone);
+    
+    }
+    console.log(Edit_data);
+    dispatch(signin(token_copy));
+    Edit_personal_info(Edit_data);
+    Edit_data={};
         setEdit(false);
    }
+   const [temp,edit_pic_temp]=useState("");
+   const edit_pic =  (file) =>{
+    if (!file) return
+    console.log(file)
+    console.log(file.name)
+    const storageRef = ref(storage,`/files/${file.name}`);
+    const uploadTask = uploadBytesResumable(storageRef,file);
+     uploadTask.on("state_changed",()=>{
+        getDownloadURL(uploadTask.snapshot.ref).then((url)=>{
+            console.log(url); // saved in database
+          Edit_profile_pic(url);
+           token_copy.profilePic=url;
+           dispatch(signin(token_copy));
+        }).catch((err)=>{console.log(err)})
+    })
+    }
 
-    return(
 
-        <div className="student-profile py-4">
-  <div className="container">
-    <div className="row">
-      <div className="col-lg-4">
-        <div className="card shadow-sm">
-             
-          <div className="card-header bg-transparent text-center">
 
-           
-           <Avatar style={{ cursor: "pointer"}} className="profile_img" src={token.profilePic} onClick={(e)=>{setEdit_photo(true)}}/>
-           
-                     
-           {edit_photo ? <input type="file"></input>:""}
-          
-          
-            <h3>Dr {token.username}</h3>
-          </div>
-          <div className="card-body">
-            <p className="mb-0"><strong className="pr-1">Email: </strong>{token.email}</p>
+  return (
+    <div className="main-container">
+      <SideBarUI compact={compact} oncompact={compacthandler}>
+        <div>
+          <div className="image-container">
+            <Avatar
+              className="profile_img"
+              src={token.profilePic}
+              sx={{ width: 50, height: 50, bgcolor: blueGrey[400] }}
+            />
+            
+              <h3>{token.username}</h3>
             
           </div>
           </div>
+        <div className="sidebar-links">
+          {/* <ul className="sidebar-links"> */}
+          <li onClick={() => sideBarhandler("info")}>
+            <i class="bi bi-info-circle-fill"></i>
+            {compact ? "" : <span> Personnal Info</span>}
+          </li>
+          <li onClick={() => sideBarhandler("reviews")}>
+            <i class="bi bi-chat-left-text-fill"></i>
+            {compact ? "" : <span> Reviews</span>}
+          </li>
+          <li onClick={() => sideBarhandler("appointment")}>
+            <i class="bi bi-clock-fill"></i>
+            {compact ? "" : <span> Appointments</span>}
+          </li>
+          <li onClick={() => sideBarhandler("timetable")}>
+          <i class="bi bi-bandaid-fill"></i>
+            {compact ? "" :  <span> Timetable</span>}
+          </li>
+        </div>
+      </SideBarUI>
+      <main>
+        <div className="profile-container">
+          {showinfo ? (
+            <div className="card">
+              <div className="card-header bg-transparent">
+                <h3 className="mb-0">
+                  <BsInfoCircleFill /> Personal Information
+                   
+                    <EditIcon
+                      style={{ cursor: "pointer" }}
+                      onClick={(e) => setEdit(true)}
+                    ></EditIcon>
+                  
+                </h3>
+               
+              </div>
+              <div className="card-body pt-0">
+                <div className="row personnal-image">
+                  <Avatar
+                    className="profile_img"
+                    src={token.profilePic}
+                    onClick={(e) => setEdit_photo(!edit_photo)}
+                    sx={{ width: 56, height: 56, bgcolor: blueGrey[400] }}
+                  />
+                  {edit_photo ? (
+                    <>
+                    <input className="edit-photo" type="file"  onChange={(e)=>edit_pic_temp(e.target.files[0])}></input>
+                   
+                      <ButtonGroup>
+                        <Button
+                          variant="outline-success"
+                          className="col-md-12 text-right"
+                          onClick={(e)=>{edit_pic(temp);setEdit_photo(false);}}
+                        >
+                          Submit
+                        </Button>
+                        <Button
+                          variant="outline-danger"
+                          className="col-md-12 text-right"
+                          onClick={(e) => setEdit_photo(false)}
+                        >
+                          Cancel
+                        </Button>
+                      </ButtonGroup>
+                      </>
+                  ) : (
+                    ""
+                  )}
+                  {edit ? 
+                  <input
+                  style={{ cursor: "pointer" }}
+                  placeholder={token.username}
+                  type="text"
+                  onChange={(e) => setusername(e.target.value)}
+                ></input>
+               : 
+                <h3 style={{textAlign:'center'}}>{token.username}</h3>
+                }
+                   
+                </div>
+                <div class="row mt-3">
+                  <div class="col-sm-3">
+                    <h6 class="mb-0">Email</h6>
+                  </div>
+                  <div class="col-sm-9 text-secondary">                     
+                  {token.email} 
+                  </div>
+                </div>
+                {/* <hr id="profile-hr" />
+                <div class="row mt-3">
+                  <div class="col-sm-3">
+                    <h6 class="mb-0">Address</h6>
+                  </div>
+                  <div class="col-sm-9 text-secondary">
+                    {edit ? (
+                      <input
+                        placeholder={token.address}
+                        onChange={(e) => setadd(e.target.value)}
+                      ></input>
+                    ) : (
+                      token.address
+                    )}
+                  </div>
+                </div> */}
+                <hr id="profile-hr" />
+                <div class="row mt-3">
+                  <div class="col-sm-3">
+                    <h6 class="mb-0">University</h6>
+                  </div>
+                  <div class="col-sm-9 text-secondary">
+                  {token.university}
+                  </div>
+                </div>
+                <hr id="profile-hr" />
+                <div class="row mt-3">
+                  <div class="col-sm-3">
+                    <h6 class="mb-0">Specialization</h6>
+                  </div>
+                  <div class="col-sm-9 text-secondary">
+                  {token.specialization}
+                  </div>
+                </div>
+                <hr id="profile-hr" />
+                <div class="row mt-3">
+                  <div class="col-sm-3">
+                    <h6 class="mb-0">
+                      
+                    {token.entity_id.flag === 'H' && "Hospital	Name"}
+                {token.entity_id.flag === 'C' && "Clinic	Name"}
+                    </h6>
+                  </div>
+                  <div class="col-sm-9 text-secondary">
+                  {token.entity_id.name}
+                  </div>
+                </div>
 
-
-
-         
-
-
-
-
-
-          <br/>
-          <div styled="height: 26px"></div>
+                <hr id="profile-hr" />
+                <div class="row mt-3">
+                  <div class="col-sm-3">
+                    <h6 class="mb-0">Phone Number</h6>
+                  </div>
+                  <div class="col-sm-9 text-secondary">
+                  {edit ? <input placeholder={token.telephone[0]} type="text" onChange={(e)=>setphone(e.target.value)}></input>:
+                token.telephone.map(t=> <>{t}</>)}
+                  </div>
+                </div>
+                
+                <hr id="profile-hr" />
+                <div class="row mt-3">
+                  <div class="col-sm-3">
+                    <h6 class="mb-0">Data of Birth</h6>
+                  </div>
+                  <div class="col-sm-9 text-secondary">
+                    {edit ? (
+                      <input
+                        style={{ cursor: "pointer" }}
+                        placeholder={token.dateOfBirth.split('T')[0]}
+                        type="date"
+                        onChange={(e) => setDob(e.target.value)}
+                      ></input>
+                    ) : (
+                      token.dateOfBirth.split('T')[0]
+                    )}
+                  </div>
+                </div>
+                <hr id="profile-hr" />
+                <div class="row mt-3">
+                  <div class="col-sm-3">
+                    <h6 class="mb-0">Gender</h6>
+                  </div>
+                  <div class="col-sm-9 text-secondary">
+                    {edit ? (
+                      <div>
+                        <input
+                          style={{ cursor: "pointer" }}
+                          type="radio"
+                          id="gender1"
+                          name="gender"
+                          value="Male"
+                          onChange={(e) => setGender(e.target.value)}
+                        />
+                        <label for="gender1"> Male</label>
+                        <br />
+                        <input
+                          style={{ cursor: "pointer" }}
+                          type="radio"
+                          id="gender2"
+                          name="gender"
+                          value="Female"
+                          onChange={(e) => setGender(e.target.value)}
+                        ></input>
+                        <label for="gender2"> Female</label>
+                      </div>
+                    ) : (
+                      token.gender
+                    )}
+                  </div>
+                </div>
+              
+               
+                {edit ? (
+                  <ButtonGroup>
+                    <Button
+                      variant="outline-success"
+                      className="col-md-12 text-right"
+                      onClick={setdata}
+                    >
+                      Submit
+                    </Button>
+                    <Button
+                      variant="outline-danger"
+                      className="col-md-12 text-right"
+                      onClick={(e) => setEdit(false)}
+                    >
+                      Cancel
+                    </Button>
+                  </ButtonGroup>
+                ) : (
+                  ""
+                )}
+                {/* {edit ? <Button variant="outline-danger" className="col-md-12 text-right" onClick={(e)=>setEdit(false)}>Cancel</Button>:""} */}
+              </div>
+            </div>
+          ) : (
+            ""
+          )}
+          {showreviews ? 
+          
+          
           <div className="card shadow-sm">
              
              <div className="card-header bg-transparent">
@@ -223,257 +559,152 @@ const DoctorProfile =()=>{
                   </ListGroup>
                     ))
              }
-           
-              
-              
-
 </div>
 
 
         </div>
-      </div>
      
+          : 
+            ""
+          }
+        </div>
+        {showAppointment ? (
+          <div className="card">
+            <div className="card-header bg-transparent border-0">
+              <h3 className="mb-0">
+                <AiFillClockCircle /> Appointments
+              </h3>
+            </div>
+            <div className="card-body pt-0">
+              <div>
+                <Table responsive="sm">
+                  <thead>
+                    <tr>
+                      <th width="30%">Date</th>
+                      <th width="30%">Time</th>
+                      <th width="30%">Patient Name</th>
 
-      <br/>
-      <div className="col-lg-8">
-        <div className="card shadow-sm">
+                      <th width="30%">State</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {
+                      meetings.lenght === 0 ? "":
+                      <>
+                      {meetings.map((item) => (
+                        <tr key={item.id}>
+                          <td width="33%">{item.date}</td>
+                          <td width="33%">{item.slot}</td>
+                          <td width="33%">{item.patient}</td>
+                          <td width="33%">{item.state}</td>
+                          </tr>
+                      ))}
+                      </>
+                    }
+                    
+                  </tbody>
+                </Table>
+              </div>
+            </div>
+          </div>
+        ) : (
+          ""
+        )}
+
+
+
+{showtimetable ? 
+          <div className="card shadow-sm">
           <div className="card-header bg-transparent border-0">
-            <h3 className="mb-0"><BsInfoCircleFill /> Personal Information 
             
-              <EditIcon style={{ cursor: "pointer"}} onClick={(e)=>setEdit(true)}></EditIcon>
-            
-            </h3>  
-            {/* <Button variant="outline-secondary">Secondary</Button> 
-            <svg data-testid="EditIcon"></svg>
-            */}
-            
+            <h3 className="mb-0"><AiFillClockCircle /> Set Timetable  <button onClick={(e)=>setadd(1)}>  <MdAdd/></button>  </h3>
           </div>
           <div className="card-body pt-0">
-            <table className="table table-bordered">
-              <tr>
-                <th width="30%">Specialization   </th>
-                <td width="2%">:</td>
-                <td>{edit ? <input type="text" placeholder={token.specialization} onChange={(e)=>setspec(e.target.value)}></input>:token.specialization}</td>
-              </tr>
-              <tr>
-                <th width="30%">University	</th>
-                <td width="2%">:</td>
-                <td>{edit ? <input placeholder={edit_data.university} type="text" onChange={(e)=>setuni(e.target.value)}></input>:edit_data.university}</td>
-              </tr>
-              <tr>
-                {token.entity_id.flag === 'H' && <th width="30%">Hospital	Name</th>}
-                {token.entity_id.flag === 'C' && <th width="30%">Clinic	Name</th>}
-                <td width="2%">:</td>
-                <td>{edit ? <input placeholder={token.entity_id.name} type="text" onChange={(e)=>sethosp(e.target.value)}></input>:token.entity_id.name}</td>
-              </tr>
-              
-            
-                <tr>
-                <th width="30%">Personal Phone Number	</th>
-                <td width="2%">:</td>
-                <td>{edit ? <input placeholder={token.telephone[0]} type="text" onChange={(e)=>setp_ph(e.target.value)}></input>:token.telephone[0]}</td>
-              </tr>
-              <tr>
-                <th width="30%">Date of Birth	</th>
-                <td width="2%">:</td>
-                <td>{edit ? <input style={{ cursor: "pointer"}} placeholder={edit_data.date} type="date" onChange={(e)=>setDob(e.target.value)}></input>:edit_data.date}</td>
-              </tr>
-              <tr>
-                <th width="30%">Gender</th>
-                <td width="2%">:</td>
-                <td>{edit ? <div>
-                    <input style={{ cursor: "pointer"}} type="radio" id="gender1" name="gender" value="Male" onChange={(e)=>setGender(e.target.value)} />
-                    <label for="gender1"> Male</label><br/>
-                    <input style={{ cursor: "pointer"}} type="radio" id="gender2" name="gender" value="Female"  onChange={(e)=>setGender(e.target.value)}></input>
-                    <label for="gender2"> Female</label>
-                </div>:token.gender}</td>
-              </tr>
-              
-              
-              <br/>
-              
-            </table>
-            {edit ? 
-              <ButtonGroup>
-              <Button variant="outline-success" className="col-md-12 text-right" onClick={setdata}>Submit</Button>
-              <Button variant="outline-danger" className="col-md-12 text-right" onClick={(e)=>setEdit(false)}>Cancel</Button>
-              </ButtonGroup>
-              :""} 
-              {/* {edit ? <Button variant="outline-danger" className="col-md-12 text-right" onClick={(e)=>setEdit(false)}>Cancel</Button>:""} */}
+          <div>
+ 
+ 
+          {
+                 add === 1 ? 
+                 <ListGroup variant="flush" >
+                 <div>
+                 <ListGroup.Item > 
+                 <tr key="0">
+                    <td width="33%"><div>
+                     <select onChange={(e)=>setday(e.target.value)} className="ll">
+                         <option value="Sunday">Sunday</option>
+                         <option value="Monday">Monday</option>
+                         <option value="Tuesday">Tuesday</option>
+                         <option value="Wednesday">Wednesday</option>
+                         <option value="Thursday">Thursday</option>
+                         <option value="Friday">Friday</option>
+                         <option value="Saturday">Saturday</option>
+                        
+                     </select>
+                 </div></td>
+                    <td width="33%"><button onClick={inc1}><MdAdd/></button><label>{from}</label><button onClick={dec1}><RiSubtractLine/></button></td>
+                    <td width="33%"><button onClick={inc2}><MdAdd/></button><label>{to}</label><button onClick={dec2}><RiSubtractLine/></button></td>
+                    <td width="33%">
+                    <ButtonGroup>
+               <Button variant="outline-success" className="col-md-12 text-right" onClick={(e)=>{setadd(0); add_slot()}}><MdOutlineDone/></Button>
+               <Button variant="outline-danger" className="col-md-12 text-right" onClick={(e)=>setadd(0)} ><MdCancel/></Button>
+               </ButtonGroup>
+                    </td>
+                    </tr>
+                 </ListGroup.Item>
+                 </div>
+                 <br/>
              
+            
+           </ListGroup>
+ 
+               
+              : ""
+               }
+ 
+         
+ 
+   <Table responsive="sm">
+     <thead>
+     <tr>
+          <th width="35%">Day</th>
+                {/* <th width="30%">Date</th> */}
+                <th width="33%">From</th>
+                <th width="33%">To</th> </tr>
+     </thead>
+     <tbody>
+       {
+         token.timetable.length ===0 ?  
+         <Alert  variant="danger">
+        Please enter your weekly timetable.
+       </Alert> :""
+       }
+     {
+                  token.timetable.map((item)=>
+                    <tr key={item._id}>
+                    <td width="33%">{item.day}</td>
+                    <td width="33%">{item.from}</td>
+                    <td width="33%">{item.to}</td>
+                     <td width="33%"> <Button variant="outline-danger" ><CancelIcon/></Button></td>
+                  </tr>
+                  )
+              }
+       
+     </tbody>
+   </Table>
+   </div>
+  
           </div>
         </div>
-       
-         <div>
-                              <br/>
-                              
-                              
-                              <div styled="height: 26px"></div>
-                              
-                            <div className="card shadow-sm">
-                              <div className="card-header bg-transparent border-0">
-                                
-                                <h3 className="mb-0"><AiFillClockCircle /> Appointments</h3>
-                              </div>
-                              <div className="card-body pt-0">
+                           
 
 
+         : 
+          ""
+        }
 
-                              <div>
-
-
-
-
-
-
-                      <Table responsive="sm">
-                      <thead>
-                      <tr>
-                                    <th width="30%">Date</th>
-                                    <th width="30%">Time</th>
-                                    <th width="30%">Patient Name</th>
-                                    
-                                    <th width="30%">State</th>
-                                    
-                                  </tr>
-                      </thead>
-                      <tbody>
-
-                      {
-                                      token.meetings.map((item)=>
-                                        <tr key={item.id}>
-                                        <td width="33%">{item.Date}</td>
-                                        <td width="33%">{item.slot}</td>
-                                        <td width="33%">{item.user}</td>
-                                        <td width="33%">{item.status}</td>
-                                        {/* <td width="33%">{item.status==="pending" ? 
-                                          <Button variant="outline-danger" ><CancelIcon/></Button>
-                                       
-                                        
-                                        :item.state==="today" ? 
-                                        <Alert variant="danger" >
-                                        Today
-                                      </Alert>
-                                        :"Done"}</td> */}
-                                        
-                                      </tr>
-                                      )
-                                  }
-
-                      </tbody>
-                      </Table>
-                      </div>
-
-                              </div>
-                            </div> 
-
-
-
-                            
-       <br/>
-         
-        
-         <div styled="height: 26px"></div>
-         
-       <div className="card shadow-sm">
-         <div className="card-header bg-transparent border-0">
-           
-           <h3 className="mb-0"><AiFillClockCircle /> Set Timetable  <button onClick={(e)=>setadd(1)}>  <MdAdd/></button>  </h3>
-         </div>
-         <div className="card-body pt-0">
-         <div>
-
-
-         {
-                add === 1 ? 
-                <ListGroup variant="flush" >
-                <div>
-                <ListGroup.Item > 
-                <tr key="0">
-                   <td width="33%"><div>
-                    <select onChange={(e)=>setday(e.target.value)} className="ll">
-                        <option value="Sunday">Sunday</option>
-                        <option value="Monday">Monday</option>
-                        <option value="Tuesday">Tuesday</option>
-                        <option value="Wednesday">Wednesday</option>
-                        <option value="Thursday">Thursday</option>
-                        <option value="Friday">Friday</option>
-                        <option value="Saturday">Saturday</option>
-                       
-                    </select>
-                </div></td>
-                   <td width="33%"><button onClick={inc1}><MdAdd/></button><label>{from}</label><button onClick={dec1}><RiSubtractLine/></button></td>
-                   <td width="33%"><button onClick={inc2}><MdAdd/></button><label>{to}</label><button onClick={dec2}><RiSubtractLine/></button></td>
-                   <td width="33%">
-                   <ButtonGroup>
-              <Button variant="outline-success" className="col-md-12 text-right" onClick={(e)=>{setadd(0); add_slot()}}><MdOutlineDone/></Button>
-              <Button variant="outline-danger" className="col-md-12 text-right" onClick={(e)=>setadd(0)} ><MdCancel/></Button>
-              </ButtonGroup>
-                   </td>
-                   </tr>
-                </ListGroup.Item>
-                </div>
-                <br/>
-            
-           
-          </ListGroup>
-
-              
-             : ""
-              }
-
-        
-
-  <Table responsive="sm">
-    <thead>
-    <tr>
-         <th width="35%">Day</th>
-               {/* <th width="30%">Date</th> */}
-               <th width="33%">From</th>
-               <th width="33%">To</th> </tr>
-    </thead>
-    <tbody>
-      {
-        token.timetable.length ===0 ?  
-        <Alert  variant="danger">
-       Please enter your weekly timetable.
-      </Alert> :""
-      }
-    {
-                 token.timetable.map((item)=>
-                   <tr key={item.id}>
-                   <td width="33%">{item.day}</td>
-                   <td width="33%">{item.from}</td>
-                   <td width="33%">{item.to}</td>
-                    <td width="33%"> <Button variant="outline-danger" ><CancelIcon/></Button></td>
-                   {/* <td width="33%">{item.state==="pending" ? <Button variant="outline-danger" onClick={(e)=>remove(e,item.id)}><CancelIcon/></Button>
-                   
-                   :item.state==="today" ? 
-                   <Alert variant="danger" >
-                  Today
-                 </Alert>
-                   :"Done"}</td> */}
-                  
-                 </tr>
-                 )
-             }
-      
-    </tbody>
-  </Table>
-  </div>
- 
-         </div>
-       </div>
-                            </div>
-                            
-
- 
-
-      </div>
+      </main>
     </div>
-  </div>
-</div>
+  );
+};
 
-    )
-}
 export default DoctorProfile;
