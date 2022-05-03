@@ -11,15 +11,23 @@ import Hospitals from '../../Components/AdminApp/Hospitals/Hospitals';
 import Clinics from '../../Components/AdminApp/Clinics/Clinics';
 import Pharmacies from '../../Components/AdminApp/Pharmacies/Pharmacies';
 import Announcemts from '../../Components/AdminApp/Announcments/Announcments';
+import Sidebarcomp from '../../Components/SideBarUi/Sidebarcomp';
+import AppAppointments from '../../Components/AdminApp/Appointments/AppAppointments';
+import AppOrders from '../../Components/AdminApp/Orders/AppOrders';
+import Info from '../../Components/AdminApp/PersonalInfo/Info';
 function AppAdmin() {
   const chosencomp = useSelector(state => state.sidebarcomp)
    console.log(chosencomp);
 const token = JSON.parse(useSelector(state => state.auth)); //state of token 
 console.log(token)
   return (
-   
-         <div  style={{display:'flex' , margin:'0'}}>       
-        <Slidebar/>
+   <>
+         <div className="main-container">
+
+          
+          {<Sidebarcomp page="app"/>}
+          <main>
+        <div className="profile-container">
         <div className='otherpages'>
            { (chosencomp==='chart') && <Piechart/>}
           { (chosencomp==='chart') && <Chart data={data} dataKey={"Active Hospital profit"} title={"Hospital Analytics"}/>}
@@ -29,9 +37,14 @@ console.log(token)
         { (chosencomp==='clinics') && <Clinics/>}
         { (chosencomp==='pharmacies') && <Pharmacies/>}
         { (chosencomp==='announcments') && <Announcemts/>}
+        { (chosencomp==='appointments') && <AppAppointments/>}
+        { (chosencomp==='orders') && <AppOrders/>}
+        { (chosencomp==='info') && <Info/>}
          </div>
          </div>
-   
+         </main>
+         </div>
+   </>
   )
 }
 

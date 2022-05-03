@@ -17,6 +17,16 @@ export const pharmacies = ()=>{
 export const announcments = ()=>{
     return {type : "announcments"} 
 }
+export const appointments = ()=>{
+    return {type : "appointments"} 
+}
+
+export const orders = ()=>{
+    return {type : "orders"} 
+}
+export const info = ()=>{
+    return {type : "info"} 
+}
 
 /*export const signin = (token,usertype)=>{
     return {type : "Signin" , token : token , usertype : usertype } 

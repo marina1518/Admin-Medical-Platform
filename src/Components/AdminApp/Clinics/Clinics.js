@@ -15,16 +15,18 @@ const Get_Clinics_Api = async ()=>{
  try {
         const res = await axios.get('https://future-medical.herokuapp.com/clinics')
         const data = await res.data;
+        let i = 1 ;
         data.forEach((x) => {
                 console.log(x.name)
                 clinic.clinicname = x.name; 
-                clinic.id = x.admin.email;
+                clinic.id = i;
                 clinic.number = x.telephone[0];
                 clinic.Admin = x.admin.username;
                 clinic.Email = x.admin.email;
                 clinic.Location = x.address;
                 clinics_list.push(clinic);
                 clinic={}
+                ++i;
           });
         setdata(clinics_list);  
     } 
@@ -84,36 +86,41 @@ const Get_Clinics_Api = async ()=>{
      setdata(data.filter((item) => item.id !== id)) //static delete
   }
   const columns = [
-
+    {
+    field: 'id',
+    headerName: 'Number',
+    width: 170,
+   
+  },
   {
     field: 'clinicname',
     headerName: 'Clinic Name',
     width: 220,
-    editable: true,
+    
   },
   {
     field: 'number',
     headerName: 'Contact Number',
     width: 190,
-    editable: true,
+    
   },
   {
     field: 'Admin',
     headerName: 'Admain Name',
     width: 190,
-    editable: true,
+   
   },
     {
     field: 'Email',
     headerName: 'Admain Email',
     width: 190,
-    editable: true,
+    
   },
   {
     field: 'Location',
     headerName: 'Location',
-    editable: true,
-    width: 220,
+   
+    width: 150,
 
   },
    {
@@ -123,7 +130,7 @@ const Get_Clinics_Api = async ()=>{
       renderCell: (params) => {
         return (
           <>       
-              <Button variant="outline-primary" onClick={() => handleEdit(params.row)}>Edit</Button>
+              {/*<Button variant="outline-primary" onClick={() => handleEdit(params.row)}>Edit</Button>*/}
              <DeleteOutline htmlColor='red' style={{cursor:'pointer' , marginLeft:'30px'}} onClick={() => handleDelete(params.row.id)}
               
                         
@@ -135,11 +142,13 @@ const Get_Clinics_Api = async ()=>{
 ];
 
   return (
-    <div style={{ height: '75%', width: '100%' }}>
+    <div>
+     <div style={{ height: 540, width: '90%' , margin: '1rem 2rem' ,marginBottom:'60px' }}>
       {viewedit && viewadd &&<Table rows={data} columns={columns}></Table>}
     {viewedit && viewadd &&<Button variant="primary" onClick={()=>{setadd(false)}} style={{margin:'15px'}}>Add Clinic</Button>  }
     {!viewedit && <EditClinic editdata={editdata} changeedit={changeedit}  goback={goback}/>}
     {!viewadd && <AddClinic changeadd={changeadd}  goback={goback}/>}
+    </div>
     </div>
   );
 }

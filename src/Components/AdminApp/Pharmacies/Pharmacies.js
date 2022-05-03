@@ -17,16 +17,18 @@ const Get_Pharmacies_Api = async ()=>{
  try {
         const res = await axios.get('https://future-medical.herokuapp.com/pharmacies')
         const data = await res.data;
+        let i = 1;
         data.forEach((x) => {
                 console.log(x.name)
                 pharmacy.pharmacyname = x.name;
-                pharmacy.id = x.admin.email;
+                pharmacy.id = i;
                 pharmacy.number = x.telephone[0];
                 pharmacy.Admin = x.admin.username;
                 pharmacy.Email = x.admin.email;
                 pharmacy.Location = x.address;
                 pharmacies_list.push(pharmacy);
                 pharmacy={}
+                ++i;
           });
         setdata(pharmacies_list);  
     } 
@@ -116,36 +118,41 @@ const Get_Pharmacies_Api = async ()=>{
      setdata(data.filter((item) => item.id !== id)) //STATIC DELETE
   }
   const columns = [
-
+  {
+    field: 'id',
+    headerName: 'Number',
+    width: 220,
+    
+  },
   {
     field: 'pharmacyname',
     headerName: 'Pharmacy Name',
     width: 220,
-    editable: true,
+    
   },
   {
     field: 'number',
     headerName: 'Contact Number',
     width: 190,
-    editable: true,
+   
   },
   {
     field: 'Admin',
     headerName: 'Admain Name',
     width: 190,
-    editable: true,
+   
   },
     {
     field: 'Email',
     headerName: 'Admain Email',
     width: 190,
-    editable: true,
+   
   },
   {
     field: 'Location',
     headerName: 'Location',
-    editable: true,
-    width: 220,
+  
+    width: 190,
 
   },
    {
@@ -155,7 +162,7 @@ const Get_Pharmacies_Api = async ()=>{
       renderCell: (params) => {
         return (
           <>       
-              <Button variant="outline-primary" onClick={() => handleEdit(params.row)}>Edit</Button>
+              {/*<Button variant="outline-primary" onClick={() => handleEdit(params.row)}>Edit</Button>*/}
              <DeleteOutline htmlColor='red' style={{cursor:'pointer' , marginLeft:'30px'}} onClick={() => handleDelete(params.row.id)}
               
                         
@@ -167,11 +174,13 @@ const Get_Pharmacies_Api = async ()=>{
 ];
 
   return (
-    <div style={{ height: '75%', width: '100%' }}>
+    <div>
+     <div style={{ height: 540, width: '90%' , margin: '1rem 2rem' ,marginBottom:'60px' }}>
       {viewedit && viewadd && <Table rows={data} columns={columns}></Table>}
     {viewedit && viewadd &&<Button variant="primary" onClick={()=>{setadd(false)}} style={{margin:'15px'}}>Add Pharmacy</Button>  }
     {!viewedit && <EditPharmacy editdata={editdata} changeedit={changeedit} goback={goback}/>}
     {!viewadd && <AddPharmacy changeadd={changeadd}  goback={goback}/>}
+    </div>
     </div>
   );
 }

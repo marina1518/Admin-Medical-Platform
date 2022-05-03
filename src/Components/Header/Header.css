@@ -20,37 +20,10 @@ nav {
   display: flex;
   align-items: center;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-end;
   padding: 1rem;
 }
 
-.logo-image {
-  /* max-height: 31px; */
-  object-fit: cover;
-  /* padding-right: 0.5rem; */
-  height: 28px;
-}
-
-/*.logo-name {
-  font-family: "Roboto", sans-serif;
-  font-weight: bold;
-  /* font-size: 23px; */
-/* font-size: 20px; */
-/* max-width: 5rem; */
-/* line-height: 38px; */
-/* margin-left: 12px; */
-/*color: #06a3da;
-  margin-top: 5px;
-  text-decoration: none;
-  letter-spacing: 0.1rem;
-}*/
-.logo-left {
-  display: flex;
-  align-items: center;
-}
-/* .nav-toggle i {
-  color: #06a3da;
-} */
 .nav-toggle {
   font-size: 1.5rem;
   color: #06a3da;
@@ -70,14 +43,10 @@ nav {
 
   align-items: flex-end;
 }
-.links-container {
-  height: 0;
-  overflow: hidden;
-  transition: all 0.3s linear;
-}
+
 .login-container {
   height: 0;
-  margin: 0px 38%;
+  margin: 0px auto;
   overflow: hidden;
   padding: 0;
   transition: all 0.3s linear;
@@ -177,6 +146,7 @@ nav {
     align-items: center;
     justify-content: space-between;
     padding: 1rem;
+    justify-content: center;
 
     /* padding-top: 0.5rem; */
   }

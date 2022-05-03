@@ -28,12 +28,14 @@ const Get_Announcments_Api = async ()=>{
           }
         })
         const data = await res.data;
+        let i = 1;
         data.forEach((x) => {
                 announce.announcmentname = x.announce.title;
-                announce.id =  x.announce.title;
+                announce.id =  i;
                 announce.Description = x.announce.description;
                 announcments_list.push(announce);
                 announce={}
+                ++i;
           });
         setdata(announcments_list);  
     } 
@@ -41,7 +43,27 @@ const Get_Announcments_Api = async ()=>{
         console.error(err);
     }
 }
-
+const Delete_Announcments_Api = async (title,id)=>{
+ try {
+       const res = await axios.delete('https://future-medical.herokuapp.com/admin/announcement/delete', {
+  headers: {
+   'Authorization': `Bearer ${token.token}`
+      },
+       data: {
+              title: title 
+        }
+});
+      
+       
+        const res_data = await res.data;
+        console.log(res_data)
+        
+        Get_Announcments_Api(); //Call to get announcments again 
+    } 
+    catch (err) {
+        console.error(err);
+    }
+}
 
 useEffect(()=>{
   Get_Announcments_Api();
@@ -87,21 +109,31 @@ useEffect(()=>{
     
       const handleDelete = (id)=>{
         //API DELETE ANNOUNCMENT
-     setdata(data.filter((item) => item.id !== id)) //DELETE STATIC
+        console.log(id)
+        let req = data.filter((item) => item.id === id)
+        //console.log(req)
+        //console.log(req[0].announcmentname)
+        Delete_Announcments_Api(req[0].announcmentname,id);
+     
   }
   const columns = [
-
+  {
+    field: 'id',
+    headerName: 'Number',
+    width: 170,
+    
+  },
   {
     field: 'announcmentname',
     headerName: 'Announcment Name',
     width: 200,
-    editable: true,
+    
   },
   {
     field: 'Description',
     headerName: 'Description',
     width: 500,
-    editable: true,
+    
   },
   /*{
     field: 'Image',
@@ -136,17 +168,19 @@ useEffect(()=>{
 ];
 
   return (
-    <div style={{ height: '75%', width: '100%' }}>
+    <div>
+     <div style={{ height: 540, width: '90%' , margin: '1rem 2rem' ,marginBottom:'60px' }}>
       {viewedit && viewadd && <DataGrid 
         rows={data}
         disableSelectionOnClick
         columns={columns} 
         pageSize={8}
-        checkboxSelection
+        
       />}
     {viewedit && viewadd &&<Button variant="primary" onClick={()=>{setadd(false)}} style={{margin:'15px'}}>Add Announcment</Button>  }
     {!viewedit && <EditAnnouncment editdata={editdata} changeedit={changeedit} goback={goback}/>}
     {!viewadd && <AddAnnouncment changeadd={changeadd} goback={goback}/>}
+    </div>
     </div>
   );
 }

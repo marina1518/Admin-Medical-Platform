@@ -8,7 +8,7 @@ export default function Table({rows,columns}) {
         rows={rows}
         columns={columns}
         pageSize={8}
-        checkboxSelection
+        //checkboxSelection
         disableSelectionOnClick
       />   
   );

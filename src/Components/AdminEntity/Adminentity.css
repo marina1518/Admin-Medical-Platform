@@ -1,0 +1,11 @@
+.profile_img {
+  object-fit: cover;
+  margin: 10px auto;
+  border: 10px solid #ccc;
+  border-radius: 50%;
+}
+.input-form {
+  //margin: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 10px;
+}

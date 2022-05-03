@@ -14,6 +14,7 @@ import PrivateAdmin from './Components/PrivateRoutes/PrivateAdmin';
 import PrivatePharmacy from './Components/PrivateRoutes/PrivatePharmacy';
 import PrivateEntity from './Components/PrivateRoutes/PrivateEntity';
 import { useSelector, useDispatch } from "react-redux";
+import OrderImage from './Components/AdminApp/Orders/OrderImage';
 function App() {
 const token = JSON.parse(useSelector((state) => state.auth)); //state of token
   return (
@@ -25,7 +26,8 @@ const token = JSON.parse(useSelector((state) => state.auth)); //state of token
   </Routes>*/}
          <div className='body'>
       <Routes>
-        <Route path="/" element={<Login/>}> </Route>
+        {/*<Route path="/" element={<OrderImage/>}> </Route>*/}
+        {<Route path="/" element={<Login/>}> </Route>}
         <Route path="/AppAdmin" element={<PrivateAdmin><AppAdmin style={{marginTop:'200px'}}/></PrivateAdmin>}> </Route>
         <Route path="/HospitalAdmin" element={<PrivateEntity> <Adminhospital /> </PrivateEntity>}> </Route>
         {/*<Route path='/ClinicAdmin' element={<Clinic_admin />}> </Route>*/}
