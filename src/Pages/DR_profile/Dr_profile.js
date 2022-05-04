@@ -1,5 +1,4 @@
 import React , {useState, useEffect} from "react";
-//import './profile.css';
 import { Alert ,Button,ButtonGroup,ListGroup, Stack , Table,Card, Row, Col} from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import EditIcon from '@material-ui/icons/Edit';
@@ -10,19 +9,19 @@ import {BsInfoCircleFill} from 'react-icons/bs';
 //import {AiOutlineComment} from 'react-icons/bi';
 import {AiFillClockCircle,AiOutlineComment} from 'react-icons/ai';
 import {MdAdd} from 'react-icons/md';
-import {MdOutlineDoneOutline,MdOutlineDone,MdCancel} from 'react-icons/md';
+import {MdOutlineDoneOutline,MdOutlineDone,MdCancel,MdDelete} from 'react-icons/md';
 import {RiSubtractLine} from 'react-icons/ri';
 import axios from 'axios';
 import { useSelector, useDispatch } from "react-redux";
-import {GiNotebook} from 'react-icons/gi';
 import { useLocation } from 'react-router-dom';
 import { signin } from "../../actions";
-import SideBarUI from "../../Components/SideBarUi/Sidebar";
+import SideBarUI from "../../Components/SideBarUI/SideBar";
 import "./profileui.css";
 import { blueGrey } from "@material-ui/core/colors";
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import { storage } from '../../Firebase';
-
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import Time from '../../Components/inc_dec/file';
 const DoctorProfile =()=>{
   const dispatch = useDispatch();  
 
@@ -92,85 +91,12 @@ const location = useLocation();
 
   const config = {headers: {'Authorization': `Bearer ${token.token}`}};
 
-  const Set_timetable = async (data)=>{
-    try {
-          const res = await axios.patch(`https://future-medical.herokuapp.com/doctor/timetable`, data, config)
-          const data = await res.data;
-          console.log(data);
-          
-      } 
-      catch (err) {
-          console.error(err);
-      }
-
-  }
-
+  
 
    const [add,setadd] = useState(0);
    const [day, setday] = useState("");
    var [from , setfrom] =useState(0);
    var [to, setto] = useState(0);
-   
-
-   const inc1 = ()=>{
-     from+=1;
-     if (from <=24)
-     {
-      setfrom(from);
-      console.log(from)
-     }
-     else if (from === 24 || from > 24 )
-     {
-      from =24; 
-      setfrom(24);
-       
-       console.log(from)
-     }
-     
-   };
-   const inc2 = ()=>{
-    to+=1;
-    if (to <=24)
-    {
-     setto(to);
-     console.log(to)
-    }
-    else  if (to === 24 || to > 24 )
-    {
-      to =24; 
-      setto(24);
-      console.log(to)
-    }
-    
-  };
-
-  const dec1 = ()=>{
-    from-=1;
-    if (from >=0)
-    {
-     setfrom(from);
-    }
-    else if (from ===0 || from <0 )
-    {
-     from =0;
-      setfrom(0);
-    }
-    
-  };
-
-  const dec2 = ()=>{
-    to-=1;
-    if (to >=0)
-    {
-     setto(to);
-    }
-    else  if (to ===0 || to <0 )
-    {
-      to = 0;
-      setto(0);
-    }
-    
-  };
   
   var token_copy = token;
   const add_slot = ()=>{
@@ -180,6 +106,19 @@ const location = useLocation();
     dispatch(signin(token_copy));  //update the state
     }
 
+    const Set_timetable = async (slot)=>{
+      try {
+            const res = await axios.patch(`https://future-medical.herokuapp.com/doctor/timetable`, slot, config)
+            const data = await res.data;
+            console.log(data);
+            
+        } 
+        catch (err) {
+            console.error(err);
+        }
+  
+    }
+  
     
   var meetings=[];
   const current = new Date();
@@ -189,7 +128,7 @@ const location = useLocation();
     const day = (token.meetings[i].Date).split('-');
     if(parseInt(day[2])<current.getFullYear()) state = 'Done'; //year check
     else if (parseInt(day[2])>current.getFullYear()) state = 'Pending'; //next year
-    else if ((parseInt(day[1])<current.getMonth()+1) && (parseInt(day[0])<current.getDate()) ) state = 'Done'; //month check
+    else if ((parseInt(day[1])<current.getMonth()+1) ) state = 'Done'; //month check
     else if ((parseInt(day[1])===current.getMonth()+1) && (parseInt(day[0])<current.getDate()) ) state = 'Done'; //month check
     else if ((parseInt(day[1])===current.getMonth()+1) && (parseInt(day[0])===current.getDate()) && (parseInt(day[2])===current.getFullYear())) state= 'Today'; 
     else state = 'Pending';
@@ -214,7 +153,7 @@ const location = useLocation();
 
      const Edit_profile_pic = async (url)=>{
       try {
-             const res = await axios.patch('https://future-medical.herokuapp.com/doctor/edit/info' ,{profilePic:url},config)
+             const res = await axios.patch('https://future-medical.herokuapp.com/doctor/edit/photo' ,{profilePic:url},config)
               alert(res.data);
              console.log(res.data);
            
@@ -227,18 +166,14 @@ const location = useLocation();
   
     
     const [username, setusername] = useState(null);
+    const [email, setemail] = useState(null);
     const [gender, setGender] = useState(null);
     const [date, setDob] = useState(null);
-    const [phone, setphone] = useState(null);
+    const [phone, setphone] = useState("");
     const [bio2, setbio] = useState(null);
-    //const [history, setHistory] = useState(null);
    const [edit,setEdit]=useState(false);
- 
   const [edit_photo,setEdit_photo]=useState(false);
-
-  //const [edit_data,seteditdata]=useState(to);
- 
- 
+     const [ phone_error, setphone_error]=useState("");
    const editted = {};
   var Edit_data={};
    const setdata=()=>{
@@ -247,30 +182,41 @@ const location = useLocation();
         editted.bio=bio2;
         editted.date=date;
         editted.phone=phone;
+        editted.email=email;
        
         
-    if (editted.user_name !== null) {
-      Edit_data.username=editted.user_name; 
-      token_copy.username = editted.user_name;
+    if (editted.username !== null) {
+      Edit_data.username=editted.username; 
+      token_copy.username = editted.username;
     }
     if (editted.bio !== null) {
-      Edit_data.bio=editted.bio; //user_data.blood = editted.blood;
+      Edit_data.bio=editted.bio;
       token_copy.bio = editted.bio;
      
     }
+    if (editted.email !== null) {
+      Edit_data.email=editted.email;
+      token_copy.email = editted.email;
+     
+    }
     if (editted.date !== null)  
-    {Edit_data.dateOfBirth=editted.date; //user_data.date = editted.date;
+    {Edit_data.dateOfBirth=editted.date; 
     token_copy.dateOfBirth=editted.date;
     
   }
     if (editted.gender !== null)
-    { Edit_data.gender=editted.gender; //user_data.gender = editted.gender;
+    { Edit_data.gender=editted.gender; 
     token_copy.gender=editted.gender;
     
     }
     if (editted.phone !== null)
-    { Edit_data.telephone=editted.phone; //user_data.gender = editted.gender;
-    token_copy.telephone.push(editted.phone);
+    { 
+      if(editted.phone.length === 11 )
+      {Edit_data.telephone=editted.phone; 
+    token_copy.telephone.push(editted.phone);}
+    else{
+      setphone_error("invalid phone number")
+    }
     
     }
     console.log(Edit_data);
@@ -278,6 +224,7 @@ const location = useLocation();
     Edit_personal_info(Edit_data);
     Edit_data={};
         setEdit(false);
+        setphone_error("");
    }
    const [temp,edit_pic_temp]=useState("");
    const edit_pic =  (file) =>{
@@ -288,7 +235,6 @@ const location = useLocation();
     const uploadTask = uploadBytesResumable(storageRef,file);
      uploadTask.on("state_changed",()=>{
         getDownloadURL(uploadTask.snapshot.ref).then((url)=>{
-            console.log(url); // saved in database
           Edit_profile_pic(url);
            token_copy.profilePic=url;
            dispatch(signin(token_copy));
@@ -306,7 +252,7 @@ const location = useLocation();
             <Avatar
               className="profile_img"
               src={token.profilePic}
-              sx={{ width: 70, height: 70, bgcolor: blueGrey[400] }}
+              sx={{ width: 50, height: 50, bgcolor: blueGrey[400] }}
             />
             
               <h3>{token.username}</h3>
@@ -314,9 +260,8 @@ const location = useLocation();
           </div>
           </div>
         <div className="sidebar-links">
-          {/* <ul className="sidebar-links"> */}
           <li onClick={() => sideBarhandler("info")}>
-            <i class="bi bi-info-circle-fill"></i>
+          <i class="bi bi-info-circle-fill"></i>
             {compact ? "" : <span> Personnal Info</span>}
           </li>
           <li onClick={() => sideBarhandler("reviews")}>
@@ -355,7 +300,7 @@ const location = useLocation();
                     className="profile_img"
                     src={token.profilePic}
                     onClick={(e) => setEdit_photo(!edit_photo)}
-                    sx={{ width: 56, height: 56, bgcolor: blueGrey[400] }}
+                    sx={{ width: 70, height: 70, bgcolor: blueGrey[400] }}
                   />
                   {edit_photo ? (
                     <>
@@ -398,7 +343,16 @@ const location = useLocation();
                     <h6 class="mb-0">Email</h6>
                   </div>
                   <div class="col-sm-9 text-secondary">                     
-                  {token.email} 
+                  {edit ? 
+                  <input
+                  style={{ cursor: "pointer" }}
+                  placeholder={token.email}
+                  type="text"
+                  onChange={(e) => setemail(e.target.value)}
+                ></input>
+               : 
+                token.email
+                }
                   </div>
                 </div>
                 {/* <hr id="profile-hr" />
@@ -455,12 +409,17 @@ const location = useLocation();
                     <h6 class="mb-0">Phone Number</h6>
                   </div>
                   <div class="col-sm-9 text-secondary">
-                  {edit ? <input placeholder={token.telephone[0]} type="text" onChange={(e)=>setphone(e.target.value)}></input>:
+                  {edit ? <input placeholder={token.telephone[0]} type="text" onChange={(e)=>{
+                    setphone(e.target.value);
+                    if ((phone.length !== 11 && phone.length !==0 && edit)) setphone_error("invalid phone number");
+                  
+                  }}></input>:
                 token.telephone.map(t=> <>{t}</>)}
+               {(phone.length !== 11 && phone.length !==0 && edit)  ? <h6 style={{color:"red"}}>{phone_error}</h6> :"" }
                   </div>
                 </div>
                 
-                <hr id="profile-hr" />
+                {/* <hr id="profile-hr" />
                 <div class="row mt-3">
                   <div class="col-sm-3">
                     <h6 class="mb-0">Data of Birth</h6>
@@ -477,7 +436,7 @@ const location = useLocation();
                       token.dateOfBirth.split('T')[0]
                     )}
                   </div>
-                </div>
+                </div> */}
                 <hr id="profile-hr" />
                 <div class="row mt-3">
                   <div class="col-sm-3">
@@ -617,7 +576,9 @@ const location = useLocation();
           <div className="card shadow-sm">
           <div className="card-header bg-transparent border-0">
             
-            <h3 className="mb-0"><AiFillClockCircle /> Set Timetable  <button onClick={(e)=>setadd(1)}>  <MdAdd/></button>  </h3>
+            <h3 className="mb-0"><AiFillClockCircle /> Set Timetable  
+            <button style={{cursor:"pointer", borderRadius:"50%", background:"white", border:"None"}} onClick={()=>setadd(1)}><AddCircleIcon/></button>
+              </h3>
           </div>
           <div className="card-body pt-0">
           <div>
@@ -638,11 +599,10 @@ const location = useLocation();
                          <option value="Thursday">Thursday</option>
                          <option value="Friday">Friday</option>
                          <option value="Saturday">Saturday</option>
-                        
                      </select>
                  </div></td>
-                    <td width="33%"><button onClick={inc1}><MdAdd/></button><label>{from}</label><button onClick={dec1}><RiSubtractLine/></button></td>
-                    <td width="33%"><button onClick={inc2}><MdAdd/></button><label>{to}</label><button onClick={dec2}><RiSubtractLine/></button></td>
+                    <td width="33%"><Time setfrom={setfrom}/></td>
+                    <td width="33%"><Time setto={setto}/></td>
                     <td width="33%">
                     <ButtonGroup>
                <Button variant="outline-success" className="col-md-12 text-right" onClick={(e)=>{setadd(0); add_slot()}}><MdOutlineDone/></Button>
@@ -653,15 +613,9 @@ const location = useLocation();
                  </ListGroup.Item>
                  </div>
                  <br/>
-             
-            
-           </ListGroup>
- 
-               
+           </ListGroup>          
               : ""
                }
- 
-         
  
    <Table responsive="sm">
      <thead>
@@ -684,7 +638,7 @@ const location = useLocation();
                     <td width="33%">{item.day}</td>
                     <td width="33%">{item.from}</td>
                     <td width="33%">{item.to}</td>
-                     <td width="33%"> <Button variant="outline-danger" ><CancelIcon/></Button></td>
+                     <td width="33%"> <Button variant="outline-danger" ><MdDelete/></Button></td>
                   </tr>
                   )
               }
