@@ -17,9 +17,9 @@ function OrderDetails(props) {
       <Modal.Body>
           <OrderImage pic={props.pic}/>
           <br></br>
-          <span> <strong>User Address :</strong></span> <span>{props.phone}</span>
+          <span> <strong>User Address :</strong></span> <span>{props.address}</span>
           <br></br>
-          <span> <strong> User Phone :</strong></span> <span>{props.address}</span>
+          <span> <strong> User Phone :</strong></span> <span>{props.phone}</span>
        <br></br>
       </Modal.Body>
      {/* <Modal.Footer>

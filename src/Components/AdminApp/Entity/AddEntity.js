@@ -23,6 +23,7 @@ const Add_hospital_api = ()=>{
                     hospitalname : FormValues.Hospitalname,
                     address : FormValues.Location ,
                     telephone : FormValues.number ,
+                    arabic_hospitalname : FormValues.arabicname
                    
          }).then((res)=>{
            console.log(res.data);
@@ -51,7 +52,8 @@ const Add_pharmacy_api = ()=>{
                     profilePic : FormValues.imageurl,
                     pharmacyname : FormValues.pharmacyname,
                     address : FormValues.Location ,
-                    telephone : FormValues.number
+                    telephone : FormValues.number,
+                    arabic_pharmacyname : FormValues.arabicname
          }).then((res)=>{
            console.log(res.data);
            props.changeadd(FormValues);  //go to all pharmacies
@@ -79,7 +81,8 @@ const Add_clinic_api = ()=>{
                     profilePic : FormValues.imageurl,
                     clinicname : FormValues.clinicname,
                     address : FormValues.Location ,
-                    telephone : FormValues.number
+                    telephone : FormValues.number ,
+                    arabic_clinicname : FormValues.arabicname
          }).then((res)=>{
            console.log(res.data);
            props.changeadd(FormValues);  //go to all clinics
@@ -118,21 +121,33 @@ const Add_clinic_api = ()=>{
         {
           if (!values.Hospitalname)
              {
-                errors.hospitalname="Hospital Name is required!";  
+                errors.hospitalname="Hospital English Name is required!";  
+             }
+              if (!values.arabicname)
+             {
+                errors.arabicname="Hospital Arabic Name is required!";  
              }
         }
         else if (props.entity === "clinics" )
         {
           if (!values.clinicname)
              {
-                errors.clinicname="Clinic Name is required!";  
+                errors.clinicname="Clinic English Name is required!";  
+             }
+         if (!values.arabicname)
+             {
+                errors.arabicname="Clinic Arabic Name is required!";  
              }
         }
         else if (props.entity === "pharmacies" )
         {
           if (!values.pharmacyname)
              {
-                errors.pharmacyname="Pharmacy Name is required!";  
+                errors.pharmacyname="Pharmacy English Name is required!";  
+             }
+         if (!values.arabicname)
+             {
+                errors.arabicname="Pharmacy Arabic Name is required!";  
              }
         }
         if (!values.number)
@@ -207,7 +222,7 @@ const uploadTask = uploadBytesResumable(storageRef,file);
             //empty
             //setfile(e.target[7].files[0]); //The image
             if (FormValues.Image)
-            {uploadFiles(e.target[7].files[0])} //The image[Calling The Api(ada entity)]
+            {uploadFiles(e.target[8].files[0])} //The image[Calling The Api(ada entity)]
             else {
                       if (props.entity === 'hospitals')
                       {Add_hospital_api() ; }//API ADD HOSPITAL
@@ -235,19 +250,35 @@ const uploadTask = uploadBytesResumable(storageRef,file);
     {props.entity === 'clinics' && <h6><strong>Clinic Information</strong></h6>}
     {props.entity === 'pharmacies' && <h6><strong>Pharmacy Information</strong></h6>}
     <Form.Group className="mb-3" controlId="formGridName">
-      {props.entity === 'hospitals' &&<Form.Label>Hospital Name</Form.Label>}
-      {props.entity === 'clinics' &&<Form.Label>Clinic Name</Form.Label>}
-      {props.entity === 'pharmacies' &&<Form.Label>Pharmacy Name</Form.Label>}
+      {props.entity === 'hospitals' &&<Form.Label>Hospital English Name</Form.Label>}
+      {props.entity === 'clinics' &&<Form.Label>Clinic English Name</Form.Label>}
+      {props.entity === 'pharmacies' &&<Form.Label>Pharmacy English Name</Form.Label>}
 
-    {props.entity === 'hospitals' &&  <Form.Control onChange={(e)=>handlechange(e)} value={FormValues.hospitalname} name="Hospitalname" type="text" placeholder="Enter Hospital name" />}
-    {props.entity === 'clinics' &&  <Form.Control onChange={(e)=>handlechange(e)} value={FormValues.clinicname} name="clinicname" type="text" placeholder="Enter Clinic name" />}
-    {props.entity === 'pharmacies' &&  <Form.Control onChange={(e)=>handlechange(e)} value={FormValues.pharmacyname} name="pharmacyname" type="text" placeholder="Enter Pharmacy name" />}
+    {props.entity === 'hospitals' &&  <Form.Control onChange={(e)=>handlechange(e)} value={FormValues.hospitalname} name="Hospitalname" type="text" placeholder="Enter Hospital English name" />}
+    {props.entity === 'clinics' &&  <Form.Control onChange={(e)=>handlechange(e)} value={FormValues.clinicname} name="clinicname" type="text" placeholder="Enter Clinic English name" />}
+    {props.entity === 'pharmacies' &&  <Form.Control onChange={(e)=>handlechange(e)} value={FormValues.pharmacyname} name="pharmacyname" type="text" placeholder="Enter Pharmacy English name" />}
+
+    
       
     {props.entity === 'hospitals' &&  <p style={{padding:'0',color:'red',marginTop:'6px'}} >{Formerrors.hospitalname}</p>}
     {props.entity === 'clinics' &&  <p style={{padding:'0',color:'red',marginTop:'6px'}} >{Formerrors.clinicname}</p>}
     {props.entity === 'pharmacies' &&  <p style={{padding:'0',color:'red',marginTop:'6px'}} >{Formerrors.pharmacyname}</p>}
     </Form.Group>
+        <Form.Group className="mb-3" controlId="formGridarabicName">
+      {props.entity === 'hospitals' &&<Form.Label>Hospital Arabic Name</Form.Label>}
+      {props.entity === 'clinics' &&<Form.Label>Clinic Arabic Name</Form.Label>}
+      {props.entity === 'pharmacies' &&<Form.Label>Pharmacy Arabic Name</Form.Label>}
 
+     {props.entity === 'hospitals' &&  <Form.Control onChange={(e)=>handlechange(e)} value={FormValues.arabicname} name="arabicname" type="text" placeholder="Enter Hospital Arabic name" />}
+    {props.entity === 'clinics' &&  <Form.Control onChange={(e)=>handlechange(e)} value={FormValues.arabicname} name="arabicname" type="text" placeholder="Enter Clinic Arabic name" />}
+    {props.entity === 'pharmacies' &&  <Form.Control onChange={(e)=>handlechange(e)} value={FormValues.arabicname} name="arabicname" type="text" placeholder="Enter Pharmacy Arabic name" />}
+    
+      
+    {props.entity === 'hospitals' &&  <p style={{padding:'0',color:'red',marginTop:'6px'}} >{Formerrors.arabicname}</p>}
+    {props.entity === 'clinics' &&  <p style={{padding:'0',color:'red',marginTop:'6px'}} >{Formerrors.arabicname}</p>}
+    {props.entity === 'pharmacies' &&  <p style={{padding:'0',color:'red',marginTop:'6px'}} >{Formerrors.arabicname}</p>}
+    </Form.Group>
+ 
     <Form.Group className="mb-3" controlId="formGridNumber">
       <Form.Label>Contact Number</Form.Label>
       <Form.Control onChange={(e)=>handlechange(e)} value={FormValues.number} name="number" type="number" placeholder="Enter Contact number" />

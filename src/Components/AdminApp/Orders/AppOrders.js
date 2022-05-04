@@ -153,7 +153,7 @@ const columns = [
 ];
   return (     
           
-    <div style={{ height: 560, width: '90%' , margin: '1rem 2rem' ,marginBottom:'60px' }}>
+    <div style={{ height: 560, width: '95%' , margin: '1rem 2rem' ,marginBottom:'60px' }}>
      { <Table rows={data} columns={columns}></Table> }
      </div>
   )

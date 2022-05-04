@@ -68,18 +68,19 @@ const Get_Clinics_Api = async ()=>{
      setdata(updatedlist); 
      setedit(true); //AFTER SUBMIT EDIT FORM [GET BACK TO CLINICS LIST]
   }
-    const changeadd = (newclinic)=>{
-       //WHEN SUBMIT ADD PHARMACY FORM 
-       var updatedlist = JSON.parse(JSON.stringify(data));
-       const lastid = updatedlist[updatedlist.length - 1].id;
-       console.log(lastid);
-       newclinic.id=(parseInt(lastid)+1).toString();
-       updatedlist.push(newclinic);
-       //Static update list       
-       setdata(updatedlist);    
-     setadd(true); //AFTER SUBMIT ADD FORM [GET BACK TO CLINICS LIST]
-    
-  }   
+    const changeadd = (newhospital)=>{
+      //WHEN SUBMIT ADD HOSPITAL FORM 
+      var lastid = 0 ; 
+        var updatedlist = JSON.parse(JSON.stringify(data));
+        if (updatedlist.length == 0){ lastid = 0} //To make the first has id = 1
+        else{lastid = updatedlist[updatedlist.length - 1].id;}        
+        console.log(lastid);
+        newhospital.id=(parseInt(lastid)+1).toString();
+        updatedlist.push(newhospital);
+        //Static update list       
+        setdata(updatedlist); 
+        setadd(true); //AFTER SUBMIT ADD FORM [GET BACK TO HOSPITALS LIST]
+  }     
     
       const handleDelete = (id)=>{
         //API DELETE CLINIC

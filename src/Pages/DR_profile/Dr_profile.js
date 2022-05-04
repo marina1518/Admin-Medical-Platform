@@ -17,7 +17,7 @@ import { useSelector, useDispatch } from "react-redux";
 import {GiNotebook} from 'react-icons/gi';
 import { useLocation } from 'react-router-dom';
 import { signin } from "../../actions";
-import SideBarUI from "../../Components/SideBarUI/SideBarUI";
+import SideBarUI from "../../Components/SideBarUi/Sidebar";
 import "./profileui.css";
 import { blueGrey } from "@material-ui/core/colors";
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
@@ -306,7 +306,7 @@ const location = useLocation();
             <Avatar
               className="profile_img"
               src={token.profilePic}
-              sx={{ width: 50, height: 50, bgcolor: blueGrey[400] }}
+              sx={{ width: 70, height: 70, bgcolor: blueGrey[400] }}
             />
             
               <h3>{token.username}</h3>

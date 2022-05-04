@@ -16,7 +16,9 @@ const Add_doctor_api = ()=>{
                     telephone: FormValues.number,
                     specialization : FormValues.specialization,
                     entityName: props.entityname ,//Added
-                    profilePic: FormValues.imageurl
+                    profilePic: FormValues.imageurl,
+                    arabic_username:FormValues.arabicname,
+                    arabic_specialization:FormValues.arabicdep
          }).then((res)=>{
            console.log(res.data);
            console.log(props.changeadd)
@@ -43,6 +45,33 @@ const Add_doctor_api = ()=>{
          const name = e.target.name ;
          const value = e.target.value ;
         // console.log(value);
+        if (name === 'specialization')
+        {
+            switch(value){
+                case 'Emergency Medicine' :
+                    FormValues.arabicdep = 'الطوارئ'
+                break;
+                case 'Dermatology (Skin)' :
+                    FormValues.arabicdep = 'الجلدية'
+                break;
+                case 'Cardiologist' :
+                    FormValues.arabicdep = 'القلب'
+                break;
+                case 'Chest/Respiratory Medicine' :
+                    FormValues.arabicdep = 'الصدر و التنفس'
+                break;
+                case 'Dietetics' :
+                    FormValues.arabicdep = 'التغذية'
+                break;
+                case 'Gastroenterology (Bowel)' :
+                    FormValues.arabicdep = 'مسالك بولية'
+                break;
+                case 'Pediatrics' :
+                    FormValues.arabicdep = 'طب الاطفال'
+                break;
+
+            }
+        } 
          setFormvalues({...FormValues, [name] : value});
          
          if (issubmit)
@@ -59,8 +88,12 @@ const Add_doctor_api = ()=>{
 
         if (!values.name)
             {
-                errors.name="Doctor Name is required!";  
+                errors.name="Doctor English Name is required!";  
             }
+        if (!values.arabicname)
+            {
+                errors.arabicname="Doctor Arabic Name is required!";  
+            }    
         
         if (!values.number)
             {
@@ -125,7 +158,7 @@ uploadTask.on("state_changed",()=>{
             //empty
             if(FormValues.Image)
             {
-            uploadFiles(e.target[3].files[0]) }//The image
+            uploadFiles(e.target[4].files[0]) }//The image
             else{Add_doctor_api()}
             console.log(FormValues)
             setissubmit(true);
@@ -142,9 +175,15 @@ uploadTask.on("state_changed",()=>{
      <Col>
     
     <Form.Group className="mb-3" controlId="formGridName">
-      <Form.Label>Doctor Name</Form.Label>
-      <Form.Control onChange={(e)=>handlechange(e)} value={FormValues.name} name="name" type="text" placeholder="Enter Doctor name" />
+      <Form.Label>Doctor Name English</Form.Label>
+      <Form.Control onChange={(e)=>handlechange(e)} value={FormValues.name} name="name" type="text" placeholder="Enter Doctor English name" />
       <p style={{padding:'0',color:'red',marginTop:'6px'}} >{Formerrors.name}</p>
+    </Form.Group>
+
+        <Form.Group className="mb-3" controlId="formGridArabicName">
+      <Form.Label>Doctor Name Arabic</Form.Label>
+      <Form.Control onChange={(e)=>handlechange(e)} value={FormValues.arabicname} name="arabicname" type="text" placeholder="Enter Doctor Arabic name" />
+      <p style={{padding:'0',color:'red',marginTop:'6px'}} >{Formerrors.arabicname}</p>
     </Form.Group>
 
     <Form.Group className="mb-3" controlId="formGridNumber">
@@ -157,16 +196,12 @@ uploadTask.on("state_changed",()=>{
   <Form.Select aria-label="Default select example2" defaultValue="Select Doctor Specialization" name="specialization" value={FormValues.specialization} onChange={(e)=>handlechange(e)}>      
   <option>Select Doctor Specialization</option>
   <option >Emergency Medicine</option>
-  <option >Obstetrics & Gynecology</option>
   <option >Dermatology (Skin)</option>
   <option >Cardiologist</option>
   <option >Chest/Respiratory Medicine</option>
   <option >Dietetics</option>
    <option >Gastroenterology (Bowel)</option>
   <option >Pediatrics</option>
-  <option >Urology</option>
-  <option >Psychiatry</option>
-  <option >Plastic Surgery</option>
 </Form.Select>     
     <p style={{padding:'0',color:'red',marginTop:'6px'}} >{Formerrors.specialization}</p>
     </Form.Group>

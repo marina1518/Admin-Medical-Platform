@@ -70,7 +70,7 @@ const Header = () => {
             <li
               className="profile-icon"
               onClick={() => {
-                handlerouting(token.usertype);
+                handlerouting(token.role);
               }}
             >
               <div className="icon-circle">

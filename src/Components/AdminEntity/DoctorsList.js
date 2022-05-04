@@ -80,15 +80,17 @@ const [viewedit,setedit]=useState(true) //WHEN FALSE SHOW COMPONENT ADD HOSPITAL
   }
     const changeadd = (newhospital)=>{
       //WHEN SUBMIT ADD HOSPITAL FORM 
+      var lastid = 0 ; 
         var updatedlist = JSON.parse(JSON.stringify(data));
-        const lastid = updatedlist[updatedlist.length - 1].id;
+        if (updatedlist.length == 0){ lastid = 0} //To make the first has id = 1
+        else{lastid = updatedlist[updatedlist.length - 1].id;}        
         console.log(lastid);
         newhospital.id=(parseInt(lastid)+1).toString();
         updatedlist.push(newhospital);
         //Static update list       
         setdata(updatedlist); 
         setadd(true); //AFTER SUBMIT ADD FORM [GET BACK TO HOSPITALS LIST]
-  }   
+  }     
    
    const handleDelete = (id)=>{
      //API DELETE Hospital

@@ -101,17 +101,19 @@ const Get_Pharmacies_Api = async ()=>{
      setedit(true); //AFTER SUBMIT EDIT FORM [GET BACK TO PHARMACIES LIST]
      
   }
-    const changeadd = (newpharmacy)=>{
-       //WHEN SUBMIT ADD PHARMACY FORM 
-       var updatedlist = JSON.parse(JSON.stringify(data));
-       const lastid = updatedlist[updatedlist.length - 1].id;
-       console.log(lastid);
-       newpharmacy.id=(parseInt(lastid)+1).toString();
-       updatedlist.push(newpharmacy);
-       //Static update list       
-       setdata(updatedlist);    
-     setadd(true); //AFTER SUBMIT ADD FORM [GET BACK TO PHARMACIES LIST]
-  }   
+    const changeadd = (newhospital)=>{
+      //WHEN SUBMIT ADD Pharmacy FORM 
+      var lastid = 0 ; 
+        var updatedlist = JSON.parse(JSON.stringify(data));
+        if (updatedlist.length == 0){ lastid = 0} //To make the first has id = 1
+        else{lastid = updatedlist[updatedlist.length - 1].id;}        
+        console.log(lastid);
+        newhospital.id=(parseInt(lastid)+1).toString();
+        updatedlist.push(newhospital);
+        //Static update list       
+        setdata(updatedlist); 
+        setadd(true); //AFTER SUBMIT ADD FORM [GET BACK TO PHARMACIES LIST]
+  }     
     console.log(data)
   const handleDelete = (id)=>{
         //API DELETE PHARMACY 
