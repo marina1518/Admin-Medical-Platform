@@ -25,13 +25,13 @@ const Ph_admin =()=>{
 
     const Get_orders_Api = async ()=>{
       try {
-             const res = await axios.get(`https://future-medical.herokuapp.com/admin/orders/new`, config)
+             const res = await axios.get(`https://future-medical.herokuapp.com/admin/orders/pending`, config)
              const data = await res.data;
              console.log(data);
              data.forEach((x) => {
               order_details.form = x.order_data.form;
-              let b=x.order_data.Date.split("T")
-              order_details.Date =b[0];
+              //let b=x.order_data.Date.split("T")
+              order_details.Date =x.order_data.Date;
               order_details.address = x.order_data.address;
               order_details.phone = x.order_data.phone;
               order_details.price = x.price;
@@ -56,11 +56,11 @@ const Ph_admin =()=>{
      
      const Get_pending_Api = async ()=>{
       try {
-             const res = await axios.get(`https://future-medical.herokuapp.com/admin/orders/pending`,config)
+             const res = await axios.get(`https://future-medical.herokuapp.com/admin/orders/approved`,config)
              const data = await res.data;
              console.log(order_list2);
              console.log(data);
-              if(data == "there is no pending orders") 
+              if(data == "there is no approved orders") 
              {return}
              data.forEach((x) => {
               order_details.form = x.order_data.form;
@@ -91,11 +91,11 @@ const Ph_admin =()=>{
      order_details={};
      const Get_approved_Api = async ()=>{
       try {
-             const res = await axios.get(`https://future-medical.herokuapp.com/admin/orders/approved`,config)
+             const res = await axios.get(`https://future-medical.herokuapp.com/admin/orders/preparing`,config)
              const data = await res.data;
              console.log(order_list3);
              console.log(data);
-              if(data == "there is no approved orders") 
+              if(data == "there is no preparing orders") 
              {return}
              data.forEach((x) => {
               order_details.form = x.order_data.form;
@@ -143,7 +143,8 @@ const Ph_admin =()=>{
               order_details.username = x.user.username;
               order_details.email = x.user.email;
               order_details.id = x._id;
-              order_list3.push(order_details); 
+              order_details.status = x.status;
+              order_list4.push(order_details); 
               console.log(order_details);   
               order_details={};   
               console.log(order_details);
@@ -197,9 +198,9 @@ const [comment, setComment] = useState("")
        }
 
    }
-   const disapprove_order = async (e,id)=>{
+   const disapprove_order = async (e,id,comment_api)=>{
     try {
-           const res = await axios.patch(`https://future-medical.herokuapp.com/admin/order/disapprove`, {id:id}, config )
+           const res = await axios.patch(`https://future-medical.herokuapp.com/admin/order/disapprove`, {id:id, comment:comment_api}, config )
            const data = await res.data;
            console.log(data);
            alert('Order disapproved');
@@ -286,12 +287,14 @@ const [comment, setComment] = useState("")
            <Row>
            <Col>
             <input type="text" placeholder="Price" onChange={(e)=>{setPrice(parseFloat(e.target.value))}}/>
-            <input type="text" placeholder="Comment" onChange={(e)=>{setComment(e.target.value)}}/>
+            </Col>
+            <Col>
+            <textarea type="text" placeholder="Comment" onChange={(e)=>{setComment(e.target.value)}}/>
            </Col>
           <Col>
             <ButtonGroup>
               <Button variant="outline-success" className="col-md-12 text-right" onClick={(e)=>approve(e,item.id)} ><MdOutlineDone/></Button>
-              <Button variant="outline-danger" className="col-md-12 text-right" onClick={(e)=>disapprove_order(e,item.id)}><MdCancel/></Button>
+              <Button variant="outline-danger" className="col-md-12 text-right" onClick={(e)=>disapprove_order(e,item.id, comment)}><MdCancel/></Button>
             </ButtonGroup>
           </Col>
           </Row>
@@ -380,13 +383,15 @@ const [comment, setComment] = useState("")
              <Accordion.Header> 
             <Col>{item.username} </Col>
             <Col>{item.Date} </Col>
+            <Col>{item.status}</Col>
             </Accordion.Header>
             <Accordion.Body>
                <img src={item.form} width="300px" height="300px"/>
                 <h3>Address : {item.address}</h3>
                 <h3>Phone : {item.phone}</h3>
                 <h3>Email : {item.email}</h3>
-                <h3>Price : {item.price} LE</h3>
+               {item.status === "disapproved" ? "" : <h3>Price : {item.price} LE</h3>} 
+              
                </Accordion.Body>
         </Accordion.Item>
        
