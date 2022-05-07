@@ -15,13 +15,15 @@ import axios from 'axios';
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation } from 'react-router-dom';
 import { signin } from "../../actions";
-import SideBarUI from "../../Components/SideBarUI/SideBar";
+import SideBarUI from "../../Components/SideBarUI/SideBarUI";
 import "./profileui.css";
 import { blueGrey } from "@material-ui/core/colors";
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import { storage } from '../../Firebase';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import Time from '../../Components/inc_dec/file';
+// import VideoChat from '../../Components/Meeting_room/Video_chat/VideoChat';
+
 const DoctorProfile =()=>{
   const dispatch = useDispatch();  
 
@@ -90,7 +92,9 @@ const location = useLocation();
   
 
   const config = {headers: {'Authorization': `Bearer ${token.token}`}};
-
+  useEffect(()=>{
+    get_meetings(); 
+    },[]) 
   
 
    const [add,setadd] = useState(0);
@@ -118,23 +122,44 @@ const location = useLocation();
         }
   
     }
+  const[meetings_api,setmeetings]=useState([]);
+    const get_meetings = async ()=>{
+      try {
+             const res = await axios.get('https://future-medical.herokuapp.com/doctor/meetings' ,
+              config
+             )
   
+             console.log(res.data);
+             //if (res.data==="you have no orders yet") return
+             setmeetings(res.data);
+           
+         } 
+         catch (err) {
+             console.error(err);
+         }
+     }
     
-  var meetings=[];
+  var meetings=[{date:"06-05-2022",state:"Today", email:"michael15@gmail.com"}];
   const current = new Date();
   let state;
-  for(var i=0;i<token.meetings.length;i++)
+  for(var i=0;i<meetings_api.length;i++)
   {
-    const day = (token.meetings[i].Date).split('-');
+    const day = (meetings_api[i].Date).split('-');
     if(parseInt(day[2])<current.getFullYear()) state = 'Done'; //year check
     else if (parseInt(day[2])>current.getFullYear()) state = 'Pending'; //next year
     else if ((parseInt(day[1])<current.getMonth()+1) ) state = 'Done'; //month check
     else if ((parseInt(day[1])===current.getMonth()+1) && (parseInt(day[0])<current.getDate()) ) state = 'Done'; //month check
     else if ((parseInt(day[1])===current.getMonth()+1) && (parseInt(day[0])===current.getDate()) && (parseInt(day[2])===current.getFullYear())) state= 'Today'; 
     else state = 'Pending';
-    meetings.push({id:i, patient:token.meetings[i].user.username, slot:token.meetings[i].slot, date:token.meetings[i].Date, state:state})
+    meetings.push({id:i, patient:meetings_api[i].user.username, slot:meetings_api[i].slot, date:meetings_api[i].Date, state:state})
  
   }
+
+  meetings.sort((a,b) =>
+  {const c=new Date(a.date.split('-').reverse().join('-'));
+  const d=new Date(b.date.split('-').reverse().join('-'));
+   return c-d;}
+  );
 
 
 
@@ -539,23 +564,24 @@ const location = useLocation();
                 <Table responsive="sm">
                   <thead>
                     <tr>
-                      <th width="30%">Date</th>
-                      <th width="30%">Time</th>
-                      <th width="30%">Patient Name</th>
-
-                      <th width="30%">State</th>
+                      <th width="20%">Date</th>
+                      <th width="20%">Time</th>
+                      <th width="20%">Patient Name</th>
+                      <th width="20%">Meeting</th>
+                      <th width="20%">State</th>
                     </tr>
                   </thead>
                   <tbody>
                     {
                       meetings.lenght === 0 ? "":
                       <>
-                      {meetings.map((item) => (
-                        <tr key={item.id}>
-                          <td width="33%">{item.date}</td>
-                          <td width="33%">{item.slot}</td>
-                          <td width="33%">{item.patient}</td>
-                          <td width="33%">{item.state}</td>
+                      {meetings.reverse().map((item) => (
+                        <tr key={item.id} style={item.state ==="Pending" ? {opacity:"1"}:(item.state==="Today" ? {background:"#B9D9EB"}:{opacity:"0.5"}) }>
+                          <td width="20%">{item.date}</td>
+                          <td width="20%">{item.slot}</td>
+                          <td width="20%">{item.patient}</td>
+                          {/* <td width="20%">{item.state ==="Today" ? <VideoChat dr_email={token.email}/>:""}</td> */}
+                          <td width="20%">{item.state}</td>
                           </tr>
                       ))}
                       </>
