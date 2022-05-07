@@ -90,6 +90,7 @@ const Ph_admin =()=>{
       const res = await axios.get(`https://future-medical.herokuapp.com/admin/orders/pending`, config)
       const data = await res.data;
       console.log(data);
+      if(data == "there is no pending orders"){return}
       data.forEach((x) => {
       order_details.form = x.order_data.form;
       //let b=x.order_data.Date.split("T")
@@ -220,9 +221,9 @@ const Ph_admin =()=>{
    //    } 
   const[price,setPrice]=useState("");
   const [comment, setComment] = useState("")
-  const Approve_api = async (id , price)=>{
+  const Approve_api = async (id , price , comment)=>{
     try {
-      const res = await axios.patch(`https://future-medical.herokuapp.com/admin/order/approve`, {id : id , price : price}, config )
+      const res = await axios.patch(`https://future-medical.herokuapp.com/admin/order/approve`, {id : id , price : price , comment : comment}, config )
       const data = await res.data;
       alert('Order Approved');
       var new_orders=[];
@@ -330,10 +331,12 @@ const Ph_admin =()=>{
             <Avatar className="profile_img" src="/broken-image.jpg" onClick={(e)=>
             setEdit_photo(true)} />
             {edit_photo ? <input type="file"></input>:""}
-            <h3>Pharmacy </h3>
+            <h3>{token.entity.name} </h3>
          </div>
          <div className="card-body">
             <p className="mb-0"><strong className="pr-1">Email: </strong>{token.email}</p>
+            <p className="mb-0"><strong className="pr-1">Phone: </strong>{token.entity.telephone}</p>
+            <p className="mb-0"><strong className="pr-1">Address: </strong>{token.entity.address}</p>
          </div>
       </div>
       ): (
@@ -370,7 +373,7 @@ const Ph_admin =()=>{
                         <Col>
                         <ButtonGroup>
                            <Button variant="outline-success" className="col-md-12 text-right" onClick={(e)=>
-                              Approve_api(item.id , price)} >
+                              Approve_api(item.id , price , comment)} >
                               <MdOutlineDone/>
                            </Button>
                            <Button variant="outline-danger" className="col-md-12 text-right" onClick={(e)=>
