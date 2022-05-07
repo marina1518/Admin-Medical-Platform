@@ -212,43 +212,70 @@ const Ph_admin =()=>{
     Get_approved_Api();
     Get_history_Api();
     Get_pending_Api();
-    },[]) 
+    },[])
+   // const[temp,settemp] = useState([]);
+   // const remove=(id,newapp)=>{
+   //    const newp = newapp.filter((item)=> item.id !== id );
+   //    settemp(newp);
+   //    } 
   const[price,setPrice]=useState("");
-  //const [report,setreport] = useState(false);
-  const [approve_data, setapprove_data] = useState("");
-  const [done_id, setdone_id] = useState("");
   const [comment, setComment] = useState("")
-  const Approve_api = async ()=>{
+  const Approve_api = async (id , price)=>{
     try {
-      const res = await axios.patch(`https://future-medical.herokuapp.com/admin/order/approve`, approve_data, config )
+      const res = await axios.patch(`https://future-medical.herokuapp.com/admin/order/approve`, {id : id , price : price}, config )
       const data = await res.data;
+      alert('Order Approved');
+      var new_orders=[];
+      for(var i=0;i<order2_details.length;i++)
+      {
+        if(order2_details[i].id !== id) new_orders.push(order2_details[i]);
+        //else if(order2_details[i].id === id) pending_orders.push(order2_details[i]);
+      }
+      Get_pending_Api();
+      console.log(new_orders);
+      setorder2_details(new_orders);
       console.log(data);
     } 
     catch (err) {
       console.error(err);
     }
   }
-  const Done_Api = async ()=>{
+  const Done_Api = async (id)=>{
     try {
-      const res = await axios.patch(`https://future-medical.herokuapp.com/admin/order/done`, done_id, config )
+      const res = await axios.patch(`https://future-medical.herokuapp.com/admin/order/done`, {id : id}, config )
       const data = await res.data;
+      alert('Order Dilevered');
+      var new_orders=[];
+      for(var i=0;i<approved.length;i++)
+      {
+        if(approved[i].id !== id) new_orders.push(approved[i]);
+        //else if(approved[i].id === id) history.push(approved[i]);
+      }
+      Get_history_Api();
+      console.log(new_orders);
+      setapproved(new_orders);
       console.log(data);
     } 
     catch (err) {
       console.error(err);
     }
   }
-  const disapprove_order = async (e,id,comment_api)=>{
+  const disapprove_order = async (id,comment_api)=>{
     try {
       const res = await axios.patch(`https://future-medical.herokuapp.com/admin/order/disapprove`, {id:id, comment:comment_api}, config )
       const data = await res.data;
       console.log(data);
       alert('Order disapproved');
+      // const newp = order2_details.filter((item)=> item.id !== id );
+      // //remove(id,order2_details);
+      // setorder2_details(newp);
       var new_orders=[];
       for(var i=0;i<order2_details.length;i++)
       {
         if(order2_details[i].id !== id) new_orders.push(order2_details[i]);
+        //else if(order2_details[i].id === id) history.push(order2_details[i]);
       }
+      Get_history_Api();
       console.log(new_orders);
       setorder2_details(new_orders);
       console.log(order2_details);
@@ -256,18 +283,7 @@ const Ph_admin =()=>{
     catch (err) {
       console.error(err);
     }
-  }
-  const approve=(e,id)=>{
-    const o={id:id, price:price}; //comment 
-    setapprove_data(o);
-    console.log(approve_data)
-   Approve_api();
-  }
-  const Done=(e,id)=>{
-    const o={id:id};
-    setdone_id(o);
-    Done_Api();
-  }    
+  }  
   return (
     <div className="main-container">
 <SideBarUI compact={compact} oncompact={compacthandler}>
@@ -317,7 +333,7 @@ const Ph_admin =()=>{
             <h3>Pharmacy </h3>
          </div>
          <div className="card-body">
-            <p className="mb-0"><strong className="pr-1">Email: </strong>gh</p>
+            <p className="mb-0"><strong className="pr-1">Email: </strong>{token.email}</p>
          </div>
       </div>
       ): (
@@ -354,11 +370,11 @@ const Ph_admin =()=>{
                         <Col>
                         <ButtonGroup>
                            <Button variant="outline-success" className="col-md-12 text-right" onClick={(e)=>
-                              approve(e,item.id)} >
+                              Approve_api(item.id , price)} >
                               <MdOutlineDone/>
                            </Button>
                            <Button variant="outline-danger" className="col-md-12 text-right" onClick={(e)=>
-                              disapprove_order(e,item.id, comment)}>
+                              disapprove_order(item.id, comment)}>
                               <MdCancel/>
                            </Button>
                         </ButtonGroup>
@@ -428,7 +444,7 @@ const Ph_admin =()=>{
                      <h3>Price : {item.price} LE</h3>
                      <br/>
                      <Button variant="outline-success" className="col-md-12 text-right" onClick={(e)=>
-                        Done(e,item.id)} >Done 
+                        Done_Api(item.id)} >Done 
                         <MdOutlineDoneOutline/>
                      </Button>
                   </Accordion.Body>
@@ -463,7 +479,7 @@ const Ph_admin =()=>{
                      <h3>Address : {item.address}</h3>
                      <h3>Phone : {item.phone}</h3>
                      <h3>Email : {item.email}</h3>
-                     {item.status === "disapproved" ? "" : 
+                     {item.status === "disapproved"  ? "" : item.status === "cancelled"  ? "" :
                      <h3>Price : {item.price} LE</h3>
                      } 
                   </Accordion.Body>
