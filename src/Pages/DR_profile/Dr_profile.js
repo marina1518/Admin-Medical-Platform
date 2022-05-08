@@ -15,14 +15,14 @@ import axios from 'axios';
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation } from 'react-router-dom';
 import { signin } from "../../actions";
-import SideBarUI from "../../Components/SideBarUI/SideBarUI";
+import SideBarUI from "../../Components/SideBarUi/Sidebar";
 import "./profileui.css";
 import { blueGrey } from "@material-ui/core/colors";
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import { storage } from '../../Firebase';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import Time from '../../Components/inc_dec/file';
-// import VideoChat from '../../Components/Meeting_room/Video_chat/VideoChat';
+import VideoChat from '../../Components/Meeting_room/Video_chat/VideoChat';
 
 const DoctorProfile =()=>{
   const dispatch = useDispatch();  
@@ -139,7 +139,7 @@ const location = useLocation();
          }
      }
     
-  var meetings=[{date:"06-05-2022",state:"Today", email:"michael15@gmail.com"}];
+  var meetings=[];
   const current = new Date();
   let state;
   for(var i=0;i<meetings_api.length;i++)
@@ -151,7 +151,7 @@ const location = useLocation();
     else if ((parseInt(day[1])===current.getMonth()+1) && (parseInt(day[0])<current.getDate()) ) state = 'Done'; //month check
     else if ((parseInt(day[1])===current.getMonth()+1) && (parseInt(day[0])===current.getDate()) && (parseInt(day[2])===current.getFullYear())) state= 'Today'; 
     else state = 'Pending';
-    meetings.push({id:i, patient:meetings_api[i].user.username, slot:meetings_api[i].slot, date:meetings_api[i].Date, state:state})
+    meetings.push({id:i, patient:meetings_api[i].user.username, slot:meetings_api[i].slot, date:meetings_api[i].Date, state:state, patient_email:meetings_api[i].user.email})
  
   }
 
@@ -580,7 +580,25 @@ const location = useLocation();
                           <td width="20%">{item.date}</td>
                           <td width="20%">{item.slot}</td>
                           <td width="20%">{item.patient}</td>
-                          {/* <td width="20%">{item.state ==="Today" ? <VideoChat dr_email={token.email}/>:""}</td> */}
+                          <td width="20%">
+                          {item.state === "Today" ? (
+                                <VideoChat
+                                  dr_email={token.email}
+                                  button_state={true}
+                                  patient_email={item.patient_email}
+                                  patient_name={item.patient}
+                                  date = {item.date}
+                                />
+                              ) : (
+                                <VideoChat
+                                  dr_email={token.email}
+                                  button_state={false}
+                                  patient_email={item.patient_email}
+                                  patient_name={item.patient}
+                                  date = {item.date}
+                                />
+                              )}
+                          </td>
                           <td width="20%">{item.state}</td>
                           </tr>
                       ))}
