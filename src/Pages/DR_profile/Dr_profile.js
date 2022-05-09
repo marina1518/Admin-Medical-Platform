@@ -22,11 +22,15 @@ import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import { storage } from '../../Firebase';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import Time from '../../Components/inc_dec/file';
+import { Link, useNavigate } from "react-router-dom";
 import VideoChat from '../../Components/Meeting_room/Video_chat/VideoChat';
 
 const DoctorProfile =()=>{
   const dispatch = useDispatch();  
-
+  let navigate = useNavigate();
+  const navigation = (userid) => {
+    navigate("/user", { state: { user_id: userid } });
+  };
   const [showinfo, setShowinfo] = useState(false);
   const [showreviews, setShowReviews] = useState(false);
   const [showAppointment, setShowAppointment] = useState(false);
@@ -277,7 +281,8 @@ const location = useLocation();
             <Avatar
               className="profile_img"
               src={token.profilePic}
-              sx={{ width: 50, height: 50, bgcolor: blueGrey[400] }}
+              style={{height:'70px',width:'70px'}}
+              sx={{ bgcolor: blueGrey[400] }}
             />
             
               <h3>{token.username}</h3>
@@ -325,7 +330,8 @@ const location = useLocation();
                     className="profile_img"
                     src={token.profilePic}
                     onClick={(e) => setEdit_photo(!edit_photo)}
-                    sx={{ width: 70, height: 70, bgcolor: blueGrey[400] }}
+                    style={{height:'150px',width:'150px'}}
+                    sx={{  bgcolor: blueGrey[400] }}
                   />
                   {edit_photo ? (
                     <>
@@ -579,7 +585,15 @@ const location = useLocation();
                         <tr key={item.id} style={item.state ==="Pending" ? {opacity:"1"}:(item.state==="Today" ? {background:"#B9D9EB"}:{opacity:"0.5"}) }>
                           <td width="20%">{item.date}</td>
                           <td width="20%">{item.slot}</td>
-                          <td width="20%">{item.patient}</td>
+                          <td
+                              style={{ cursor: "pointer" }}
+                              width="20%"
+                              onClick={() => {
+                                navigation(item.patient_email);
+                              }}
+                            >
+                              <Link to={`/user/`}>{item.patient}</Link>
+                          </td>
                           <td width="20%">
                           {item.state === "Today" ? (
                                 <VideoChat
@@ -598,7 +612,7 @@ const location = useLocation();
                                  
                                 />
                               )}
-                          </td>
+                          </td> 
                           <td width="20%">{item.state}</td>
                           </tr>
                       ))}

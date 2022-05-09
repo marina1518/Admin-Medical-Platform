@@ -3,13 +3,38 @@ import {Form,Button,Row,Col} from 'react-bootstrap'
 import axios from 'axios';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import { storage } from '../../../Firebase';
+import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
+import Tooltip from '@mui/material/Tooltip';
 export default function AddEntity(props) {
    
     const [FormValues, setFormvalues ] = useState({}); //FORM VALUES 
     const [Formerrors, setFormerrors ] = useState({}); //ERROR 
     const [issubmit, setissubmit ] = useState(false);  //SUBMITTED OR NOT 
-    
+    const [latitude,set_latitude]=useState(0.0)
+    const [longitude,set_longitude]=useState(0.0)
 
+const handle_Location = ()=>{
+  navigator.geolocation.getCurrentPosition(function (position) {
+
+         console.log("Latitude is :", position.coords.latitude);
+
+         console.log("Longitude is :", position.coords.longitude);
+
+        
+         set_latitude(position.coords.latitude)
+         set_longitude(position.coords.longitude)
+         FormValues.latitude = position.coords.latitude ;
+         FormValues.longitude = position.coords.longitude ;
+         ////// TO REMOVE THE ERROR WHEN CLICKED 
+          setFormerrors(validate({...FormValues, latitude :  position.coords.latitude}))
+            //latitude: position.coords.latitude,
+
+            //longitude: position.coords.longitude,
+
+        
+
+      });
+}
 const Add_hospital_api = ()=>{
         console.log(FormValues.Admin)  
             axios.post('https://future-medical.herokuapp.com/register/hospitalAdmin',
@@ -165,7 +190,7 @@ const Add_clinic_api = ()=>{
             }
         if (!values.Location)
             {
-                errors.Location="Location is required!";  
+                errors.Location="Address is required!";  
             }
         if (!values.Email)
             {
@@ -174,6 +199,10 @@ const Add_clinic_api = ()=>{
         else if (!regx.test(values.Email))
         {
             errors.email = "This is not a valid email format";
+        }
+        if (!values.latitude)
+        {
+          errors.latitude = "Entity Location is required!";
         }    
         if (!values.Password)
             {
@@ -293,7 +322,8 @@ const uploadTask = uploadBytesResumable(storageRef,file);
   </Form.Group>
 
     <Form.Group  className="mb-3" controlId="formGridLocation">
-    <Form.Label>Location</Form.Label>
+   
+    <Form.Label>Address</Form.Label>
     <Form.Control onChange={(e)=>handlechange(e)} value={FormValues.Location} name="Location" type="string" placeholder="Enter the locaion of the clinic " />
   <p style={{padding:'0',color:'red',marginTop:'6px'}} >{Formerrors.Location}</p>
   </Form.Group>
@@ -326,6 +356,13 @@ const uploadTask = uploadBytesResumable(storageRef,file);
     <Form.Control onChange={(e)=>handlechange(e)} value={FormValues.Image} name="Image" type="file" placeholder="Enter Admin image " />
   </Form.Group>
 
+ <Form.Group  className="mb-3" controlId="formGridlatitude">
+    <Tooltip title="Click it to set your location" placement="bottom" >
+  <AddLocationAltIcon style={{"cursor": "pointer"}} onClick={handle_Location} htmlColor='#06a3da'></AddLocationAltIcon>
+  </Tooltip>
+ <Form.Label style={{'marginLeft':'0.7rem'}}>Location</Form.Label>
+ <p style={{padding:'0',color:'red',marginTop:'6px'}} >{Formerrors.latitude}</p>
+ </Form.Group>
   </Col>
   </Row>
   <Row>
