@@ -145,7 +145,7 @@ const location = useLocation();
          }
      }
     
-  var meetings=[{id:4, patient:"hossam", slot:"2-2:30", date:"09-05-2022", state:"Today", patient_email:"hossam15@gmail.com"}];
+  var meetings=[];
   const current = new Date();
   let state;
   for(var i=0;i<meetings_api.length;i++)
