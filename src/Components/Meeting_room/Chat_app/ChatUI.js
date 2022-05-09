@@ -11,9 +11,11 @@ import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { useSelector, useDispatch } from "react-redux";
 
 const ChatUI = () => {
-  const dr_email = JSON.parse(
-    JSON.stringify(localStorage.getItem("Dr_email"))
-  );
+  // const dr_email = JSON.parse(
+  //   JSON.stringify(localStorage.getItem("Dr_email"))
+  // );
+  const email = JSON.parse(useSelector(state => state.meeting_reducer));
+
   const scroll_down = useRef(null);
   const [open, setopen] = useState(false);
   const [img, setimg] = useState("");
@@ -34,10 +36,13 @@ const ChatUI = () => {
     socketRef.current.on(
       "message",
       ({ name: name, msg: message, type: type, room: room }) => {
-        setChat([
-          ...chat,
-          { name: "P", msg: message, type: type, room: room },
-        ]);
+        if(room === email){
+          setChat([
+            ...chat,
+            { name: "P", msg: message, type: type, room: room },
+          ]);
+        }
+        
       }
     );
     return () => socketRef.current.disconnect();
@@ -48,12 +53,12 @@ const ChatUI = () => {
   const onMessageSubmit = (e) => {
     //const { name, text } = state
     if (text !== "") {
-      setChat([...chat, { name: name, msg: text, type: "text" }]);
+      setChat([...chat, { name: name, msg: text, type: "text", room: email }]);
       socketRef.current.emit("message", {
         name: name,
         msg: text,
         type: "text",
-        room: dr_email,
+        room: email,
       });
       window.scrollTo({ bottom: 0, behavior: "smooth" });
       settext("");
@@ -77,6 +82,7 @@ const ChatUI = () => {
             name: name,
             msg: url,
             type: "img",
+            room: email
           });
           setopen(false);
           window.scrollTo({ bottom: 0, behavior: "smooth" });

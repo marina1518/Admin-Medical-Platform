@@ -39,3 +39,11 @@ export const signin = (state)=>{
 export const logout = ()=>{
     return {type : "logout"} 
 }
+
+
+export const channel_name = (state)=>{
+    return {type : "channel_name", state:state} 
+}
+export const patient_details = (state)=>{
+    return {type : "patient_details", state:state} 
+}

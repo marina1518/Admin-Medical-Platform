@@ -587,7 +587,7 @@ const location = useLocation();
                                   button_state={true}
                                   patient_email={item.patient_email}
                                   patient_name={item.patient}
-                                  date = {item.date}
+                                 
                                 />
                               ) : (
                                 <VideoChat
@@ -595,7 +595,7 @@ const location = useLocation();
                                   button_state={false}
                                   patient_email={item.patient_email}
                                   patient_name={item.patient}
-                                  date = {item.date}
+                                 
                                 />
                               )}
                           </td>

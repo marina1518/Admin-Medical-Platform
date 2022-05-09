@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "./videochat.css";
 import {
-  channelName,
+ // channelName,
   config,
   useClient,
   useMicrophoneAndCameraTracks,
@@ -12,11 +12,12 @@ import Controls from "./Controls";
 import { useSelector, useDispatch } from "react-redux";
 
 const VideoCall = () => {
-  const email_dr_video_call = JSON.parse(
-    JSON.stringify(localStorage.getItem("Dr_email"))
-  );
-  console.log("dr_email from video call:", email_dr_video_call);
-
+  // const email_dr_video_call = JSON.parse(
+  //   JSON.stringify(localStorage.getItem("Dr_email"))
+  // );
+  //console.log("dr_email from video call:", email_dr_video_call);
+  const channelName = JSON.parse(useSelector(state => state.meeting_reducer));
+    console.log(channelName)
   const [users, setUsers] = useState([]);
   const [start, setStart] = useState(false);
   const client = useClient();
