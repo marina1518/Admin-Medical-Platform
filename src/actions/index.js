@@ -27,14 +27,18 @@ export const orders = ()=>{
 export const info = ()=>{
     return {type : "info"} 
 }
-
+export const history = ()=>{
+    return {type : "history"} 
+}
+export const prescription = ()=>{
+    return {type : "prescription"} 
+}
 /*export const signin = (token,usertype)=>{
     return {type : "Signin" , token : token , usertype : usertype } 
 }*/
 export const signin = (state)=>{
     return {type : "Signin" , state : state } 
 }
-
 
 export const logout = ()=>{
     return {type : "logout"} 
