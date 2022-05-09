@@ -24,9 +24,11 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import Time from '../../Components/inc_dec/file';
 import { Link, useNavigate } from "react-router-dom";
 import VideoChat from '../../Components/Meeting_room/Video_chat/VideoChat';
+import { channel_name } from "../../actions";
 
 const DoctorProfile =()=>{
-  const dispatch = useDispatch();  
+  const dispatch = useDispatch(); 
+  dispatch(channel_name("")); 
   let navigate = useNavigate();
   const navigation = (userid) => {
     navigate("/user", { state: { user_id: userid } });
@@ -134,7 +136,7 @@ const location = useLocation();
              )
   
              console.log(res.data);
-             //if (res.data==="you have no orders yet") return
+             if (res.data==="you have no meetings yet") return
              setmeetings(res.data);
            
          } 
@@ -143,7 +145,7 @@ const location = useLocation();
          }
      }
     
-  var meetings=[];
+  var meetings=[{id:4, patient:"hossam", slot:"2-2:30", date:"09-05-2022", state:"Today", patient_email:"hossam15@gmail.com"}];
   const current = new Date();
   let state;
   for(var i=0;i<meetings_api.length;i++)
