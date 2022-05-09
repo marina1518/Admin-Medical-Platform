@@ -43,7 +43,7 @@ export const signin = (state)=>{
 export const logout = ()=>{
     return {type : "logout"} 
 }
-<<<<<<< HEAD
+
 
 
 export const channel_name = (state)=>{
@@ -52,5 +52,3 @@ export const channel_name = (state)=>{
 export const patient_details = (state)=>{
     return {type : "patient_details", state:state} 
 }
-=======
->>>>>>> b5b89da1d4c4750cf6fe5cf0635e8ab196b18f24
