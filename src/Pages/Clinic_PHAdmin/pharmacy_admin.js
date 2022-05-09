@@ -293,7 +293,8 @@ const Ph_admin =()=>{
          <Avatar
          className="profile_img"
          src={token.profilePic}
-         sx={{ width: 50, height: 50, bgcolor: blueGrey[400] }}
+         style={{height:'70px',width:'70px'}}
+         sx={{  bgcolor: blueGrey[400] }}
          />
          <h3>{token.username}</h3>
       </div>
@@ -328,7 +329,8 @@ const Ph_admin =()=>{
       {showinfo ? (
       <div className="card">
          <div className="card-header bg-transparent border-0">
-            <Avatar className="profile_img" src="/broken-image.jpg" onClick={(e)=>
+            <Avatar className="profile_img" src="/broken-image.jpg" 
+            style={{height:'150px',width:'150px'}} onClick={(e)=>
             setEdit_photo(true)} />
             {edit_photo ? <input type="file"></input>:""}
             <h3>{token.entity.name} </h3>

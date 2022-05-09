@@ -281,7 +281,8 @@ const location = useLocation();
             <Avatar
               className="profile_img"
               src={token.profilePic}
-              sx={{ width: 50, height: 50, bgcolor: blueGrey[400] }}
+              style={{height:'70px',width:'70px'}}
+              sx={{ bgcolor: blueGrey[400] }}
             />
             
               <h3>{token.username}</h3>
@@ -329,7 +330,8 @@ const location = useLocation();
                     className="profile_img"
                     src={token.profilePic}
                     onClick={(e) => setEdit_photo(!edit_photo)}
-                    sx={{ width: 70, height: 70, bgcolor: blueGrey[400] }}
+                    style={{height:'150px',width:'150px'}}
+                    sx={{  bgcolor: blueGrey[400] }}
                   />
                   {edit_photo ? (
                     <>
