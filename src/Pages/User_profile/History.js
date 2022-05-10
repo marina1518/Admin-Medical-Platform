@@ -17,8 +17,27 @@ import TabPanel from "./TabPanel";
 import {useLocation} from "react-router-dom";
 
 const History = (props) => {
-  //const location = useLocation();
+  const location = useLocation();
   console.log(props.user);
+  let user_Api = {};
+  const[user, setuser]=useState({});
+  const get_user_info = async (username)=>{
+    try {
+      const res = await axios.get(`https://future-medical.herokuapp.com/profile/user/${username}`);
+      const data = await res.data;
+      user_Api.surgeries = data.history.surgeries;
+      user_Api.diseases = data.history.diseases;
+      user_Api.family_history = data.history.family_history;
+      user_Api.medications = data.history.medications;
+      setuser(user_Api);   
+    } 
+    catch (err) {
+      console.error(err);
+    }
+  }
+  useEffect(()=>{
+    get_user_info(location.state.user_id);
+  },[])
   // Floating Buttons Code
   const labels = [
     "Surgeries",
@@ -90,22 +109,22 @@ const History = (props) => {
             onChangeIndex={handleChangeIndex}
           >
             <TabPanel value={value} index={0} dir={theme.direction}>
-               <p>{props.user.surgeries}</p>
+               {/* <p>{props.user.surgeries}</p> */}
+               <p>{user.surgeries}</p>
             </TabPanel>
             <TabPanel value={value} index={1} dir={theme.direction}>
               <p>
-                 {props.user.diseases }
+                 {/* {props.user.diseases } */}
+                  {user.diseases }
               </p>
             </TabPanel>
             <TabPanel value={value} index={2} dir={theme.direction}>
-              <p>
-                {props.user.family_history}
-              </p> 
+              {/* <p>{props.user.family_history}</p>  */}
+              {user.family_history}
             </TabPanel>
             <TabPanel value={value} index={3} dir={theme.direction}>
-              <p>
-                { props.user.medications}
-              </p>
+              {/* <p>{ props.user.medications}</p> */}
+              { user.medications}
             </TabPanel>
           </SwipeableViews>
         </Box>
