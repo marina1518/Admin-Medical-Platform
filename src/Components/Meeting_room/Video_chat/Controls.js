@@ -10,9 +10,12 @@ import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import Grid from "@mui/material/Grid";
 import { useNavigate } from "react-router";
 import Pres from "./../../prescription/pres";
+import { useDispatch } from "react-redux";
+
 
 const Controls = (props) => {
   let navigate = useNavigate();
+  const dispatch = useDispatch();
   const client = useClient();
   // const { tracks, setStart, setInCall } = props;
   const { tracks, setStart } = props;
@@ -40,6 +43,7 @@ const Controls = (props) => {
     tracks[1].close();
     setStart(false);
     localStorage.removeItem("Dr_email");
+    
     show_pres(true);
     //navigate("/doctor");
     // setInCall(false);

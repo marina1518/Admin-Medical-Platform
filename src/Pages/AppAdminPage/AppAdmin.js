@@ -16,6 +16,7 @@ import AppAppointments from '../../Components/AdminApp/Appointments/AppAppointme
 import AppOrders from '../../Components/AdminApp/Orders/AppOrders';
 import Info from '../../Components/AdminApp/PersonalInfo/Info';
 import { useNavigate } from 'react-router-dom';
+import Barchart from '../../Components/AdminApp/Dashboard/Barchart';
 
 
 function AppAdmin() {
@@ -68,7 +69,7 @@ console.log(token)
           <main>
         <div className="profile-container">
         <div className='otherpages'>
-           { (chosencomp==='chart') && <Piechart/>}
+           { (chosencomp==='chart') && <Barchart/>}
           { (chosencomp==='chart') && <Chart data={data} dataKey={"Active Hospital profit"} title={"Hospital Analytics"}/>}
         { (chosencomp==='chart') &&  <Chart data={Clinic} dataKey={"Active Clinic profit"} title={"Clinic Analytics"}/>}
         { (chosencomp==='chart') && <Chart data={pharmacy} dataKey={"Active Pharmacy profit"} title={"Pharmacy Analytics"}/>}

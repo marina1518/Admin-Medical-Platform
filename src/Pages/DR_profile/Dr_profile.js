@@ -24,9 +24,11 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import Time from '../../Components/inc_dec/file';
 import { Link, useNavigate } from "react-router-dom";
 import VideoChat from '../../Components/Meeting_room/Video_chat/VideoChat';
+import { channel_name } from "../../actions";
 
 const DoctorProfile =()=>{
-  const dispatch = useDispatch();  
+  const dispatch = useDispatch(); 
+  dispatch(channel_name("")); 
   let navigate = useNavigate();
   const navigation = (userid) => {
     navigate("/user", { state: { user_id: userid } });
@@ -134,7 +136,7 @@ const location = useLocation();
              )
   
              console.log(res.data);
-             //if (res.data==="you have no orders yet") return
+             if (res.data==="you have no meetings yet") return
              setmeetings(res.data);
            
          } 
@@ -281,7 +283,8 @@ const location = useLocation();
             <Avatar
               className="profile_img"
               src={token.profilePic}
-              sx={{ width: 50, height: 50, bgcolor: blueGrey[400] }}
+              style={{height:'70px',width:'70px'}}
+              sx={{ bgcolor: blueGrey[400] }}
             />
             
               <h3>{token.username}</h3>
@@ -329,7 +332,8 @@ const location = useLocation();
                     className="profile_img"
                     src={token.profilePic}
                     onClick={(e) => setEdit_photo(!edit_photo)}
-                    sx={{ width: 70, height: 70, bgcolor: blueGrey[400] }}
+                    style={{height:'150px',width:'150px'}}
+                    sx={{  bgcolor: blueGrey[400] }}
                   />
                   {edit_photo ? (
                     <>
@@ -599,7 +603,7 @@ const location = useLocation();
                                   button_state={true}
                                   patient_email={item.patient_email}
                                   patient_name={item.patient}
-                                  date = {item.date}
+                                 
                                 />
                               ) : (
                                 <VideoChat
@@ -607,7 +611,7 @@ const location = useLocation();
                                   button_state={false}
                                   patient_email={item.patient_email}
                                   patient_name={item.patient}
-                                  date = {item.date}
+                                 
                                 />
                               )}
                           </td> 
