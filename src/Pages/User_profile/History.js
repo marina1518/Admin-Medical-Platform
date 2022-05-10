@@ -17,7 +17,7 @@ import TabPanel from "./TabPanel";
 import {useLocation} from "react-router-dom";
 
 const History = (props) => {
-  const location = useLocation();
+  //const location = useLocation();
   console.log(props.user);
   // Floating Buttons Code
   const labels = [
@@ -36,7 +36,7 @@ const History = (props) => {
 
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
-console.log("value", value);
+  console.log("value", value);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -90,21 +90,21 @@ console.log("value", value);
             onChangeIndex={handleChangeIndex}
           >
             <TabPanel value={value} index={0} dir={theme.direction}>
-               <p>{props.history.surgeries}</p>
+               <p>{props.user.surgeries}</p>
             </TabPanel>
             <TabPanel value={value} index={1} dir={theme.direction}>
               <p>
-                 {props.history.diseases }
+                 {props.user.diseases }
               </p>
             </TabPanel>
             <TabPanel value={value} index={2} dir={theme.direction}>
               <p>
-                {props.history.family_history}
+                {props.user.family_history}
               </p> 
             </TabPanel>
             <TabPanel value={value} index={3} dir={theme.direction}>
               <p>
-                { props.history.medications }
+                { props.user.medications}
               </p>
             </TabPanel>
           </SwipeableViews>
