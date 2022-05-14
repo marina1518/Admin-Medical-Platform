@@ -1,6 +1,6 @@
 import React from "react";
 import "./Header.css";
-import Avatar from '@material-ui/core/Avatar';
+import Avatar from "@material-ui/core/Avatar";
 import "bootstrap/dist/css/bootstrap.min.css";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Badge from "@mui/material/Badge";
@@ -60,6 +60,14 @@ const Header = () => {
       {/* {!token.token ? ( */}
       <div className="nav-center">
         <div className="nav-header">
+          <div className="logo-left">
+            <img
+              className="logo-image"
+              alt="logo"
+              src="/assets/images/Untitled-2.svg"
+            />
+          </div>
+
           <button className="nav-toggle" onClick={() => setShowNav(!showNav)}>
             {/* <i class="bi bi-list"></i> */}
             <MenuIcon />
@@ -74,8 +82,11 @@ const Header = () => {
               }}
             >
               <div className="icon-circle">
-                <Badge color="primary" badgeContent={2} overlap="circular" >
-                    <Avatar  style={{height:'40px',width:'40px'}} src={token.profilePic}  />
+                <Badge color="primary" badgeContent={2} overlap="circular">
+                  <Avatar
+                    style={{ height: "40px", width: "40px" }}
+                    src={token.profilePic}
+                  />
                 </Badge>
               </div>
             </li>

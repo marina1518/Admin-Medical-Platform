@@ -19,3 +19,23 @@
 .profile-container {
   margin: 0rem;
 }
+
+.MuiDataGrid-window::-webkit-scrollbar {
+  width: 9px;
+  height: 10px;
+  background-color: rgba(225, 225, 226, 0.518);
+  /* background: rgba(255, 255, 255, 0.4); */
+}
+
+.MuiDataGrid-window::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.MuiDataGrid-window::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background: rgba(87, 84, 84, 0.4);
+}
+
+.MuiDataGrid-window::-webkit-scrollbar-thumb:hover {
+  background: rgba(87, 84, 84, 0.7);
+}

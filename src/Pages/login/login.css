@@ -6,6 +6,10 @@
     border-color: darkblue;
 } */
 
+/* .login_container {
+  margin: 5rem 0;
+} */
+
 .form-container {
   display: flex;
   max-width: 100%;
@@ -27,6 +31,7 @@
   min-height: 70vh;
   flex-shrink: 0;
   margin: 0px auto;
+  padding: 3rem 0px;
 }
 .form-details {
   width: 60%;

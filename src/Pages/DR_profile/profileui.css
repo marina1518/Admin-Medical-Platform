@@ -58,17 +58,23 @@
   /* flex-grow: 1; */
 }
 
+.sidebar-links::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+  background-color: rgb(226, 226, 226);
+}
+
 .sidebar-links::-webkit-scrollbar-track {
   background: transparent;
 }
 
 .sidebar-links::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.4);
   border-radius: 4px;
+  background: rgba(70, 62, 62, 0.4);
 }
 
 .sidebar-links::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(70, 62, 62, 0.3);
 }
 
 .sidebar-links li {
@@ -169,8 +175,6 @@
   background-color: inherit;
 }
 
-
-
 /*image enlargement*/
 
 #myImg {
@@ -179,7 +183,9 @@
   transition: 0.3s;
 }
 
-#myImg:hover {opacity: 0.7;}
+#myImg:hover {
+  opacity: 0.7;
+}
 
 /* The Modal (background) */
 .modal_image {
@@ -191,25 +197,24 @@
   top: 100px;
   width: 100%; /* Full width */
   height: 80%; /* Full height */
- overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0,0,0); /* Fallback color */
-  background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.9); /* Black w/ opacity */
 }
 
 /* Modal Content (image) */
 .modal-content {
   margin: auto;
   display: block;
-  left:10%;
+  left: 10%;
   width: 80%;
   height: 100%;
   max-width: 700px;
 }
 
-
-
 /* Add Animation */
-.modal-content, #caption {  
+.modal-content,
+#caption {
   -webkit-animation-name: zoom;
   -webkit-animation-duration: 0.6s;
   animation-name: zoom;
@@ -217,13 +222,21 @@
 }
 
 @-webkit-keyframes zoom {
-  from {-webkit-transform:scale(0)} 
-  to {-webkit-transform:scale(1)}
+  from {
+    -webkit-transform: scale(0);
+  }
+  to {
+    -webkit-transform: scale(1);
+  }
 }
 
 @keyframes zoom {
-  from {transform:scale(0)} 
-  to {transform:scale(1)}
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
 }
 
 /* The Close Button */
@@ -246,7 +259,7 @@
 }
 
 /* 100% Image Width on Smaller Screens */
-@media only screen and (max-width: 700px){
+@media only screen and (max-width: 700px) {
   .modal-content {
     width: 100%;
   }

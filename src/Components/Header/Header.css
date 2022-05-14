@@ -16,12 +16,25 @@ nav {
   z-index: 99;
   /* max-height: 70px; */
 }
+
 .nav-header {
   display: flex;
   align-items: center;
   flex-direction: row;
-  justify-content: flex-end;
+  justify-content: space-between;
   padding: 1rem;
+}
+
+.logo-left {
+  display: flex;
+  align-items: center;
+}
+
+.logo-image {
+  /* max-height: 31px; */
+  object-fit: cover;
+  /* padding-right: 0.5rem; */
+  height: 28px;
 }
 
 .nav-toggle {
@@ -52,7 +65,7 @@ nav {
   transition: all 0.3s linear;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   flex-wrap: nowrap;
   align-content: center;
@@ -146,7 +159,7 @@ nav {
     align-items: center;
     justify-content: space-between;
     padding: 1rem;
-    justify-content: center;
+    /* justify-content: center; */
 
     /* padding-top: 0.5rem; */
   }
