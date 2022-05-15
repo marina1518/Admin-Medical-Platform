@@ -16,6 +16,7 @@ import PrivateEntity from './Components/PrivateRoutes/PrivateEntity';
 import { useSelector, useDispatch } from "react-redux";
 import OrderImage from './Components/AdminApp/Orders/OrderImage';
 import VideoCall from "./Components/Meeting_room/Video_chat/VideoCall";
+import ProfileUi from "./Pages/User_profile/ProfileUI"
 import { useLocation } from "react-router-dom";
 function App() {
 const token = JSON.parse(useSelector((state) => state.auth)); //state of token
@@ -31,6 +32,7 @@ const location = useLocation();
       <Routes>
         {/*<Route path="/" element={<OrderImage/>}> </Route>*/}
         {<Route path="/" element={<Login/>}> </Route>}
+        {<Route path="/user" element={<ProfileUi/>}> </Route>}
         <Route path="/AppAdmin" element={<PrivateAdmin><AppAdmin style={{marginTop:'200px'}}/></PrivateAdmin>}> </Route>
         <Route path="/HospitalAdmin" element={<PrivateEntity> <Adminhospital /> </PrivateEntity>}> </Route>
         {/*<Route path='/ClinicAdmin' element={<Clinic_admin />}> </Route>*/}
