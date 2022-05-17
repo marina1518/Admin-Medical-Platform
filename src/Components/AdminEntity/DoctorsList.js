@@ -42,8 +42,11 @@ const Get_Doctors_Api = async (hospitalname)=>{
           });
         setdata(doctors_list);  
     } 
-    catch (err) {
-        console.error(err);
+    catch (error) {
+        console.error(error);
+        if (error.response) {
+          console.log(error.response.data);
+          console.log(error.response.status);}
     }
 } 
 

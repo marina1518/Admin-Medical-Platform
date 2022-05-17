@@ -52,3 +52,15 @@ export const channel_name = (state)=>{
 export const patient_details = (state)=>{
     return {type : "patient_details", state:state} 
 }
+
+/*********** ADMIN ENTITY */
+
+export const entity_info = (state)=>{
+    return {type : "entity_info", state:state} 
+}
+export const entity_appointments = (state)=>{
+    return {type : "entity_appointments", state:state} 
+}
+export const entity_doctors = (state)=>{
+    return {type : "entity_doctors", state:state} 
+}   

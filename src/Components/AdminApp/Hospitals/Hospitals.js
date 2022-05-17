@@ -6,20 +6,42 @@ import Table from '../../Table/Table';
 import axios from 'axios'
 import AddHospital from './AddHospital';
 import EditHospitals from './EditHospitals';
+import { useSelector } from 'react-redux';
+import AlertDelete from "../AlertDelete/AlertDelete"
 
 export default function Hospitals() {
 
+ const token = JSON.parse(useSelector(state => state.auth)); //state of token  
 const [data,setdata] = useState([]) //FROM API HOSPITALS LIST
+const [alert_delete , set_alert_delete] = useState(false);
+const [clicked_hos , set_clicked_hos] = useState({});
 var hospitals_list = JSON.parse(JSON.stringify(data));
 let hospital = {} ;
 
 
-
+const Dectivate_Hospital_Api = async (hospital_name)=>{
+ try {
+        const res = await axios.patch('https://future-medical.herokuapp.com/admin/entity/deactivate',{
+          name : hospital_name 
+        },{
+          headers: {
+          'Authorization': `Bearer ${token.token}`
+          }
+        })
+        const data = await res.data;
+        Get_Hospitals_Api() ; //IT WILL GET THE ACTIVE HOSPITALS 
+        console.log(data)
+      }
+    catch (err) {
+        console.error(err);
+    }
+}
 const Get_Hospitals_Api = async ()=>{
  try {
         const res = await axios.get('https://future-medical.herokuapp.com/hospitals')
         const data = await res.data;
         let i = 1;
+        hospitals_list = [];  
         data.forEach((x) => {
                 console.log(x.name)
                 hospital.Hospitalname = x.name;
@@ -117,10 +139,22 @@ const Get_Hospitals_Api = async ()=>{
         setadd(true); //AFTER SUBMIT ADD FORM [GET BACK TO HOSPITALS LIST]
   }   
    
-   const handleDelete = (id)=>{
+   const handleDelete = (clicked_Hos)=>{
      //API DELETE Hospital
-     console.log(id);
-     setdata(data.filter((item) => item.id !== id)) //DELETE STATIC
+     //Dectivate_Hospital_Api(clicked_Hos.Hospitalname);
+     set_clicked_hos(clicked_Hos)
+     console.log(clicked_Hos);
+     set_alert_delete(true)
+     //setdata(data.filter((item) => item.id !== id)) //DELETE STATIC
+  }
+
+  const Close_Alert_yes = (clicked_Hos) =>{
+    Dectivate_Hospital_Api(clicked_Hos.Hospitalname);
+    set_alert_delete(false)
+  }
+   const Close_Alert_No = () =>{
+    //Dectivate_Hospital_Api(clicked_Hos.Hospitalname);
+    set_alert_delete(false)
   }
   const columns = [
       {
@@ -168,7 +202,7 @@ const Get_Hospitals_Api = async ()=>{
         return (
           <>       
               {/*<Button variant="outline-primary" onClick={() => handleEdit(params.row)}>Edit</Button>*/}
-             <DeleteOutline htmlColor='red' style={{cursor:'pointer' , marginLeft:'30px'}} onClick={() => handleDelete(params.row.id)}
+             <DeleteOutline htmlColor='red' style={{cursor:'pointer' , marginLeft:'30px'}} onClick={() => handleDelete(params.row)}
                            
             />
           </>
@@ -184,6 +218,7 @@ const Get_Hospitals_Api = async ()=>{
     {viewedit && viewadd &&<Button variant="primary" onClick={()=>{setadd(false)}} style={{margin:'15px'}}>Add Hospital</Button>  }
     {!viewedit && <EditHospitals editdata={editdata} changeedit={changeedit} goback={goback}/>}
     {!viewadd &&  <AddHospital changeadd={changeadd} goback={goback} />} 
+    {alert_delete && <AlertDelete open={alert_delete} Close_Alert_No={Close_Alert_No} Close_Alert_yes={Close_Alert_yes} clicked_hos={clicked_hos} parent={"hospital"}></AlertDelete>}
     </div>
     </div>
   );

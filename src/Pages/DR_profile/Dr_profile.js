@@ -734,6 +734,7 @@ const DoctorProfile = () => {
                                 onChange={(e) => setday(e.target.value)}
                                 className="ll"
                               >
+                                <option value="">Choose the day</option>
                                 <option value="Sunday">Sunday</option>
                                 <option value="Monday">Monday</option>
                                 <option value="Tuesday">Tuesday</option>

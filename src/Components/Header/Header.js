@@ -8,7 +8,7 @@ import Badge from "@mui/material/Badge";
 import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { signin, logout } from "../../actions";
+import { signin, logout, entity_info } from "../../actions";
 import { chart } from "../../actions";
 import MenuIcon from "@mui/icons-material/Menu";
 // import { Button, Badge } from "react-bootstrap";
@@ -22,6 +22,7 @@ const Header = () => {
     ////GO BACK ALL STATES TO INIT STATES
     dispatch(logout());
     dispatch(chart());
+    dispatch(entity_info())
     navigate("/");
   };
   const [showNav, setShowNav] = useState(false);

@@ -26,7 +26,12 @@ const handle_Location = ()=>{
          FormValues.latitude = position.coords.latitude ;
          FormValues.longitude = position.coords.longitude ;
          ////// TO REMOVE THE ERROR WHEN CLICKED 
-          setFormerrors(validate({...FormValues, latitude :  position.coords.latitude}))
+           if (issubmit)
+         {
+             //if it already submitted , so if change happen make the validation to remove the error
+            setFormerrors(validate({...FormValues, latitude :  position.coords.latitude}))
+         } 
+          
             //latitude: position.coords.latitude,
 
             //longitude: position.coords.longitude,
@@ -48,7 +53,9 @@ const Add_hospital_api = ()=>{
                     hospitalname : FormValues.Hospitalname,
                     address : FormValues.Location ,
                     telephone : FormValues.number ,
-                    arabic_hospitalname : FormValues.arabicname
+                    arabic_hospitalname : FormValues.arabicname,
+                    latitude : FormValues.latitude,
+                    longitude : FormValues.longitude
                    
          }).then((res)=>{
            console.log(res.data);
@@ -78,7 +85,9 @@ const Add_pharmacy_api = ()=>{
                     pharmacyname : FormValues.pharmacyname,
                     address : FormValues.Location ,
                     telephone : FormValues.number,
-                    arabic_pharmacyname : FormValues.arabicname
+                    arabic_pharmacyname : FormValues.arabicname,
+                    latitude : FormValues.latitude,
+                    longitude : FormValues.longitude
          }).then((res)=>{
            console.log(res.data);
            props.changeadd(FormValues);  //go to all pharmacies
@@ -107,7 +116,9 @@ const Add_clinic_api = ()=>{
                     clinicname : FormValues.clinicname,
                     address : FormValues.Location ,
                     telephone : FormValues.number ,
-                    arabic_clinicname : FormValues.arabicname
+                    arabic_clinicname : FormValues.arabicname,
+                    latitude : FormValues.latitude,
+                    longitude : FormValues.longitude
          }).then((res)=>{
            console.log(res.data);
            props.changeadd(FormValues);  //go to all clinics
@@ -315,21 +326,29 @@ const uploadTask = uploadBytesResumable(storageRef,file);
     </Form.Group>
   
 
-  <Form.Group  className="mb-3" controlId="formGridAdmin">
-    <Form.Label>Admin Name</Form.Label>
-    <Form.Control onChange={(e)=>handlechange(e)} value={FormValues.Admin} name="Admin" type="string" placeholder="Enter Admin name " />
-  <p style={{padding:'0',color:'red',marginTop:'6px'}} >{Formerrors.Admin}</p>
-  </Form.Group>
-
     <Form.Group  className="mb-3" controlId="formGridLocation">
    
     <Form.Label>Address</Form.Label>
     <Form.Control onChange={(e)=>handlechange(e)} value={FormValues.Location} name="Location" type="string" placeholder="Enter the locaion of the clinic " />
   <p style={{padding:'0',color:'red',marginTop:'6px'}} >{Formerrors.Location}</p>
   </Form.Group>
+
+   <Form.Group  className="mb-3" controlId="formGridlatitude">
+    <Tooltip title="Click it to set your location" placement="bottom" >
+  <AddLocationAltIcon style={{"cursor": "pointer"}} onClick={handle_Location} htmlColor='#06a3da'></AddLocationAltIcon>
+  </Tooltip>
+ <Form.Label style={{'marginLeft':'0.7rem'}}>Location</Form.Label>
+ <p style={{padding:'0',color:'red',marginTop:'6px'}} >{Formerrors.latitude}</p>
+ </Form.Group>
   </Col>
   <Col>
       <h6><strong>Admin Account Information</strong></h6>
+      <Form.Group  className="mb-3" controlId="formGridAdmin">
+    <Form.Label>Admin Name</Form.Label>
+    <Form.Control onChange={(e)=>handlechange(e)} value={FormValues.Admin} name="Admin" type="string" placeholder="Enter Admin name " />
+  <p style={{padding:'0',color:'red',marginTop:'6px'}} >{Formerrors.Admin}</p>
+  </Form.Group>
+
       <Form.Group  className="mb-3" controlId="formGridEmail">
     <Form.Label>Email</Form.Label>
     <Form.Control onChange={(e)=>handlechange(e)} value={FormValues.Email} name="Email" type="email" placeholder="Enter Admin's Email " />
@@ -356,13 +375,7 @@ const uploadTask = uploadBytesResumable(storageRef,file);
     <Form.Control onChange={(e)=>handlechange(e)} value={FormValues.Image} name="Image" type="file" placeholder="Enter Admin image " />
   </Form.Group>
 
- <Form.Group  className="mb-3" controlId="formGridlatitude">
-    <Tooltip title="Click it to set your location" placement="bottom" >
-  <AddLocationAltIcon style={{"cursor": "pointer"}} onClick={handle_Location} htmlColor='#06a3da'></AddLocationAltIcon>
-  </Tooltip>
- <Form.Label style={{'marginLeft':'0.7rem'}}>Location</Form.Label>
- <p style={{padding:'0',color:'red',marginTop:'6px'}} >{Formerrors.latitude}</p>
- </Form.Group>
+
   </Col>
   </Row>
   <Row>

@@ -7,12 +7,15 @@ import AddAnnouncment from './AddAnnouncment';
 import EditAnnouncment from './EditAnnouncment';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
+import AlertDelete from "../AlertDelete/AlertDelete"
 
 export default function Announcemts() {
     
       const token = JSON.parse(useSelector(state => state.auth)); //state of token 
       //console.log(token)
     const [data,setdata] = useState([]) //FROM API Announcments LIST 
+        const [alert_delete , set_alert_delete] = useState(false);
+    const [clicked_announcment , set_clicked_announcment] = useState({});
 
     const [viewedit,setedit]=useState(true)  //WHEN FALSE SHOW COMPONENT EDIT ANNOUNCMENT
     const [viewadd,setadd]=useState(true) //WHEN FALSE SHOW COMPONENT ADD ANNOUNCMENT
@@ -28,6 +31,7 @@ const Get_Announcments_Api = async ()=>{
           }
         })
         const data = await res.data;
+        announcments_list=[];
         let i = 1;
         data.forEach((x) => {
                 announce.announcmentname = x.announce.title;
@@ -107,7 +111,7 @@ useEffect(()=>{
     
   }   
     
-      const handleDelete = (id)=>{
+      /*const handleDelete = (id)=>{
         //API DELETE ANNOUNCMENT
         console.log(id)
         let req = data.filter((item) => item.id === id)
@@ -115,6 +119,25 @@ useEffect(()=>{
         //console.log(req[0].announcmentname)
         Delete_Announcments_Api(req[0].announcmentname,id);
      
+  }*/
+     const handleDelete = (clicked_Announce_row)=>{
+     //API DELETE Hospital
+     //Dectivate_Hospital_Api(clicked_Hos.Hospitalname);
+     set_clicked_announcment(clicked_Announce_row)
+     console.log(clicked_Announce_row);
+     set_alert_delete(true)
+     //setdata(data.filter((item) => item.id !== id)) //DELETE STATIC
+  }
+
+  const Close_Alert_yes = (clicked_Announce_row) =>{
+    let req = data.filter((item) => item.id === clicked_Announce_row.id)
+    Delete_Announcments_Api(req[0].announcmentname,clicked_Announce_row.id);
+    //Dectivate_Hospital_Api(clicked_Hos.Hospitalname);
+    set_alert_delete(false)
+  }
+   const Close_Alert_No = () =>{
+    //Dectivate_Hospital_Api(clicked_Hos.Hospitalname);
+    set_alert_delete(false)
   }
   const columns = [
   {
@@ -157,7 +180,7 @@ useEffect(()=>{
         return (
           <>       
               <Button variant="outline-primary" onClick={() => handleEdit(params.row)}>Edit</Button>
-             <DeleteOutline htmlColor='red' style={{cursor:'pointer' , marginLeft:'30px'}} onClick={() => handleDelete(params.row.id)}
+             <DeleteOutline htmlColor='red' style={{cursor:'pointer' , marginLeft:'30px'}} onClick={() => handleDelete(params.row)}
               
                         
             />
@@ -180,6 +203,7 @@ useEffect(()=>{
     {viewedit && viewadd &&<Button variant="primary" onClick={()=>{setadd(false)}} style={{margin:'15px'}}>Add Announcment</Button>  }
     {!viewedit && <EditAnnouncment editdata={editdata} changeedit={changeedit} goback={goback}/>}
     {!viewadd && <AddAnnouncment changeadd={changeadd} goback={goback}/>}
+    {alert_delete && <AlertDelete open={alert_delete} Close_Alert_No={Close_Alert_No} Close_Alert_yes={Close_Alert_yes} clicked_hos={clicked_announcment} parent={"announcment"}></AlertDelete>}
     </div>
     </div>
   );

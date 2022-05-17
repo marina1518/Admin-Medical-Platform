@@ -6,18 +6,41 @@ import Table from '../../Table/Table';
 import axios from 'axios';
 import AddPharmacy from './AddPharmacy';
 import EditPharmacy from './EditPharmacy';
+import { useSelector } from 'react-redux';
+import AlertDelete from "../AlertDelete/AlertDelete"
 
 export default function Pharmacies() {
 
+     const token = JSON.parse(useSelector(state => state.auth)); //state of token  
     const [data,setdata] = useState([]) //FROM API PHARMACIES LIST 
     var pharmacies_list = JSON.parse(JSON.stringify(data));
+    const [alert_delete , set_alert_delete] = useState(false);
+    const [clicked_pharma , set_clicked_pharma] = useState({});
 let pharmacy = {} ;
 
+const Dectivate_Pharmacy_Api = async (hospital_name)=>{
+ try {
+        const res = await axios.patch('https://future-medical.herokuapp.com/admin/pharmcy/deactivate',{
+          name : hospital_name 
+        },{
+          headers: {
+          'Authorization': `Bearer ${token.token}`
+          }
+        })
+        const data = await res.data;
+        Get_Pharmacies_Api() ; //IT WILL GET THE ACTIVE Pharmacies
+        console.log(data)
+      }
+    catch (err) {
+        console.error(err);
+    }
+}
 const Get_Pharmacies_Api = async ()=>{
  try {
         const res = await axios.get('https://future-medical.herokuapp.com/pharmacies')
         const data = await res.data;
         let i = 1;
+        pharmacies_list =[];
         data.forEach((x) => {
                 console.log(x.name)
                 pharmacy.pharmacyname = x.name;
@@ -115,9 +138,23 @@ const Get_Pharmacies_Api = async ()=>{
         setadd(true); //AFTER SUBMIT ADD FORM [GET BACK TO PHARMACIES LIST]
   }     
     console.log(data)
-  const handleDelete = (id)=>{
-        //API DELETE PHARMACY 
-     setdata(data.filter((item) => item.id !== id)) //STATIC DELETE
+
+   const handleDelete = (clicked_Pharmacy_row)=>{
+     //API DELETE Hospital
+     //Dectivate_Hospital_Api(clicked_Hos.Hospitalname);
+     set_clicked_pharma(clicked_Pharmacy_row)
+     console.log(clicked_Pharmacy_row);
+     set_alert_delete(true)
+     //setdata(data.filter((item) => item.id !== id)) //DELETE STATIC
+  }
+
+  const Close_Alert_yes = (clicked_Pharmacy_row) =>{
+    Dectivate_Pharmacy_Api(clicked_Pharmacy_row.pharmacyname);
+    set_alert_delete(false)
+  }
+   const Close_Alert_No = () =>{
+    //Dectivate_Hospital_Api(clicked_Hos.Hospitalname);
+    set_alert_delete(false)
   }
   const columns = [
   {
@@ -165,7 +202,7 @@ const Get_Pharmacies_Api = async ()=>{
         return (
           <>       
               {/*<Button variant="outline-primary" onClick={() => handleEdit(params.row)}>Edit</Button>*/}
-             <DeleteOutline htmlColor='red' style={{cursor:'pointer' , marginLeft:'30px'}} onClick={() => handleDelete(params.row.id)}
+             <DeleteOutline htmlColor='red' style={{cursor:'pointer' , marginLeft:'30px'}} onClick={() => handleDelete(params.row)}
               
                         
             />
@@ -182,6 +219,7 @@ const Get_Pharmacies_Api = async ()=>{
     {viewedit && viewadd &&<Button variant="primary" onClick={()=>{setadd(false)}} style={{margin:'15px'}}>Add Pharmacy</Button>  }
     {!viewedit && <EditPharmacy editdata={editdata} changeedit={changeedit} goback={goback}/>}
     {!viewadd && <AddPharmacy changeadd={changeadd}  goback={goback}/>}
+    {alert_delete && <AlertDelete open={alert_delete} Close_Alert_No={Close_Alert_No} Close_Alert_yes={Close_Alert_yes} clicked_hos={clicked_pharma} parent={"pharmacy"}></AlertDelete>}
     </div>
     </div>
   );

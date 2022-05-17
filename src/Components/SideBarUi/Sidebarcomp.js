@@ -18,16 +18,7 @@ import Tooltip from "@mui/material/Tooltip";
 //import { blueGrey } from "@material-ui/core/colors";
 
 import { useSelector, useDispatch } from "react-redux";
-import {
-  hospitals,
-  clinics,
-  announcments,
-  pharmacies,
-  chart,
-  appointments,
-  orders,
-  info,
-} from "../../actions";
+import {   hospitals,  clinics,  announcments,  pharmacies,  chart,  appointments,  orders,  info,entity_appointments,entity_doctors,entity_info} from "../../actions";
 
 export default function Sidebarcomp(props) {
   const dispatch = useDispatch();
@@ -95,21 +86,21 @@ export default function Sidebarcomp(props) {
           {compact ? (
             <>
               <Tooltip title="Personnal Info" placement="right">
-                <li onClick={() => props.sideBarhandler("Info")}>
+                <li onClick={() => dispatch(entity_info())}>
                   <i>
                     <AnnouncementIcon htmlColor="#06a3da" />
                   </i>
                 </li>
               </Tooltip>
               <Tooltip title="Doctors" placement="right">
-                <li onClick={() => props.sideBarhandler("Doctors")}>
+                <li onClick={() => dispatch(entity_doctors())}>
                   <i>
                     <MedicalServicesIcon />
                   </i>
                 </li>
               </Tooltip>
               <Tooltip title="Appointments" placement="right">
-                <li onClick={() => props.sideBarhandler("Appointments")}>
+                <li onClick={() => dispatch(entity_appointments())}>
                   <i>
                     <AccessTimeIcon />
                   </i>
@@ -118,19 +109,19 @@ export default function Sidebarcomp(props) {
             </>
           ) : (
             <>
-              <li onClick={() => props.sideBarhandler("Info")}>
+              <li onClick={() => dispatch(entity_info())}>
                 <i>
                   <AnnouncementIcon htmlColor="#06a3da" />
                 </i>
                 <span> Personnal Info</span>
               </li>
-              <li onClick={() => props.sideBarhandler("Doctors")}>
+              <li onClick={() => dispatch(entity_doctors())}>
                 <i>
                   <MedicalServicesIcon />
                 </i>
                 <span> Doctors</span>
               </li>
-              <li onClick={() => props.sideBarhandler("Appointments")}>
+              <li onClick={() => dispatch(entity_appointments())}>
                 <i>
                   <AccessTimeIcon />
                 </i>
