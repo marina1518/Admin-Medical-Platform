@@ -33,8 +33,8 @@ export default function Adminhospital() {
           <main>
         <div className="profile-container">
           {(chosencomp === "entity_info")&&<AdminInformation/>}
-           {(chosencomp === "entity_appointments")&&<DoctorsList/>}
-           {(chosencomp === "entity_doctors")&&<Appointments/> }
+           {(chosencomp === "entity_doctors")&&<DoctorsList/>}
+           {(chosencomp === "entity_appointments")&&<Appointments/> }
            </div>
           </main>
           </div>

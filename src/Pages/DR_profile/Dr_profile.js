@@ -29,7 +29,7 @@ import { RiSubtractLine } from "react-icons/ri";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation } from "react-router-dom";
-import { signin } from "../../actions";
+import { doctor_info, doctor_meeting, doctor_review, doctor_timetable, signin } from "../../actions";
 import SideBarUI from "../../Components/SideBarUi/Sidebar";
 import "./profileui.css";
 import { blueGrey } from "@material-ui/core/colors";
@@ -42,6 +42,7 @@ import VideoChat from "../../Components/Meeting_room/Video_chat/VideoChat";
 import { channel_name } from "../../actions";
 import Tooltip from "@mui/material/Tooltip";
 
+
 const DoctorProfile = () => {
   const dispatch = useDispatch();
   dispatch(channel_name(""));
@@ -53,6 +54,8 @@ const DoctorProfile = () => {
   const [showreviews, setShowReviews] = useState(false);
   const [showAppointment, setShowAppointment] = useState(false);
   const [showtimetable, setshowTimetable] = useState(false);
+  
+  const chosencomp = useSelector(state => state.Doctor_reducer)
 
   const sideBarhandler = (btn) => {
     if (btn === "info") {
@@ -329,41 +332,41 @@ const DoctorProfile = () => {
           {compact ? (
             <>
               <Tooltip title="Personnal Info" placement="right">
-                <li onClick={() => sideBarhandler("info")}>
+                <li onClick={() => dispatch(doctor_info())}>
                   <i class="bi bi-info-circle-fill"></i>
                 </li>
               </Tooltip>
               <Tooltip title="Reviews" placement="right">
-                <li onClick={() => sideBarhandler("reviews")}>
+                <li onClick={() => dispatch(doctor_review())}>
                   <i class="bi bi-chat-left-text-fill"></i>
                 </li>
               </Tooltip>
               <Tooltip title="Appointments" placement="right">
-                <li onClick={() => sideBarhandler("appointment")}>
+                <li onClick={() => dispatch(doctor_meeting())}>
                   <i class="bi bi-clock-fill"></i>
                 </li>
               </Tooltip>
               <Tooltip title="Timetable" placement="right">
-                <li onClick={() => sideBarhandler("timetable")}>
+                <li onClick={() => dispatch(doctor_timetable())}>
                   <i class="bi bi-bandaid-fill"></i>
                 </li>
               </Tooltip>
             </>
           ) : (
             <>
-              <li onClick={() => sideBarhandler("info")}>
+              <li onClick={() => dispatch(doctor_info())}>
                 <i class="bi bi-info-circle-fill"></i>
                 <span> Personnal Info</span>
               </li>
-              <li onClick={() => sideBarhandler("reviews")}>
+              <li onClick={() => dispatch(doctor_review())}>
                 <i class="bi bi-chat-left-text-fill"></i>
                 <span> Reviews</span>
               </li>
-              <li onClick={() => sideBarhandler("appointment")}>
+              <li onClick={() => dispatch(doctor_meeting())}>
                 <i class="bi bi-clock-fill"></i>
                 <span> Appointments</span>
               </li>
-              <li onClick={() => sideBarhandler("timetable")}>
+              <li onClick={() => dispatch(doctor_timetable())}>
                 <i class="bi bi-bandaid-fill"></i>
                 <span> Timetable</span>
               </li>
@@ -373,7 +376,7 @@ const DoctorProfile = () => {
       </SideBarUI>
       <main>
         <div className="profile-container">
-          {showinfo ? (
+          {(chosencomp == "doctor_info") ? (
             <div className="card">
               <div className="card-header bg-transparent">
                 <h3 className="mb-0">
@@ -602,7 +605,7 @@ const DoctorProfile = () => {
           ) : (
             ""
           )}
-          {showreviews ? (
+          {(chosencomp=="doctor_review") ? (
             <div className="card shadow-sm">
               <div className="card-header bg-transparent">
                 <p className="mb-0">
@@ -626,7 +629,7 @@ const DoctorProfile = () => {
             ""
           )}
         </div>
-        {showAppointment ? (
+        {(chosencomp=="doctor_meeting") ? (
           <div className="card">
             <div className="card-header bg-transparent border-0">
               <h3 className="mb-0">
@@ -703,7 +706,7 @@ const DoctorProfile = () => {
           ""
         )}
 
-        {showtimetable ? (
+        {chosencomp=="doctor_timetable" ? (
           <div className="card shadow-sm">
             <div className="card-header bg-transparent border-0">
               <h3 className="mb-0">

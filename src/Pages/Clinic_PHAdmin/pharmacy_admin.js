@@ -19,10 +19,14 @@ import { useLocation } from "react-router-dom";
 import SideBarUI from "../../Components/SideBarUi/Sidebar";
 import { blueGrey } from "@material-ui/core/colors";
 import Tooltip from "@mui/material/Tooltip";
+import {pharmacy_info ,pharma_history , orders_pharma, pending_orders_red,approved_orders} from "../../actions/index"
 // import { Bar} from "react-chartjs-2";
 
 const Ph_admin = () => {
   const dispatch = useDispatch();
+
+   const chosencomp = useSelector(state => state.Pharmacy_reducer)
+
   const [showinfo, setShowinfo] = useState(false);
   const [showorders, setShoworders] = useState(false);
   const [showpending, setPending] = useState(false);
@@ -351,50 +355,50 @@ const Ph_admin = () => {
           {compact ? (
             <>
               <Tooltip title="Personnal Info" placement="right">
-                <li onClick={() => sideBarhandler("info")}>
+                <li onClick={() => dispatch(pharmacy_info())}>
                   <i class="bi bi-info-circle-fill"></i>
                 </li>
               </Tooltip>
               <Tooltip title="Orders" placement="right">
-                <li onClick={() => sideBarhandler("orders")}>
+                <li onClick={() => dispatch(orders_pharma())}>
                   <i class="bi bi-chat-left-text-fill"></i>
                 </li>
               </Tooltip>
               <Tooltip title="Pending Orders" placement="right">
-                <li onClick={() => sideBarhandler("pending orders")}>
+                <li onClick={() => dispatch(pending_orders_red())}>
                   <i class="bi bi-clock-fill"></i>
                 </li>
               </Tooltip>
               <Tooltip title="Approved Orders " placement="right">
-                <li onClick={() => sideBarhandler("approved orders")}>
+                <li onClick={() => dispatch(approved_orders())}>
                   <i class="bi bi-bandaid-fill"></i>
                 </li>
               </Tooltip>
               <Tooltip title="History" placement="right">
-                <li onClick={() => sideBarhandler("history")}>
+                <li onClick={() => dispatch(pharma_history())}>
                   <i class="bi bi-hourglass-split"></i>
                 </li>
               </Tooltip>
             </>
           ) : (
             <>
-              <li onClick={() => sideBarhandler("info")}>
+              <li onClick={() => dispatch(pharmacy_info())}>
                 <i class="bi bi-info-circle-fill"></i>
                 <span> Pharmacy Info </span>
               </li>
-              <li onClick={() => sideBarhandler("orders")}>
+              <li onClick={() => dispatch(orders_pharma())}>
                 <i class="bi bi-chat-left-text-fill"></i>
                 <span> Orders </span>
               </li>
-              <li onClick={() => sideBarhandler("pending orders")}>
+              <li onClick={() => dispatch(pending_orders_red())}>
                 <i class="bi bi-clock-fill"></i>
                 <span> Pending Orders </span>
               </li>
-              <li onClick={() => sideBarhandler("approved orders")}>
+              <li onClick={() => dispatch(approved_orders())}>
                 <i class="bi bi-bandaid-fill"></i>
                 <span> Approved Orders </span>
               </li>
-              <li onClick={() => sideBarhandler("history")}>
+              <li onClick={() => dispatch(pharma_history())}>
                 <i class="bi bi-hourglass-split"></i>
                 <span> History </span>
               </li>
@@ -406,7 +410,7 @@ const Ph_admin = () => {
         {/* 
    <div className="profile-container">
       */}
-        {showinfo ? (
+        {(chosencomp == "pharmacy_info") ? (
           <div className="card">
             <div className="card-header bg-transparent border-0">
               <Avatar
@@ -436,7 +440,7 @@ const Ph_admin = () => {
         ) : (
           ""
         )}
-        {showorders ? (
+        {(chosencomp == "orders_pharma") ? (
           <div className="card">
             <div className="card-header bg-transparent border-0">
               {order2_details.length === 0 ? (
@@ -507,7 +511,7 @@ const Ph_admin = () => {
         ) : (
           ""
         )}
-        {showpending ? (
+        {(chosencomp == "pending_orders") ? (
           <div className="card">
             <div className="card-header bg-transparent border-0">
               {pending_orders.length === 0 ? (
@@ -536,7 +540,7 @@ const Ph_admin = () => {
         ) : (
           ""
         )}
-        {showapproved ? (
+        {(chosencomp == "approved_orders") ? (
           <div className="card shadow-sm">
             <div className="card-header bg-transparent border-0">
               {approved.length === 0 ? (
@@ -574,7 +578,7 @@ const Ph_admin = () => {
         ) : (
           ""
         )}
-        {showhistory ? (
+        {(chosencomp == "pharma_history") ? (
           <div className="card shadow-sm">
             <div className="card-header bg-transparent border-0">
               {history.length === 0 ? (

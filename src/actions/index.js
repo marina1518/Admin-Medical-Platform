@@ -64,3 +64,37 @@ export const entity_appointments = (state)=>{
 export const entity_doctors = (state)=>{
     return {type : "entity_doctors", state:state} 
 }   
+
+
+///// DOCTOR PROFILE *///////// 
+
+export const doctor_info = (state)=>{
+    return {type : "doctor_info", state:state} 
+}
+export const doctor_review = (state)=>{
+    return {type : "doctor_review", state:state} 
+}
+export const doctor_meeting = (state)=>{
+    return {type : "doctor_meeting", state:state} 
+}   
+export const doctor_timetable = (state)=>{
+    return {type : "doctor_timetable", state:state} 
+} 
+
+
+/********* Pharmacy Admin */
+export const pharmacy_info = (state)=>{
+    return {type : "pharmacy_info", state:state} 
+}
+export const orders_pharma = (state)=>{
+    return {type : "orders_pharma", state:state} 
+}
+export const pending_orders_red = (state)=>{
+    return {type : "pending_orders", state:state} 
+}   
+export const approved_orders = (state)=>{
+    return {type : "approved_orders", state:state} 
+} 
+export const pharma_history = (state)=>{
+    return {type : "pharma_history", state:state} 
+} 

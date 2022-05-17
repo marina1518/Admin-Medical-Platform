@@ -8,7 +8,7 @@ import Badge from "@mui/material/Badge";
 import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { signin, logout, entity_info } from "../../actions";
+import { signin, logout, entity_info ,doctor_info , pharmacy_info} from "../../actions";
 import { chart } from "../../actions";
 import MenuIcon from "@mui/icons-material/Menu";
 // import { Button, Badge } from "react-bootstrap";
@@ -23,6 +23,8 @@ const Header = () => {
     dispatch(logout());
     dispatch(chart());
     dispatch(entity_info())
+    dispatch(doctor_info())
+    dispatch(pharmacy_info())
     navigate("/");
   };
   const [showNav, setShowNav] = useState(false);
@@ -83,7 +85,8 @@ const Header = () => {
               }}
             >
               <div className="icon-circle">
-                <Badge color="primary" badgeContent={2} overlap="circular">
+                {/*<Badge color="primary" badgeContent={2} overlap="circular">*/}
+                <Badge color="primary"  overlap="circular">
                   <Avatar
                     style={{ height: "40px", width: "40px" }}
                     src={token.profilePic}
