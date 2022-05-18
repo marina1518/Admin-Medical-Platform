@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import "./profileui.css";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
-import {Button,ButtonGroup,Form,Table,Card,Accordion,useAccordionButton,Row,Col,Alert,CardGroup} from "react-bootstrap";
+import {Row,Col,Alert,CardGroup, Card} from "react-bootstrap";
+import Tooltip from "@mui/material/Tooltip";
 import "bootstrap/dist/css/bootstrap.min.css";
 import EditIcon from "@material-ui/icons/Edit";
 import CancelIcon from "@material-ui/icons/Cancel";
@@ -27,8 +28,9 @@ const ProfileUI = () => {
   const dispatch = useDispatch();  
   const location = useLocation();
   const sidebar_profile = useSelector((state) => state.profile_reducer); //state of token
+  
   let user_Api = {};
-  const[user, setuser]=useState({});
+  const[user, setuser]=useState({prescription:[]});
   const get_user_info = async (username)=>{
     try {
       const res = await axios.get(`https://future-medical.herokuapp.com/profile/user/${username}`);
@@ -37,7 +39,7 @@ const ProfileUI = () => {
       user_Api.username = data.username ; 
       user_Api.email = data.email ;
       user_Api.profilePic = data.profilePic ;
-      user_Api.dob = data.dateOfBirth.split('T')[0].split('-').reverse().join('-');
+      user_Api.dob = data.dateOfBirth;
       user_Api.gender = data.gender;   
       user_Api.blood = data.blood;
       user_Api.phone = data.phone;
@@ -74,6 +76,7 @@ const ProfileUI = () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+ console.log(user.prescription)
   return (
     <div className="main-container">
    <SideBarUI compact={compact} oncompact={compacthandler}>
@@ -88,18 +91,41 @@ const ProfileUI = () => {
          </div>
       </div>
       <div className="sidebar-links">
-         <li onClick={() => dispatch(info())}>
-            <i class="bi bi-info-circle-fill"></i>
-            {compact ? "" : <span> Personnal Info</span>}
-         </li>
-         <li onClick={() => dispatch(history())}>
-            <i class="bi bi-chat-left-text-fill"></i>
-            {compact ? "" : <span> History</span>}
-         </li>
-         <li onClick={() => dispatch(prescription())}>
-            <i class="bi bi-file-medical-fill"></i> 
-            {compact ? "" :  <span> Prescriptions</span>}
-         </li>
+      {compact ? (
+            <>
+              <Tooltip title="Personnal Info" placement="right">
+                <li onClick={() => dispatch(info())}>
+                  <i class="bi bi-info-circle-fill"></i>
+                </li>
+              </Tooltip>
+            
+              <Tooltip title="History" placement="right">
+                <li onClick={() => dispatch(history())}>
+                  <i class="bi bi-clock-fill"></i>
+                </li>
+              </Tooltip>
+              <Tooltip title="Prescriptions " placement="right">
+                <li onClick={() => dispatch(prescription())}>
+                  <i class="bi bi-bandaid-fill"></i>
+                </li>
+              </Tooltip>
+            </>
+          ) : (
+            <>
+              <li onClick={() => dispatch(info())}>
+                <i class="bi bi-info-circle-fill"></i>
+                <span> Personal Info </span>
+              </li>
+              <li onClick={() => dispatch(history())}>
+                <i class="bi bi-chat-left-text-fill"></i>
+                <span> History </span>
+              </li>
+              <li onClick={() => dispatch(prescription())}>
+                <i class="bi bi-clock-fill"></i>
+                <span> Prescriptions </span>
+              </li>
+            </>
+          )}
       </div>
    </SideBarUI>
    <main>
@@ -141,7 +167,9 @@ const ProfileUI = () => {
                   <div class="col-sm-3">
                      <h6 class="mb-0">Date of Birth</h6>
                   </div>
-                  <div class="col-sm-9 text-secondary">{user.dob}</div>
+                  <div class="col-sm-9 text-secondary">
+                     {user.dob ? user.dob.split('T')[0].split('-').reverse().join('-') : user.dob}
+                     </div>
                </div>
                <hr id="profile-hr" />
                <div class="row mt-3">
@@ -174,7 +202,7 @@ const ProfileUI = () => {
          ) : ("")} 
       </div>
       {(sidebar_profile === "prescription") ? 
-      (user.prescription.length ===0) ? 
+      (user.prescription.length === 0) ? 
       <>
       <Alert key="primary" variant="primary">
          There are no prescriptions yet.

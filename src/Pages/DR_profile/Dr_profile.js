@@ -50,36 +50,8 @@ const DoctorProfile = () => {
   const navigation = (userid) => {
     navigate("/user", { state: { user_id: userid } });
   };
-  const [showinfo, setShowinfo] = useState(false);
-  const [showreviews, setShowReviews] = useState(false);
-  const [showAppointment, setShowAppointment] = useState(false);
-  const [showtimetable, setshowTimetable] = useState(false);
   
   const chosencomp = useSelector(state => state.Doctor_reducer)
-
-  const sideBarhandler = (btn) => {
-    if (btn === "info") {
-      setShowinfo(true);
-      setShowReviews(false);
-      setShowAppointment(false);
-      setshowTimetable(false);
-    } else if (btn === "reviews") {
-      setShowinfo(false);
-      setShowReviews(true);
-      setShowAppointment(false);
-      setshowTimetable(false);
-    } else if (btn === "appointment") {
-      setShowinfo(false);
-      setShowReviews(false);
-      setShowAppointment(true);
-      setshowTimetable(false);
-    } else if (btn === "timetable") {
-      setShowinfo(false);
-      setShowReviews(false);
-      setShowAppointment(false);
-      setshowTimetable(true);
-    }
-  };
 
   const [compact, setCompact] = useState(false);
 
@@ -499,7 +471,13 @@ const DoctorProfile = () => {
                     {token.entity_id.name}
                   </div>
                 </div>
-
+                <hr id="profile-hr" />
+                <div class="row mt-3">
+                  <div class="col-sm-3">
+                    <h6 class="mb-0">Meeting Fees</h6>
+                  </div>
+                  <div class="col-sm-9 text-secondary">from api</div>
+                </div>
                 <hr id="profile-hr" />
                 <div class="row mt-3">
                   <div class="col-sm-3">

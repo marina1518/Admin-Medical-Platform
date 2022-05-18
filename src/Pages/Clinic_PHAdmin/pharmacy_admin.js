@@ -9,6 +9,7 @@ import {
   Accordion,
   Col,
   Row,
+  ListGroup
 } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { MdOutlineDoneOutline, MdOutlineDone, MdCancel } from "react-icons/md";
@@ -20,51 +21,18 @@ import SideBarUI from "../../Components/SideBarUi/Sidebar";
 import { blueGrey } from "@material-ui/core/colors";
 import Tooltip from "@mui/material/Tooltip";
 import {pharmacy_info ,pharma_history , orders_pharma, pending_orders_red,approved_orders} from "../../actions/index"
+import {AiOutlineComment} from 'react-icons/ai';
+import {BsInfoCircleFill} from 'react-icons/bs';
+import EditIcon from "@material-ui/icons/Edit";
+import { signin } from "../../actions/index";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { storage } from "../../Firebase";
 // import { Bar} from "react-chartjs-2";
 
 const Ph_admin = () => {
   const dispatch = useDispatch();
 
-   const chosencomp = useSelector(state => state.Pharmacy_reducer)
-
-  const [showinfo, setShowinfo] = useState(false);
-  const [showorders, setShoworders] = useState(false);
-  const [showpending, setPending] = useState(false);
-  const [showapproved, setApproved] = useState(false);
-  const [showhistory, setHistory] = useState(false);
-  const sideBarhandler = (btn) => {
-    if (btn === "info") {
-      setShowinfo(true);
-      setShoworders(false);
-      setPending(false);
-      setApproved(false);
-      setHistory(false);
-    } else if (btn === "orders") {
-      setShowinfo(false);
-      setShoworders(true);
-      setPending(false);
-      setApproved(false);
-      setHistory(false);
-    } else if (btn === "pending orders") {
-      setShowinfo(false);
-      setShoworders(false);
-      setPending(true);
-      setApproved(false);
-      setHistory(false);
-    } else if (btn === "approved orders") {
-      setShowinfo(false);
-      setShoworders(false);
-      setPending(false);
-      setApproved(true);
-      setHistory(false);
-    } else if (btn === "history") {
-      setShowinfo(false);
-      setShoworders(false);
-      setPending(false);
-      setApproved(false);
-      setHistory(true);
-    }
-  };
+   const chosencomp = useSelector(state => state.Pharmacy_reducer);
   const [compact, setCompact] = useState(false);
   const compacthandler = () => {
     setCompact(!compact);
@@ -87,6 +55,7 @@ const Ph_admin = () => {
   console.log(Docid);
   const token = JSON.parse(useSelector((state) => state.auth));
   console.log(token);
+  const token_copy = token;
   const [state, setstate] = useState(null);
   const [edit_photo, setEdit_photo] = useState(false);
   // const [neworders,setneworders]=useState(orders);
@@ -244,11 +213,110 @@ const Ph_admin = () => {
     Get_history_Api();
     Get_pending_Api();
   }, []);
-  // const[temp,settemp] = useState([]);
-  // const remove=(id,newapp)=>{
-  //    const newp = newapp.filter((item)=> item.id !== id );
-  //    settemp(newp);
-  //    }
+  
+//edit
+const Edit_personal_info = async (info) => {
+  try {
+    const res = await axios.patch(
+      "https://future-medical.herokuapp.com/admin/edit",
+      info,
+      config
+    );
+    alert(res.data);
+    console.log(res.data);
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+const [username, setusername] = useState(null);
+const [email, setemail] = useState(null);
+const [phone, setphone] = useState("");
+const [address, setaddress] = useState(null);
+const [edit, setEdit] = useState(false);
+const [phone_error, setphone_error] = useState("");
+const [ph_name, setph_name] = useState(null);
+const [temp, edit_pic_temp] = useState("");
+const editted = {};
+var Edit_data = {};
+const setdata = () => {
+  editted.username = username;
+  editted.phone = phone;
+  editted.email = email;
+  editted.address = address
+  editted.ph_name = ph_name;
+  editted.file = temp;
+  if (editted.username === null) {
+    Edit_data.admin_username = token.username;
+  }
+  else{
+    Edit_data.admin_username = editted.username;
+    token_copy.username = editted.username;
+  }
+  if (editted.ph_name === null) {
+    Edit_data.entity_name = token.entity.name;
+  }
+  else{
+    Edit_data.entity_name = editted.ph_name;
+    token_copy.entity.name = editted.ph_name;
+  }
+  if (editted.address === null) {
+    Edit_data.entity_address = token.entity.address;
+  }
+  else{
+    Edit_data.entity_address = editted.address;
+    token_copy.entity.address = editted.address;
+  }
+  if (editted.email === null) {
+    Edit_data.admin_email = token.email;
+  }
+  else{
+    Edit_data.admin_email = editted.email;
+    token_copy.email = editted.email;
+  }
+  if (editted.phone === null) {
+    Edit_data.entity_telephone = token.entity.phone;
+  }
+  else{
+    if (editted.phone.length === 11) {
+      Edit_data.entity_telephone = editted.entity.phone;
+      token_copy.entity.telephone.push(editted.phone);
+    } else {
+      setphone_error("invalid phone number");
+    }
+  }
+
+  
+ 
+    if (!editted.file) 
+    {
+      Edit_data.admin_profilePic = token.profilePic;
+    };
+    console.log(editted.file);
+    console.log(editted.file.name);
+    const storageRef = ref(storage, `/files/${editted.file.name}`);
+    const uploadTask = uploadBytesResumable(storageRef, editted.file);
+    uploadTask.on("state_changed", () => {
+      getDownloadURL(uploadTask.snapshot.ref)
+        .then((url) => {
+          token_copy.profilePic = url;
+          Edit_data.admin_profilePic = url;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    });
+
+  console.log(Edit_data);
+  dispatch(signin(token_copy));
+  Edit_personal_info(Edit_data);
+  Edit_data = {};
+  setEdit(false);
+  setphone_error("");
+};
+
+
+
   const [price, setPrice] = useState("");
   const [comment, setComment] = useState("");
   const Approve_api = async (id, price, comment) => {
@@ -359,11 +427,17 @@ const Ph_admin = () => {
                   <i class="bi bi-info-circle-fill"></i>
                 </li>
               </Tooltip>
-              <Tooltip title="Orders" placement="right">
-                <li onClick={() => dispatch(orders_pharma())}>
-                  <i class="bi bi-chat-left-text-fill"></i>
-                </li>
-              </Tooltip>
+              {
+                token.entity.active ? 
+                (
+                  <Tooltip title="Orders" placement="right">
+                  <li onClick={() => dispatch(orders_pharma())}>
+                    <i class="bi bi-chat-left-text-fill"></i>
+                  </li>
+                </Tooltip>
+                ):""
+              }
+              
               <Tooltip title="Pending Orders" placement="right">
                 <li onClick={() => dispatch(pending_orders_red())}>
                   <i class="bi bi-clock-fill"></i>
@@ -407,39 +481,160 @@ const Ph_admin = () => {
         </div>
       </SideBarUI>
       <main>
-        {/* 
-   <div className="profile-container">
-      */}
+      <div className="profile-container">
         {(chosencomp == "pharmacy_info") ? (
           <div className="card">
-            <div className="card-header bg-transparent border-0">
+          <div className="card-header bg-transparent">
+            <h3 className="mb-0">
+              <BsInfoCircleFill /> Personal Information
+              {
+                token.entity.active ? 
+                (
+                  <EditIcon
+                style={{ cursor: "pointer" }}
+                onClick={(e) => setEdit(true)}
+              ></EditIcon>
+                ):""
+              }
+            </h3>
+          </div>
+          <div className="card-body pt-0">
+            <div className="row personnal-image">
               <Avatar
                 className="profile_img"
-                src="/broken-image.jpg"
+                src={token.profilePic}
                 style={{ height: "150px", width: "150px" }}
-                onClick={(e) => setEdit_photo(true)}
+                sx={{ bgcolor: blueGrey[400] }}
               />
-              {edit_photo ? <input type="file"></input> : ""}
-              <h3>{token.entity.name} </h3>
+              {edit ? (
+                <>
+                  <input
+                    className="edit-photo"
+                    type="file"
+                    onChange={(e) => edit_pic_temp(e.target.files[0])}
+                  ></input>
+                </>
+              ) : (
+                ""
+              )}
+              {edit ? (
+                <input
+                  style={{ cursor: "pointer" }}
+                  placeholder={token.username}
+                  type="text"
+                  onChange={(e) => setusername(e.target.value)}
+                ></input>
+              ) : (
+                <h3 style={{ textAlign: "center" }}>{token.username}</h3>
+              )}
+              </div>
+            <div class="row mt-3">
+              <div class="col-sm-3">
+                <h6 class="mb-0">Pharmacy Name</h6>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                {edit ? (
+                  <input
+                    style={{ cursor: "pointer" }}
+                    placeholder={token.entity.name}
+                    type="text"
+                    onChange={(e) => setph_name(e.target.value)}
+                  ></input>
+                ) : (
+                  token.entity.name
+                )}
+              </div>
             </div>
-            <div className="card-body">
-              <p className="mb-0">
-                <strong className="pr-1">Email: </strong>
-                {token.email}
-              </p>
-              <p className="mb-0">
-                <strong className="pr-1">Phone: </strong>
-                {token.entity.telephone}
-              </p>
-              <p className="mb-0">
-                <strong className="pr-1">Address: </strong>
-                {token.entity.address}
-              </p>
+            <hr id="profile-hr" />
+            <div class="row mt-3">
+              <div class="col-sm-3">
+                <h6 class="mb-0">Email</h6>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                {edit ? (
+                  <input
+                    style={{ cursor: "pointer" }}
+                    placeholder={token.email}
+                    type="text"
+                    onChange={(e) => setemail(e.target.value)}
+                  ></input>
+                ) : (
+                  token.email
+                )}
+              </div>
             </div>
+            <hr id="profile-hr" />
+            <div class="row mt-3">
+              <div class="col-sm-3">
+                <h6 class="mb-0">Phone Number</h6>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                {edit ? (
+                  <input
+                    placeholder={token.entity.telephone[0]}
+                    type="text"
+                    onChange={(e) => {
+                      setphone(e.target.value);
+                      if (phone.length !== 11 && phone.length !== 0 && edit)
+                        setphone_error("invalid phone number");
+                    }}
+                  ></input>
+                ) : (
+                  token.entity.telephone.map((t) => <>{t}</>)
+                )}
+                {phone.length !== 11 && phone.length !== 0 && edit ? (
+                  <h6 style={{ color: "red" }}>{phone_error}</h6>
+                ) : (
+                  ""
+                )}
+              </div>
+            </div>
+            <hr id="profile-hr" />
+            <div class="row mt-3">
+              <div class="col-sm-3">
+                <h6 class="mb-0">Address</h6>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                {edit ? (
+                  <input
+                    placeholder={token.entity.address}
+                    type="text"
+                    onChange={(e) =>setaddress(e.target.value)}></input>
+                ) : (
+                token.entity.address )
+                }
+              </div>
+            </div>
+
+            {edit ? (
+              <ButtonGroup>
+                <Button
+                  variant="outline-success"
+                  className="col-md-12 text-right"
+                  onClick={setdata}
+                >
+                  Submit
+                </Button>
+                <Button
+                  variant="outline-danger"
+                  className="col-md-12 text-right"
+                  onClick={(e) => setEdit(false)}
+                >
+                  Cancel
+                </Button>
+              </ButtonGroup>
+            ) : (
+              ""
+            )}
+            {/* {edit ? <Button variant="outline-danger" className="col-md-12 text-right" onClick={(e)=>setEdit(false)}>Cancel</Button>:""} */}
+            </div>
+            </div>
+          ) : (
+            ""
+          )}
           </div>
-        ) : (
-          ""
-        )}
+     
+       
         {(chosencomp == "orders_pharma") ? (
           <div className="card">
             <div className="card-header bg-transparent border-0">
