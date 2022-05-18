@@ -17,6 +17,7 @@ import { signin, logout } from "../../actions";
 import { useJwt } from "react-jwt";
 //import pass from "./../image/pass.png";
 import "./login.css";
+import Deactivate from "./ModalDeactivate";
 
 const Login = () => {
   let navigate = useNavigate();
@@ -42,28 +43,63 @@ const Login = () => {
   //console.log(decodedToken);
   const [error_email, sete_error] = useState("");
   const [error_pass, setp_error] = useState("");
+const [modalShow, setModalShow] = React.useState(false);
+const [Entity_dec, set_Entity_dec] = useState("");
+
   const dispatch = useDispatch();
-  const login_api = () => {
-    axios
-      .post("https://future-medical.herokuapp.com/login/doctor", {
+
+
+  const login_api = async () => {
+    try {
+        const resp = await axios.post("https://future-medical.herokuapp.com/login/doctor",{
+           email: data.email,
+           pass: data.password,
+        }
+        );
+        const data_Api = await resp.data ;
+        console.log(data_Api);
+        ////// IF HOS ADMIN OR CLINIC ADMIN DEACTIVATED 
+        if ((data_Api.entity.active == false) && (data_Api.role == "h_admin" || data_Api.role == "c_admin"))
+        {
+          setModalShow(true)
+          set_Entity_dec(data_Api.entity.name)
+          console.log("Deactivate")
+          //////// MAKE THE FORM EMPTY Ask []
+        }
+        //console.log(decodetoken)
+        else{
+          dispatch(signin(data_Api)); //save all the state
+          routing_login(data_Api.role);
+        }
+    } catch (err) {
+        // Handle Error Here
+        console.error(err);
+    }
+};
+
+  /*const login_api = async () => {
+    try { 
+      const res = await axios.post("https://future-medical.herokuapp.com/login/doctor", {
         email: data.email,
         pass: data.password,
       })
-      .then((res) => {
-        console.log(res.data);
-        dispatch(signin(res.data)); //save all the state
+        const data = await res.data ;
+        console.log(data);
+        
         console.log(token);
+        if ((data.entity.active == false) && (data.rule == "h_admin" || data.rule == "c_admin"))
+        {
+          console.log("Deactivate")
+        }
         //console.log(decodetoken)
-        routing_login(res.data.role);
-        /*if(decodedToken.type === 'admin')
-           {
-           routing_login(res.data.role); }
-           else if (decodedToken.type === 'doctor')
-           {
-           routing_login('doctor'); }*/
-      })
-      .catch(function (error) {
-        if (error.response) {
+        else{
+          dispatch(signin(data)); //save all the state
+          routing_login(data.role);
+        }
+        
+    }
+    catch(error){
+      if (error.response) {
           console.log(error.response.data);
           console.log(error.response.status);
           if (error.response.data === "incorrect email") {
@@ -71,12 +107,10 @@ const Login = () => {
           } else if (error.response.data === "incorrect password") {
             setp_error("!! incorrect password");
           }
-
-          ///Handle data => [incorrect email , incorrect password ]
-          //console.log(error.response.headers);
-        }
-      });
-  };
+    }
+  }
+  
+  };*/
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [type, setType] = useState("");
@@ -90,6 +124,7 @@ const Login = () => {
   const [flag, setflag] = useState(0);
   const submit_value = (e) => {
     e.preventDefault();
+    
     //submit(email,password);
     var flag = 0;
     if (email === "") {
@@ -163,6 +198,11 @@ const Login = () => {
                 >
                   Login
                 </Button>
+                <Deactivate
+                 show={modalShow}
+                onHide={() => setModalShow(false)}
+                entity={Entity_dec}
+                />
               </div>
             </Form>
           </div>
