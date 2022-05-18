@@ -59,8 +59,8 @@ const [Entity_dec, set_Entity_dec] = useState("");
         const data_Api = await resp.data ;
         console.log(data_Api);
         ////// IF HOS ADMIN OR CLINIC ADMIN DEACTIVATED
-        if(data_Api.role != "owner") {
-        if ((data_Api.active == false) && (data_Api.role == "h_admin" || data_Api.role == "c_admin"))
+        if(data_Api.role != "owner" && data_Api.role != "doctor") {
+        if ((data_Api.entity.active == false) && (data_Api.role == "h_admin" || data_Api.role == "c_admin"))
         {
           setModalShow(true)
           set_Entity_dec(data_Api.entity.name)
