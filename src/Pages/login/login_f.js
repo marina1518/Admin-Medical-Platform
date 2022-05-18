@@ -77,9 +77,18 @@ const [Entity_dec, set_Entity_dec] = useState("");
         dispatch(signin(data_Api)); //save all the state
           routing_login(data_Api.role);
       }
-    } catch (err) {
+    } catch (error) {
         // Handle Error Here
-        console.error(err);
+        console.error(error);
+        if (error.response) {
+          console.log(error.response.data);
+          console.log(error.response.status);
+          if (error.response.data === "incorrect email") {
+            sete_error("!! incorrect email");
+          } else if (error.response.data === "incorrect password") {
+            setp_error("!! incorrect password");
+          }
+    }
     }
 };
 
