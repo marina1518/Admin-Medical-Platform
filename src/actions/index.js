@@ -98,3 +98,4 @@ export const approved_orders = (state)=>{
 export const pharma_history = (state)=>{
     return {type : "pharma_history", state:state} 
 } 
+
