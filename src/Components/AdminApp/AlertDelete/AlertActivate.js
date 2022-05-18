@@ -11,7 +11,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function AlertDelete(props) {
+export default function AlertActivate(props) {
     console.log(props)
     //const [clicked, setclicked] = React.useState(props.clicked_hos);
   const [open, setOpen] = React.useState(false);
@@ -21,10 +21,10 @@ export default function AlertDelete(props) {
   };
 
   const handleClose_no = () => {
-    props.Close_Alert_No();
+    props.Close_Alert_No_activate();
   };
    const handleClose_yes = () => {
-    props.Close_Alert_yes(props.clicked_hos);
+    props.Close_Alert_yes_activate(props.clicked_item);
   };
 
   return (
@@ -36,21 +36,20 @@ export default function AlertDelete(props) {
         //onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>{(props.parent == "clinic") && "Clinic Deactivation "}
-        {(props.parent == "hospital") && "Hospital Deactivation "}
-        {(props.parent == "pharmacy") && "Pharmacy Deactivation "}
-        {(props.parent == "announcment") && "Announcment Deletion"}
-         {(props.parent == "doctor") && "Doctor Deactivation "}
+        <DialogTitle>{(props.parent == "clinic") && "Clinic Activation "}
+        {(props.parent == "hospital") && "Hospital Activation "}
+        {(props.parent == "pharmacy") && "Pharmacy Activation "}
+         {(props.parent == "doctor") && "Doctor Activation "}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">              
-            Are you sure that you want to 
-             {(props.parent == "announcment") ? " delete " :" deactivate "}  
-            {(props.parent == "hospital") && props.clicked_hos.Hospitalname}
-            {(props.parent == "clinic") && props.clicked_hos.clinicname} {(props.parent == "pharmacy") && props.clicked_hos.pharmacyname}
-             {(props.parent == "announcment") && props.clicked_hos.announcmentname}
+            Are you sure that you want to Activate
+              
+            {(props.parent == "hospital") && props.clicked_item.Hospitalname}
+            {(props.parent == "clinic") && props.clicked_item.clinicname} {(props.parent == "pharmacy") && props.clicked_hos.pharmacyname}
+             {(props.parent == "announcment") && props.clicked_item.announcmentname}
              {(props.parent == "doctor") &&  "Doctor "}
-               {(props.parent == "doctor") &&  props.clicked_hos.name}? 
+               {(props.parent == "doctor") &&  props.clicked_item.name}? 
           </DialogContentText>
         </DialogContent>
         <DialogActions>

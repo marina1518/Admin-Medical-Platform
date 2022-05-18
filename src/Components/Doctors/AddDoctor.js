@@ -14,6 +14,7 @@ const Add_doctor_api = ()=>{
                     password : FormValues.Password,
                     gender : FormValues.Gender,
                     telephone: FormValues.number,
+                    meeting_price: FormValues.price ,
                     specialization : FormValues.specialization,
                     entityName: props.entityname ,//Added
                     profilePic: FormValues.imageurl,
@@ -99,6 +100,10 @@ const Add_doctor_api = ()=>{
             {
                 errors.number="Number is required!";  
             }
+        if (!values.price)
+            {
+                errors.price="Meeting Price is required!";  
+            }    
         else if (values.number.length !== 11)
         {
             errors.number = "This is not a valid phone number ";
@@ -191,6 +196,7 @@ uploadTask.on("state_changed",()=>{
       <Form.Control onChange={(e)=>handlechange(e)} value={FormValues.number} name="number" type="number" placeholder="Enter Contact number" />
     <p style={{padding:'0',color:'red',marginTop:'6px'}} >{Formerrors.number}</p>
     </Form.Group>
+
       <Form.Group className="mb-3" controlId="formGridspecial">
       <Form.Label>Specialization</Form.Label>
   <Form.Select aria-label="Default select example2" defaultValue="Select Doctor Specialization" name="specialization" value={FormValues.specialization} onChange={(e)=>handlechange(e)}>      
@@ -226,6 +232,12 @@ uploadTask.on("state_changed",()=>{
   <p style={{padding:'0',color:'red',marginTop:'6px'}} >{Formerrors.Password}</p>
   </Form.Group>
 
+        <Form.Group className="mb-3" controlId="formGridprice">
+      <Form.Label>Meeting Price</Form.Label>
+      <Form.Control onChange={(e)=>handlechange(e)} value={FormValues.price} name="price" type="number" placeholder="Enter Meeting Price" />
+    <p style={{padding:'0',color:'red',marginTop:'6px'}} >{Formerrors.price}</p>
+    </Form.Group>
+    
 <Form.Group  className="mb-3" controlId="formGridGender">
     <Form.Label>Gender</Form.Label>
   <Form.Select aria-label="Default select example" defaultValue="Select Doctor Gender" name="Gender" value={FormValues.Gender} onChange={(e)=>handlechange(e)}>      

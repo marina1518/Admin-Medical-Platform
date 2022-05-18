@@ -7,6 +7,10 @@ import axios from 'axios';
 import {useSelector,useDispatch} from 'react-redux'
 import Adddoctor from '../Doctors/AddDoctor';
 import Editdoctor from '../Doctors/EditDoctor';
+import AlertDelete from '../AdminApp/AlertDelete/AlertDelete';
+import EditModal from './EditModal';
+import { async } from '@firebase/util';
+import AlertActivate from '../AdminApp/AlertDelete/AlertActivate';
 //import './HospitalAdmin.css'
 function DoctorsList() {
 
@@ -20,6 +24,47 @@ console.log(token)
 let admin = {};
 var doctors_list = JSON.parse(JSON.stringify(data));
 let doctor = {} ;
+const [alert_delete , set_alert_delete] = useState(false);
+const [alert_active , set_alert_active] = useState(false);
+
+const [clicked_doc , set_clicked_doc] = useState({});
+const [modalShow, setModalShow] = React.useState(false);
+const [doctor_data , set_doctor_data] = useState({});
+const Dectivate_Doctor_Api = async (doc_email)=>{
+ try {
+        const res = await axios.patch('https://future-medical.herokuapp.com/admin/doctor/deactivate',{
+          email : doc_email 
+        },{
+          headers: {
+          'Authorization': `Bearer ${token.token}`
+          }
+        })
+        const data = await res.data;
+        Get_Doctors_Api(token.entity.name) ; //IT WILL GET THE ACTIVE Doctors
+        console.log(data)
+      }
+    catch (err) {
+        console.error(err);
+    }
+}
+
+const Activate_Doctor_Api = async (doctor_email)=>{
+ try {
+        const res = await axios.patch('https://future-medical.herokuapp.com/admin/doctor/activate',{
+          email : doctor_email
+        },{
+          headers: {
+          'Authorization': `Bearer ${token.token}`
+          }
+        })
+        const data = await res.data;
+        Get_Doctors_Api(token.entity.name) ; //IT WILL GET THE ACTIVE Doctors
+        console.log(data)
+      }
+    catch (err) {
+        console.error(err);
+    }
+} 
 
 const Get_Doctors_Api = async (hospitalname)=>{
  try {
@@ -27,8 +72,11 @@ const Get_Doctors_Api = async (hospitalname)=>{
         const data = await res.data;
         console.log(data)
         if (data === 'this entity has no doctors right now') 
-        {return }
+        {
+         Get_Doctors__Deactivated_Api(token.entity.name,[])
+         return }
         let i = 1 
+        doctors_list=[];
         data.forEach((x) => {
                 
                 doctor.name = x.username;
@@ -36,11 +84,57 @@ const Get_Doctors_Api = async (hospitalname)=>{
                 doctor.Email = x.email;
                 doctor.specialization = x.specialization;
                 doctor.number = x.telephone[0];
+                doctor.price = x.meeting_price;
+                doctor.active = true;
                 doctors_list.push(doctor);
                 doctor={}
                 ++i;
           });
         setdata(doctors_list);  
+        Get_Doctors__Deactivated_Api(token.entity.name,doctors_list)
+    } 
+    catch (error) {
+        console.error(error);
+        if (error.response) {
+          console.log(error.response.data);
+          console.log(error.response.status);}
+    }
+} 
+
+const Get_Doctors__Deactivated_Api = async (hospitalname , activateList)=>{
+  console.log(activateList)
+ try {
+        const res = await axios.get(`https://future-medical.herokuapp.com/admin/doctors/deactivated/${hospitalname}`,
+        {
+            headers: {
+          'Authorization': `Bearer ${token.token}`
+          }
+        }
+          )
+        const data = await res.data;
+        console.log(data)
+        if (data === 'this entity has no deactivated doctors') 
+        {return }
+        let i = 0 ;
+        if (activateList.length == 0){i = 0}
+        else {i = (activateList[activateList.length-1].id) + 1}
+        
+        doctors_list=[];
+        data.forEach((x) => {
+                
+                doctor.name = x.username;
+                doctor.id = i;                
+                doctor.Email = x.email;
+                doctor.specialization = x.specialization;
+                doctor.active = false 
+                //doctor.number = x.telephone[0];
+                //doctor.price = x.meeting_price;
+                doctors_list.push(doctor);
+                doctor={}
+                ++i;
+          });
+          
+        setdata(activateList.concat(doctors_list));  
     } 
     catch (error) {
         console.error(error);
@@ -52,6 +146,7 @@ const Get_Doctors_Api = async (hospitalname)=>{
 
 useEffect(()=>{
  Get_Doctors_Api(token.entity.name);
+ 
 },[])  
 
 const [viewedit,setedit]=useState(true) //WHEN FALSE SHOW COMPONENT ADD HOSPITAL 
@@ -59,27 +154,30 @@ const [viewedit,setedit]=useState(true) //WHEN FALSE SHOW COMPONENT ADD HOSPITAL
     const [editdata,seteditdata]=useState({}); //EDITED DATA FOR HOSPITAL 
 
     const handleEdit = (props)=>{
-        seteditdata(props); //DATA OF HOSPITAL
+        /*seteditdata(props); //DATA OF HOSPITAL
         console.log(props);
-        setedit(false); //GO TO EDIT PAGE
+        setedit(false); //GO TO EDIT PAGE*/
+        setModalShow(true)
+        set_doctor_data(props)
   }
   
   const goback=()=>{
     setedit(true);
     setadd(true);
   }
-  const changeedit = (editedhospital)=>{
+  const changeedit = (editeddoctor)=>{
     //WHEN SUBMIT EDIT HOSPITAL FORM 
-     var requiredid = editedhospital.id ;
+     var requiredid = editeddoctor.id ;
      console.log(requiredid);
      var updatedlist = JSON.parse(JSON.stringify(data));
      updatedlist = updatedlist.filter((item) => item.id !== requiredid) //delete first
      //console.log(updatedlist);
-     updatedlist.push(editedhospital); //add edited one 
+     updatedlist.push(editeddoctor); //add edited one 
     // console.log(updatedlist);
      //Static update list       
      setdata(updatedlist); 
-     setedit(true); //AFTER SUBMIT EDIT FORM [GET BACK TO HOSPITALS LIST]
+     //setedit(true); //AFTER SUBMIT EDIT FORM [GET BACK TO HOSPITALS LIST]
+   //setModalShow(true)
   }
     const changeadd = (newhospital)=>{
       //WHEN SUBMIT ADD HOSPITAL FORM 
@@ -95,11 +193,52 @@ const [viewedit,setedit]=useState(true) //WHEN FALSE SHOW COMPONENT ADD HOSPITAL
         setadd(true); //AFTER SUBMIT ADD FORM [GET BACK TO HOSPITALS LIST]
   }     
    
-   const handleDelete = (id)=>{
+   /*const handleDelete = (id)=>{
      //API DELETE Hospital
      console.log(id);
      setdata(data.filter((item) => item.id !== id)) //DELETE STATIC
+  }*/
+
+     const handleDelete = (clicked_Doc)=>{
+     //API DELETE Hospital
+     //Dectivate_Hospital_Api(clicked_Hos.Hospitalname);
+    
+     set_clicked_doc(clicked_Doc)
+     console.log(clicked_Doc);
+     set_alert_delete(true)
+     //setdata(data.filter((item) => item.id !== id)) //DELETE STATIC
   }
+
+  const Close_Alert_yes = (clicked_Doc) =>{
+    //Dectivate_Hospital_Api(clicked_Hos.Hospitalname);
+    set_alert_delete(false)
+     Dectivate_Doctor_Api(clicked_Doc.Email)
+  }
+   const Close_Alert_No = () =>{
+    //Dectivate_Hospital_Api(clicked_Hos.Hospitalname);
+    set_alert_delete(false)
+  }
+
+      const handleActive = (clicked_Item)=>{
+     //API DELETE Hospital
+     //Dectivate_Hospital_Api(clicked_Hos.Hospitalname);
+    
+     set_clicked_doc(clicked_Item)
+     console.log(clicked_Item);
+     set_alert_active(true)
+     //setdata(data.filter((item) => item.id !== id)) //DELETE STATIC
+  }
+
+  const Close_Alert_yes_activate = (clicked_Item) =>{
+    //Dectivate_Hospital_Api(clicked_Hos.Hospitalname);
+    set_alert_active(false)
+     Activate_Doctor_Api(clicked_Item.Email)
+  }
+   const Close_Alert_No_activate = () =>{
+    //Dectivate_Hospital_Api(clicked_Hos.Hospitalname);
+    set_alert_active(false)
+  }
+
   const columns = [
     {
     field: 'id',
@@ -132,17 +271,25 @@ const [viewedit,setedit]=useState(true) //WHEN FALSE SHOW COMPONENT ADD HOSPITAL
     width: 200,
 
   },
+    {
+    field: 'price',
+    headerName: 'Meeting Price',
+    
+    width: 180,
+
+  },
    {
       field: "action",
       headerName: "Action" ,
-      width: 150,
+      width: 180,
       renderCell: (params) => {
         return (
           <>       
-              {/*<Button variant="outline-primary" onClick={() => handleEdit(params.row)}>Edit</Button>*/}
-             <DeleteOutline htmlColor='red' style={{cursor:'pointer' , marginLeft:'30px'}} onClick={() => handleDelete(params.row.id)}
-                               
-            />
+          {(params.row.active == false) && <Button variant="outline-success" style = {{marginLeft:'2rem'}}onClick={() => handleActive(params.row)}>Activate </Button>}
+              {(params.row.active == true) && <Button variant="outline-primary" onClick={() => handleEdit(params.row)}>Edit price </Button>}
+             {(params.row.active == true) &&<DeleteOutline htmlColor='red' style={{cursor:'pointer' , marginLeft:'30px'}} onClick={() => handleDelete(params.row)}
+                                    
+            />}
           </>
         );
       },
@@ -154,10 +301,13 @@ const [viewedit,setedit]=useState(true) //WHEN FALSE SHOW COMPONENT ADD HOSPITAL
       
     <div style={{ height: 540, width: '90%' , margin: '1rem 2rem' ,marginBottom:'60px' }}>
      {viewedit && viewadd && <Table rows={data} columns={columns}></Table> }
-    {!viewedit && <Editdoctor editdata={editdata} changeedit={changeedit} goback={goback}/>}
+    {/*!viewedit && <Editdoctor editdata={editdata} changeedit={changeedit} goback={goback}/>*/}
     {!viewadd && <Adddoctor changeadd={changeadd} goback={goback} entityname={token.entity.name}/>}      
     {viewedit && viewadd &&<Button variant="primary" onClick={()=>{setadd(false)}} style={{marginTop:'10px'}}>Add Doctor</Button>  }
-
+     {alert_delete && <AlertDelete open={alert_delete} Close_Alert_No={Close_Alert_No} Close_Alert_yes={Close_Alert_yes} clicked_hos={clicked_doc} parent={"doctor"}></AlertDelete>}
+     <EditModal show={modalShow} onHide={() => setModalShow(false)} Doctor={doctor_data}  Get_Doctors_Api={Get_Doctors_Api} Entity_Name={token.entity.name} 
+                />
+     {alert_active && <AlertActivate open={alert_active} Close_Alert_No_activate={Close_Alert_No_activate} Close_Alert_yes_activate={Close_Alert_yes_activate} clicked_item={clicked_doc} parent={"doctor"}></AlertActivate>}           
     </div>
     </div>
   )
