@@ -8,6 +8,7 @@ import AddPharmacy from './AddPharmacy';
 import EditPharmacy from './EditPharmacy';
 import { useSelector } from 'react-redux';
 import AlertDelete from "../AlertDelete/AlertDelete"
+import AlertActivate from '../AlertDelete/AlertActivate';
 
 export default function Pharmacies() {
 
@@ -15,6 +16,8 @@ export default function Pharmacies() {
     const [data,setdata] = useState([]) //FROM API PHARMACIES LIST 
     var pharmacies_list = JSON.parse(JSON.stringify(data));
     const [alert_delete , set_alert_delete] = useState(false);
+    const [alert_active , set_alert_active] = useState(false);
+
     const [clicked_pharma , set_clicked_pharma] = useState({});
 let pharmacy = {} ;
 
@@ -35,6 +38,29 @@ const Dectivate_Pharmacy_Api = async (hospital_name)=>{
         console.error(err);
     }
 }
+
+const Activate_Pharmacy_Api = async (pharmacy_name)=>{
+
+ try {
+        const res = await axios.patch('https://future-medical.herokuapp.com/admin/pharmcy/activate',{
+          entity : pharmacy_name 
+        },{
+          headers: {
+          'Authorization': `Bearer ${token.token}`
+          }
+        })
+        const data = await res.data;
+        Get_Pharmacies_Api() ; //IT WILL GET THE All Pharmacies
+        console.log(data)
+      }
+    catch (error) {
+        //console.error(err);
+        console.error(error);
+        if (error.response) {
+          console.log(error.response.data);
+          console.log(error.response.status);}
+    }
+}
 const Get_Pharmacies_Api = async ()=>{
  try {
         const res = await axios.get('https://future-medical.herokuapp.com/pharmacies')
@@ -49,14 +75,64 @@ const Get_Pharmacies_Api = async ()=>{
                 pharmacy.Admin = x.admin.username;
                 pharmacy.Email = x.admin.email;
                 pharmacy.Location = x.address;
+                pharmacy.active = true ;
                 pharmacies_list.push(pharmacy);
                 pharmacy={}
                 ++i;
           });
-        setdata(pharmacies_list);  
+        setdata(pharmacies_list);
+        Get_Pharmacies_Deactivated_Api(pharmacies_list)  
     } 
     catch (err) {
         console.error(err);
+    }
+}
+
+const Get_Pharmacies_Deactivated_Api = async (activateList)=>{
+  console.log(activateList)
+ try {
+        const res = await axios.get(`https://future-medical.herokuapp.com/admin/pharmacies/deactivated`,
+        {
+            headers: {
+          'Authorization': `Bearer ${token.token}`
+          }
+        }
+          )
+        const data = await res.data;
+        console.log(data)
+        if (data === 'there is no deactivated pharmacies') 
+        {return }
+        let i = 0 ;
+        if (activateList.length == 0){i = 0}
+        else {i = (activateList[activateList.length-1].id) + 1}
+        
+       pharmacies_list = [];  
+        data.forEach((x) => {
+                
+                pharmacy.pharmacyname = x.name;
+                pharmacy.id = i;
+                pharmacy.number = x.telephone[0];
+                pharmacy.Admin = x.admin.username;
+                pharmacy.Email = x.admin.email;
+                pharmacy.Location = x.address;
+                pharmacy.active = false ;
+                pharmacies_list.push(pharmacy);
+                pharmacy={}
+                ++i;
+                
+                //doctor.number = x.telephone[0];
+                //doctor.price = x.meeting_price;
+               
+              
+          });
+          
+        setdata(activateList.concat(pharmacies_list));  
+    } 
+    catch (error) {
+        console.error(error);
+        if (error.response) {
+          console.log(error.response.data);
+          console.log(error.response.status);}
     }
 }
     /*const Get_Pharmacies_Api = ()=>{
@@ -156,11 +232,29 @@ const Get_Pharmacies_Api = async ()=>{
     //Dectivate_Hospital_Api(clicked_Hos.Hospitalname);
     set_alert_delete(false)
   }
+
+     const handleActive = (clicked_Item)=>{     
+    
+     set_clicked_pharma(clicked_Item)
+     console.log(clicked_Item);
+     set_alert_active(true)
+     
+  }
+
+  const Close_Alert_yes_activate = (clicked_Item) =>{
+    Activate_Pharmacy_Api(clicked_Item.pharmacyname);
+    set_alert_active(false)
+     //Activate_Hospital_Api(clicked_Item.Email)
+  }
+   const Close_Alert_No_activate = () =>{
+    //Dectivate_Hospital_Api(clicked_Hos.Hospitalname);
+    set_alert_active(false)
+  }
   const columns = [
   {
     field: 'id',
     headerName: 'Number',
-    width: 220,
+    width: 140,
     
   },
   {
@@ -201,11 +295,11 @@ const Get_Pharmacies_Api = async ()=>{
       renderCell: (params) => {
         return (
           <>       
-              {/*<Button variant="outline-primary" onClick={() => handleEdit(params.row)}>Edit</Button>*/}
-             <DeleteOutline htmlColor='red' style={{cursor:'pointer' , marginLeft:'30px'}} onClick={() => handleDelete(params.row)}
+               {(params.row.active == false) && <Button variant="outline-success" onClick={() => handleActive(params.row)}>Activate </Button>}
+             {(params.row.active == true) &&<DeleteOutline htmlColor='red' style={{cursor:'pointer' , marginLeft:'30px'}} onClick={() => handleDelete(params.row)}
               
                         
-            />
+            />}
           </>
         );
       },
@@ -220,6 +314,7 @@ const Get_Pharmacies_Api = async ()=>{
     {!viewedit && <EditPharmacy editdata={editdata} changeedit={changeedit} goback={goback}/>}
     {!viewadd && <AddPharmacy changeadd={changeadd}  goback={goback}/>}
     {alert_delete && <AlertDelete open={alert_delete} Close_Alert_No={Close_Alert_No} Close_Alert_yes={Close_Alert_yes} clicked_hos={clicked_pharma} parent={"pharmacy"}></AlertDelete>}
+     {alert_active && <AlertActivate open={alert_active} Close_Alert_No_activate={Close_Alert_No_activate} Close_Alert_yes_activate={Close_Alert_yes_activate} clicked_item={clicked_pharma} parent={"pharmacy"}></AlertActivate>}
     </div>
     </div>
   );

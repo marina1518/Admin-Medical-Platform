@@ -45,9 +45,10 @@ export default function AlertActivate(props) {
           <DialogContentText id="alert-dialog-slide-description">              
             Are you sure that you want to Activate
               
-            {(props.parent == "hospital") && props.clicked_item.Hospitalname}
-            {(props.parent == "clinic") && props.clicked_item.clinicname} {(props.parent == "pharmacy") && props.clicked_hos.pharmacyname}
-             {(props.parent == "announcment") && props.clicked_item.announcmentname}
+            {(props.parent == "hospital") && " " + props.clicked_item.Hospitalname}
+            {(props.parent == "clinic") && " " + props.clicked_item.clinicname} 
+            {(props.parent == "pharmacy") && " " + props.clicked_item.pharmacyname}
+             {(props.parent == "announcment") && " " + props.clicked_item.announcmentname}
              {(props.parent == "doctor") &&  "Doctor "}
                {(props.parent == "doctor") &&  props.clicked_item.name}? 
           </DialogContentText>

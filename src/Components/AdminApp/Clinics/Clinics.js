@@ -8,6 +8,7 @@ import AddClinic from './AddClinic';
 import EditClinic from './EditClinic';
 import { useSelector } from 'react-redux';
 import AlertDelete from "../AlertDelete/AlertDelete"
+import AlertActivate from '../AlertDelete/AlertActivate';
 
 export default function Clinics() {
 
@@ -15,6 +16,8 @@ export default function Clinics() {
 const [data,setdata] = useState([]) //FROM API CLINICS LIST
 var clinics_list = JSON.parse(JSON.stringify(data));
 const [alert_delete , set_alert_delete] = useState(false);
+const [alert_active , set_alert_active] = useState(false);
+
 const [clicked_clinic , set_clicked_clinic] = useState({});
 let clinic = {} ;
 
@@ -36,7 +39,28 @@ const Dectivate_Clinic_Api = async (clinic_name)=>{
         console.error(err);
     }
 }
+const Activate_Clinic_Api = async (clinic_name)=>{
 
+ try {
+        const res = await axios.patch('https://future-medical.herokuapp.com/admin/entity/activate',{
+          entity : clinic_name 
+        },{
+          headers: {
+          'Authorization': `Bearer ${token.token}`
+          }
+        })
+        const data = await res.data;
+        Get_Clinics_Api() ; //IT WILL GET THE All clinics
+        console.log(data)
+      }
+    catch (error) {
+        //console.error(err);
+        console.error(error);
+        if (error.response) {
+          console.log(error.response.data);
+          console.log(error.response.status);}
+    }
+}
 const Get_Clinics_Api = async ()=>{
  try {
         const res = await axios.get('https://future-medical.herokuapp.com/clinics')
@@ -51,14 +75,63 @@ const Get_Clinics_Api = async ()=>{
                 clinic.Admin = x.admin.username;
                 clinic.Email = x.admin.email;
                 clinic.Location = x.address;
+                clinic.active = true 
                 clinics_list.push(clinic);
                 clinic={}
                 ++i;
           });
         setdata(clinics_list);  
+        Get_Clinics_Deactivated_Api(clinics_list);
     } 
     catch (err) {
         console.error(err);
+    }
+}
+
+const Get_Clinics_Deactivated_Api = async (activateList)=>{
+  console.log(activateList)
+ try {
+        const res = await axios.get(`https://future-medical.herokuapp.com/admin/clinics/deactivated`,
+        {
+            headers: {
+          'Authorization': `Bearer ${token.token}`
+          }
+        }
+          )
+        const data = await res.data;
+        console.log(data)
+        if (data === 'there is no deactivated clinics') 
+        {return }
+        let i = 0 ;
+        if (activateList.length == 0){i = 0}
+        else {i = (activateList[activateList.length-1].id) + 1}
+        
+       clinics_list = [];  
+        data.forEach((x) => {
+                
+                clinic.clinicname = x.name; 
+                clinic.id = i;
+                clinic.number = x.telephone[0];
+                clinic.Admin = x.admin.username;
+                clinic.Email = x.admin.email;
+                clinic.Location = x.address;
+                clinic.active = false 
+                clinics_list.push(clinic);
+                clinic={}
+                
+                //doctor.number = x.telephone[0];
+                //doctor.price = x.meeting_price;
+               
+                ++i;
+          });
+          
+        setdata(activateList.concat(clinics_list));  
+    } 
+    catch (error) {
+        console.error(error);
+        if (error.response) {
+          console.log(error.response.data);
+          console.log(error.response.status);}
     }
 }
 
@@ -125,11 +198,30 @@ const Get_Clinics_Api = async ()=>{
     //Dectivate_Hospital_Api(clicked_Hos.Hospitalname);
     set_alert_delete(false)
   }
+
+   const handleActive = (clicked_Item)=>{     
+    
+     set_clicked_clinic(clicked_Item)
+     console.log(clicked_Item);
+     set_alert_active(true)
+     
+  }
+
+  const Close_Alert_yes_activate = (clicked_Item) =>{
+    Activate_Clinic_Api(clicked_Item.clinicname);
+    set_alert_active(false)
+     //Activate_Hospital_Api(clicked_Item.Email)
+  }
+   const Close_Alert_No_activate = () =>{
+    //Dectivate_Hospital_Api(clicked_Hos.Hospitalname);
+    set_alert_active(false)
+  }
+
   const columns = [
     {
     field: 'id',
     headerName: 'Number',
-    width: 170,
+    width: 140,
    
   },
   {
@@ -170,11 +262,11 @@ const Get_Clinics_Api = async ()=>{
       renderCell: (params) => {
         return (
           <>       
-              {/*<Button variant="outline-primary" onClick={() => handleEdit(params.row)}>Edit</Button>*/}
-             <DeleteOutline htmlColor='red' style={{cursor:'pointer' , marginLeft:'30px'}} onClick={() => handleDelete(params.row)}
+              {(params.row.active == false) && <Button variant="outline-success" onClick={() => handleActive(params.row)}>Activate </Button>}
+             {(params.row.active == true) &&<DeleteOutline htmlColor='red' style={{cursor:'pointer' , marginLeft:'30px'}} onClick={() => handleDelete(params.row)}
               
                         
-            />
+            />}
           </>
         );
       },
@@ -186,9 +278,10 @@ const Get_Clinics_Api = async ()=>{
      <div style={{ height: 540, width: '90%' , margin: '1rem 2rem' ,marginBottom:'60px' }}>
       {viewedit && viewadd &&<Table rows={data} columns={columns}></Table>}
     {viewedit && viewadd &&<Button variant="primary" onClick={()=>{setadd(false)}} style={{margin:'15px'}}>Add Clinic</Button>  }
-    {!viewedit && <EditClinic editdata={editdata} changeedit={changeedit}  goback={goback}/>}
+    {/*!viewedit && <EditClinic editdata={editdata} changeedit={changeedit}  goback={goback}/>*/}
     {!viewadd && <AddClinic changeadd={changeadd}  goback={goback}/>}
     {alert_delete && <AlertDelete open={alert_delete} Close_Alert_No={Close_Alert_No} Close_Alert_yes={Close_Alert_yes} clicked_hos={clicked_clinic} parent={"clinic"}></AlertDelete>}
+     {alert_active && <AlertActivate open={alert_active} Close_Alert_No_activate={Close_Alert_No_activate} Close_Alert_yes_activate={Close_Alert_yes_activate} clicked_item={clicked_clinic} parent={"clinic"}></AlertActivate>}
     </div>
     </div>
   );

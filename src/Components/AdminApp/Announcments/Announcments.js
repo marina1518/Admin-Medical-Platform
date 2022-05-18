@@ -143,7 +143,7 @@ useEffect(()=>{
   {
     field: 'id',
     headerName: 'Number',
-    width: 170,
+    width: 140,
     
   },
   {
@@ -201,7 +201,7 @@ useEffect(()=>{
         
       />}
     {viewedit && viewadd &&<Button variant="primary" onClick={()=>{setadd(false)}} style={{margin:'15px'}}>Add Announcment</Button>  }
-    {!viewedit && <EditAnnouncment editdata={editdata} changeedit={changeedit} goback={goback}/>}
+    {!viewedit && <EditAnnouncment get_announcments ={Get_Announcments_Api} editdata={editdata} changeedit={changeedit} goback={goback}/>}
     {!viewadd && <AddAnnouncment changeadd={changeadd} goback={goback}/>}
     {alert_delete && <AlertDelete open={alert_delete} Close_Alert_No={Close_Alert_No} Close_Alert_yes={Close_Alert_yes} clicked_hos={clicked_announcment} parent={"announcment"}></AlertDelete>}
     </div>

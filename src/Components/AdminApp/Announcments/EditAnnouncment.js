@@ -22,7 +22,8 @@ export default function EditAnnouncment(props) {
           }
          }).then((res)=>{
            console.log(res.data);
-           props.changeedit(FormValues);
+           props.get_announcments();
+           props.goback();
                      
          })
          .catch(function (error) {
