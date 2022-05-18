@@ -476,7 +476,7 @@ const DoctorProfile = () => {
                   <div class="col-sm-3">
                     <h6 class="mb-0">Meeting Fees</h6>
                   </div>
-                  <div class="col-sm-9 text-secondary">from api</div>
+                  <div class="col-sm-9 text-secondary">{token.meeting_price}</div>
                 </div>
                 <hr id="profile-hr" />
                 <div class="row mt-3">
