@@ -23,7 +23,9 @@ const Add_doctor_api = ()=>{
          }).then((res)=>{
            console.log(res.data);
            console.log(props.changeadd)
-           props.changeadd(FormValues);  //go to the list
+           //props.changeadd(FormValues);  //go to the list
+           props.goback();
+           props.Get_Doctors_Api(props.entityname);
                      
          }).catch(function (error) {
     if (error.response) {      
@@ -49,8 +51,8 @@ const Add_doctor_api = ()=>{
         if (name === 'specialization')
         {
             switch(value){
-                case 'Emergency Medicine' :
-                    FormValues.arabicdep = 'الطوارئ'
+                case 'Psychiatry' :
+                    FormValues.arabicdep = 'الطب النفسي'
                 break;
                 case 'Dermatology (Skin)' :
                     FormValues.arabicdep = 'الجلدية'
@@ -201,7 +203,7 @@ uploadTask.on("state_changed",()=>{
       <Form.Label>Specialization</Form.Label>
   <Form.Select aria-label="Default select example2" defaultValue="Select Doctor Specialization" name="specialization" value={FormValues.specialization} onChange={(e)=>handlechange(e)}>      
   <option>Select Doctor Specialization</option>
-  <option >Emergency Medicine</option>
+  <option >Psychiatry</option>
   <option >Dermatology (Skin)</option>
   <option >Cardiologist</option>
   <option >Chest/Respiratory Medicine</option>

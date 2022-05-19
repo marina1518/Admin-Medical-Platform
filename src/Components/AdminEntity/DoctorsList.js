@@ -302,7 +302,7 @@ const [viewedit,setedit]=useState(true) //WHEN FALSE SHOW COMPONENT ADD HOSPITAL
     <div style={{ height: 540, width: '90%' , margin: '1rem 2rem' ,marginBottom:'60px' }}>
      {viewedit && viewadd && <Table rows={data} columns={columns}></Table> }
     {/*!viewedit && <Editdoctor editdata={editdata} changeedit={changeedit} goback={goback}/>*/}
-    {!viewadd && <Adddoctor changeadd={changeadd} goback={goback} entityname={token.entity.name}/>}      
+    {!viewadd && <Adddoctor changeadd={changeadd} goback={goback} Get_Doctors_Api={Get_Doctors_Api} entityname={token.entity.name}/>}      
     {viewedit && viewadd &&<Button variant="primary" onClick={()=>{setadd(false)}} style={{marginTop:'10px'}}>Add Doctor</Button>  }
      {alert_delete && <AlertDelete open={alert_delete} Close_Alert_No={Close_Alert_No} Close_Alert_yes={Close_Alert_yes} clicked_hos={clicked_doc} parent={"doctor"}></AlertDelete>}
      <EditModal show={modalShow} onHide={() => setModalShow(false)} Doctor={doctor_data}  Get_Doctors_Api={Get_Doctors_Api} Entity_Name={token.entity.name} 
