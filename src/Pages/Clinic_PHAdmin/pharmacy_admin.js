@@ -222,6 +222,7 @@ const Edit_personal_info = async (info) => {
       info,
       config
     );
+    console.log(info);
     alert(res.data);
     console.log(res.data);
   } catch (err) {
@@ -231,12 +232,12 @@ const Edit_personal_info = async (info) => {
 
 const [username, setusername] = useState(null);
 const [email, setemail] = useState(null);
-const [phone, setphone] = useState("");
+const [phone, setphone] = useState(null);
 const [address, setaddress] = useState(null);
 const [edit, setEdit] = useState(false);
 const [phone_error, setphone_error] = useState("");
 const [ph_name, setph_name] = useState(null);
-const [temp, edit_pic_temp] = useState("");
+const [temp, edit_pic_temp] = useState(null);
 const editted = {};
 var Edit_data = {};
 const setdata = () => {
@@ -275,41 +276,47 @@ const setdata = () => {
     token_copy.email = editted.email;
   }
   if (editted.phone === null) {
-    Edit_data.entity_telephone = token.entity.phone;
+    Edit_data.entity_telephone = token.entity.telephone;
   }
   else{
-    if (editted.phone.length === 11) {
-      Edit_data.entity_telephone = editted.entity.phone;
-      token_copy.entity.telephone.push(editted.phone);
+  if (editted.phone.length === 11) {
+      Edit_data.entity_telephone = editted.phone;
+      token_copy.entity.telephone = editted.phone;
     } else {
       setphone_error("invalid phone number");
-    }
-  }
-
-  
- 
-    if (!editted.file) 
+    }}
+    if (editted.file === null) 
     {
       Edit_data.admin_profilePic = token.profilePic;
-    };
+      Edit_data.role = "p_admin";
+      dispatch(signin(token_copy));
+      Edit_personal_info(Edit_data);
+    }
+    else{
     console.log(editted.file);
     console.log(editted.file.name);
+    
     const storageRef = ref(storage, `/files/${editted.file.name}`);
     const uploadTask = uploadBytesResumable(storageRef, editted.file);
     uploadTask.on("state_changed", () => {
       getDownloadURL(uploadTask.snapshot.ref)
         .then((url) => {
-          token_copy.profilePic = url;
           Edit_data.admin_profilePic = url;
+          token_copy.profilePic = url;
+          Edit_data.role = "p_admin";
+          dispatch(signin(token_copy));
+          Edit_personal_info(Edit_data);
         })
         .catch((err) => {
           console.log(err);
         });
     });
-
-  console.log(Edit_data);
-  dispatch(signin(token_copy));
-  Edit_personal_info(Edit_data);
+    };
+  //console.log(Edit_data.admin_profilePic);
+  //dispatch(signin(token_copy));
+  //Edit_data.role = "p_admin";
+  //console.log(Edit_data.entity_telephone);
+  //Edit_personal_info(Edit_data);
   Edit_data = {};
   setEdit(false);
   setphone_error("");
@@ -571,22 +578,23 @@ const setdata = () => {
               <div class="col-sm-9 text-secondary">
                 {edit ? (
                   <input
-                    placeholder={token.entity.telephone[0]}
+                    placeholder={token.entity.telephone}
                     type="text"
                     onChange={(e) => {
                       setphone(e.target.value);
+                      if(phone !== null){
                       if (phone.length !== 11 && phone.length !== 0 && edit)
-                        setphone_error("invalid phone number");
+                        setphone_error("invalid phone number");}
                     }}
                   ></input>
                 ) : (
-                  token.entity.telephone.map((t) => <>{t}</>)
-                )}
-                {phone.length !== 11 && phone.length !== 0 && edit ? (
+                  token.entity.telephone)
+                }
+                {phone!==null ? phone.length !== 11 && phone.length !== 0 && edit  ? (
                   <h6 style={{ color: "red" }}>{phone_error}</h6>
                 ) : (
-                  ""
-                )}
+                  "" 
+                ) : ""}
               </div>
             </div>
             <hr id="profile-hr" />
