@@ -23,6 +23,7 @@ setModalShow(true)
 click_order.phone = props.phone;
 click_order.photo = props.photo ;
 click_order.address = props.address;
+click_order.flag = props.flag ;
 console.log(click_order)
 set_clicked_order(click_order);
 //console.log(orders_list)
@@ -40,12 +41,15 @@ const Orders_Api = async ()=>{
         if (data === 'no orders available') 
         {return }
         let i = 1 ;
+        console.log(data);
         data.forEach((x) => {
                 
                  order.adminname = x.pharmacy.admin.username;
                  order.adminemail = x.pharmacy.admin.email;
                  order.entity = x.pharmacy.name;
                  order.id = i;          
+                 order.flag = x.flag ; //Image or form 
+                 order.status = x.status;
                  order.photo = x.order_data.form ;
                  order.address = x.order_data.address ;
                  order.phone = x.order_data.phone ;      
@@ -92,25 +96,12 @@ const columns = [
     width: 190,
     
   },
-  {
-    field: 'adminname',
-    headerName: 'admin name',
-   
-    width: 180,
-
-  },
+ 
     {
     field: 'adminemail',
     headerName: 'admin email',
   
     width: 180,
-
-  },
-    {
-    field: 'username',
-    headerName: 'User name',
-   
-    width: 170,
 
   },
     {
@@ -127,6 +118,13 @@ const columns = [
     width: 210,
 
   },
+  {
+    field: 'status',
+    headerName: 'State',
+    
+    width: 180,
+
+  },
     {
       field: "action",
       headerName: "Details" ,
@@ -139,7 +137,8 @@ const columns = [
                <OrderDetails
         show={modalShow}
         onHide={() => setModalShow(false)}
-        pic ={clicked_order.photo}
+        order ={clicked_order.photo}
+        flag ={clicked_order.flag}   
         address={clicked_order.address}
         phone={clicked_order.phone}
       />

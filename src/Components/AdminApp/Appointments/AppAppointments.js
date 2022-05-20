@@ -10,6 +10,29 @@ var [data,setdata] = useState([]) //FROM API appointments LIST
 var appointments_list = JSON.parse(JSON.stringify(data));
 let appointment = {} ;
 
+const Get_state_meeting = (date) =>{
+   const current = new Date();
+
+// Get the State of the meeting 
+    var state = "Pending"
+    const day = date.split("-");
+    if (parseInt(day[2]) < current.getFullYear()) state = "Done"; //year check
+    else if (parseInt(day[2]) > current.getFullYear())
+      state = "Pending"; //next year
+    else if ( parseInt(day[1]) === current.getMonth() + 1 &&  parseInt(day[0]) === current.getDate() && parseInt(day[2]) === current.getFullYear() )
+      state = "Today";
+    else if (parseInt(day[1]) < current.getMonth() + 1)
+      state = "Done"; //month check
+    else if (
+      parseInt(day[1]) === current.getMonth() + 1 && parseInt(day[0]) < current.getDate()
+    )
+      state = "Done"; //month check
+    else state = "Pending";
+    //meetings_api[i].state = state;
+  return state ;
+
+}
+
 const Appointments_Entity_Api = async ()=>{
  try {
         const res = await axios.get(`https://future-medical.herokuapp.com/admin/appointments`,
@@ -20,17 +43,27 @@ const Appointments_Entity_Api = async ()=>{
         if (data === 'no appointments available') 
         {return }
         let i = 1 ;
+        console.log(  data[0].Date);
+        var meet_date = "";
+        var meet_day = "";
+        var meeting_date = ""; 
         data.forEach((x) => {
                 
                 appointment.doctorname = x.doctor.username;
                 appointment.doctoremail = x.doctor.email;
                 appointment.entity = x.doctor.entity_id.name;
                 appointment.id = i;                
-                appointment.date = x.day + " "+ x.Date ;
+                meet_date = x.Date.split('-');
+                meet_day = meet_date[2].split('T')
+                meeting_date =  meet_day[0]+'-'+meet_date[1]+'-' +meet_date[0] ;
+                appointment.date = x.day + " " + meeting_date ;
+                 //(x.Date.getDate()).toString() +"-" +(x.Date.getMonth()+1).toString() +"-"+(x.Date.getFullYear()).toString();
+                 
                 appointment.slot = x.slot ;
                 appointment.patientname = x.user.username;
                 appointment.patientemail = x.user.email;
-                appointment.status = x.status ;
+
+                appointment.status = Get_state_meeting(meeting_date) ;
                 appointments_list.push(appointment);
                 appointment={}
                 ++i;
@@ -72,13 +105,7 @@ const columns = [
     width: 190,
     
   },
-  {
-    field: 'doctorname',
-    headerName: 'Doctor name',
-   
-    width: 180,
 
-  },
     {
     field: 'doctoremail',
     headerName: 'Doctor email',
@@ -86,13 +113,7 @@ const columns = [
     width: 180,
 
   },
-    {
-    field: 'patientname',
-    headerName: 'Patient name',
-   
-    width: 170,
-
-  },
+    
     {
     field: 'patientemail',
     headerName: 'Patient email',

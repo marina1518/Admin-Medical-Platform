@@ -103,7 +103,7 @@ const Get_Clinics_Deactivated_Api = async (activateList)=>{
         if (data === 'there is no deactivated clinics') 
         {return }
         let i = 0 ;
-        if (activateList.length == 0){i = 0}
+        if (activateList.length == 0){i = 1}
         else {i = (activateList[activateList.length-1].id) + 1}
         
        clinics_list = [];  
@@ -279,7 +279,7 @@ const Get_Clinics_Deactivated_Api = async (activateList)=>{
       {viewedit && viewadd &&<Table rows={data} columns={columns}></Table>}
     {viewedit && viewadd &&<Button variant="primary" onClick={()=>{setadd(false)}} style={{margin:'15px'}}>Add Clinic</Button>  }
     {/*!viewedit && <EditClinic editdata={editdata} changeedit={changeedit}  goback={goback}/>*/}
-    {!viewadd && <AddClinic changeadd={changeadd}  goback={goback}/>}
+    {!viewadd && <AddClinic changeadd={changeadd}  goback={goback} getclinics={Get_Clinics_Api}/>}
     {alert_delete && <AlertDelete open={alert_delete} Close_Alert_No={Close_Alert_No} Close_Alert_yes={Close_Alert_yes} clicked_hos={clicked_clinic} parent={"clinic"}></AlertDelete>}
      {alert_active && <AlertActivate open={alert_active} Close_Alert_No_activate={Close_Alert_No_activate} Close_Alert_yes_activate={Close_Alert_yes_activate} clicked_item={clicked_clinic} parent={"clinic"}></AlertActivate>}
     </div>

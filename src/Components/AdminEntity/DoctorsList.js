@@ -116,7 +116,7 @@ const Get_Doctors__Deactivated_Api = async (hospitalname , activateList)=>{
         if (data === 'this entity has no deactivated doctors') 
         {return }
         let i = 0 ;
-        if (activateList.length == 0){i = 0}
+        if (activateList.length == 0){i = 1}
         else {i = (activateList[activateList.length-1].id) + 1}
         
         doctors_list=[];

@@ -104,7 +104,7 @@ const Get_Hospitals_Deactivated_Api = async (activateList)=>{
         if (data === 'there is no deactivated hospitals') 
         {return }
         let i = 0 ;
-        if (activateList.length == 0){i = 0}
+        if (activateList.length == 0){i = 1}
         else {i = (activateList[activateList.length-1].id) + 1}
         
        hospitals_list = [];  
@@ -309,7 +309,7 @@ const Get_Hospitals_Deactivated_Api = async (activateList)=>{
     {viewedit && viewadd && <Table rows={data} columns={columns}></Table>}
     {viewedit && viewadd &&<Button variant="primary" onClick={()=>{setadd(false)}} style={{margin:'15px'}}>Add Hospital</Button>  }
     {/*!viewedit && <EditHospitals editdata={editdata} changeedit={changeedit} goback={goback}/>*/}
-    {!viewadd &&  <AddHospital changeadd={changeadd} goback={goback} />} 
+    {!viewadd &&  <AddHospital changeadd={changeadd} goback={goback} gethospitals={Get_Hospitals_Api}/>} 
     {alert_delete && <AlertDelete open={alert_delete} Close_Alert_No={Close_Alert_No} Close_Alert_yes={Close_Alert_yes} clicked_hos={clicked_hos} parent={"hospital"}></AlertDelete>}
    {alert_active && <AlertActivate open={alert_active} Close_Alert_No_activate={Close_Alert_No_activate} Close_Alert_yes_activate={Close_Alert_yes_activate} clicked_item={clicked_hos} parent={"hospital"}></AlertActivate>} 
     </div>

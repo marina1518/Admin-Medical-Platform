@@ -5,7 +5,7 @@ function AddHospital(props) {
   
   return (
     <div>
-     <AddEntity  entity='hospitals' goback={props.goback} changeadd={props.changeadd}/>
+     <AddEntity  entity='hospitals' goback={props.goback} changeadd={props.changeadd} gethospitals={props.gethospitals}/>
     </div>
   )
 }

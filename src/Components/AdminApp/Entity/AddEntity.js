@@ -59,7 +59,9 @@ const Add_hospital_api = ()=>{
                    
          }).then((res)=>{
            console.log(res.data);
-           props.changeadd(FormValues);  //go to all hospitals
+           props.goback()
+           props.gethospitals();
+           //props.changeadd(FormValues);  //go to all hospitals
            //return errors;           
          })
          .catch(function (error) {
@@ -90,8 +92,9 @@ const Add_pharmacy_api = ()=>{
                     longitude : FormValues.longitude
          }).then((res)=>{
            console.log(res.data);
-           props.changeadd(FormValues);  //go to all pharmacies
-                    
+           //props.changeadd(FormValues);  //go to all pharmacies
+           props.goback()
+           props.getpharmacies();         
          }).catch(function (error) {
     if (error.response) {      
       console.log(error.response.data);
@@ -121,8 +124,10 @@ const Add_clinic_api = ()=>{
                     longitude : FormValues.longitude
          }).then((res)=>{
            console.log(res.data);
-           props.changeadd(FormValues);  //go to all clinics
-          
+           //props.changeadd(FormValues);  //go to all clinics
+           props.goback()
+           props.getclinics();
+
          }).catch(function (error) {
     if (error.response) {    
       console.log(error.response.data);

@@ -4,7 +4,7 @@ import axios from 'axios'
 function AddClinic(props) { 
   return (
     <div>
-     <AddEntity  entity='clinics' goback={props.goback} changeadd={props.changeadd}/>
+     <AddEntity  entity='clinics' goback={props.goback} changeadd={props.changeadd} getclinics={props.getclinics}/>
     </div>
   )
 }

@@ -5,7 +5,7 @@ function AddPharmacy(props) {
   
   return (
     <div>
-     <AddEntity  entity='pharmacies' goback={props.goback} changeadd={props.changeadd}/>
+     <AddEntity  entity='pharmacies' goback={props.goback} changeadd={props.changeadd} getpharmacies={props.getpharmacies}/>
     </div>
   )
 }
