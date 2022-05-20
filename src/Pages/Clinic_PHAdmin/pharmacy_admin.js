@@ -54,7 +54,7 @@ const Ph_admin = () => {
   const [Docid, setdoctorid] = useState(location.state ? location.state : "");
   console.log(Docid);
   const token = JSON.parse(useSelector((state) => state.auth));
-  console.log(token);
+  console.log(token.token);
   const token_copy = token;
   const [state, setstate] = useState(null);
   const [edit_photo, setEdit_photo] = useState(false);
@@ -86,6 +86,8 @@ const Ph_admin = () => {
         order_details.username = x.user.username;
         order_details.email = x.user.email;
         order_details.id = x._id;
+        order_details.flag = x.flag;
+        if(order_details.flag === "text"){order_details.form=JSON.parse(order_details.form)}
         order_list.push(order_details);
         console.log(order_details);
         order_details = {};
@@ -121,6 +123,8 @@ const Ph_admin = () => {
         order_details.username = x.user.username;
         order_details.email = x.user.email;
         order_details.id = x._id;
+        order_details.flag = x.flag;
+        if(order_details.flag === "text"){order_details.form=JSON.parse(order_details.form)}
         order_list2.push(order_details);
         console.log(order_details);
         order_details = {};
@@ -158,6 +162,8 @@ const Ph_admin = () => {
         order_details.username = x.user.username;
         order_details.id = x._id;
         order_details.email = x.user.email;
+        order_details.flag = x.flag;
+        if(order_details.flag === "text"){order_details.form=JSON.parse(order_details.form)}
         order_list3.push(order_details);
         console.log(order_details);
         order_details = {};
@@ -196,6 +202,8 @@ const Ph_admin = () => {
         order_details.email = x.user.email;
         order_details.id = x._id;
         order_details.status = x.status;
+        order_details.flag = x.flag;
+        if(order_details.flag === "text"){order_details.form=JSON.parse(order_details.form)}
         order_list4.push(order_details);
         console.log(order_details);
         order_details = {};
@@ -657,7 +665,8 @@ const setdata = () => {
                         <Col>{item.Date} </Col>
                       </Accordion.Header>
                       <Accordion.Body>
-                        <img src={item.form} width="300px" height="300px" />
+                        {item.flag === "image" ? <img src={item.form} width="300px" height="300px" /> : <div><h4>{item.form.map((f)=><li>{f.medicine} with Quantity={f.quanity}</li>)}</h4></div>}
+                        
                         <h3>Address : {item.address}</h3>
                         <h3>Phone : {item.phone}</h3>
                         <h3>Email : {item.email}</h3>
@@ -728,7 +737,7 @@ const setdata = () => {
                         <Col>{item.Date} </Col>
                       </Accordion.Header>
                       <Accordion.Body>
-                        <img src={item.form} width="300px" height="300px" />
+                      {item.flag === "image" ? <img src={item.form} width="300px" height="300px" /> : <div><h4>{item.form.map((f)=><li>{f.medicine} with Quantity={f.quanity}</li>)}</h4></div>}
                         <h3>Address : {item.address}</h3>
                         <h3>Phone : {item.phone}</h3>
                         <h3>Email : {item.email}</h3>
@@ -757,7 +766,7 @@ const setdata = () => {
                         <Col>{item.Date} </Col>
                       </Accordion.Header>
                       <Accordion.Body>
-                        <img src={item.form} width="300px" height="300px" />
+                      {item.flag === "image" ? <img src={item.form} width="300px" height="300px" /> : <div><h4>{item.form.map((f)=><li>{f.medicine} with Quantity={f.quanity}</li>)}</h4></div>}
                         <h3>Address : {item.address}</h3>
                         <h3>Phone : {item.phone}</h3>
                         <h3>Email : {item.email}</h3>
@@ -796,7 +805,7 @@ const setdata = () => {
                         <Col>{item.status}</Col>
                       </Accordion.Header>
                       <Accordion.Body>
-                        <img src={item.form} width="300px" height="300px" />
+                      {item.flag === "image" ? <img src={item.form} width="300px" height="300px" /> : <div><h4>{item.form.map((f)=><li>{f.medicine} with Quantity={f.quanity}</li>)}</h4></div>}
                         <h3>Address : {item.address}</h3>
                         <h3>Phone : {item.phone}</h3>
                         <h3>Email : {item.email}</h3>
