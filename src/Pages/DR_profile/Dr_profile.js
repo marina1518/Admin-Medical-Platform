@@ -133,7 +133,7 @@ const DoctorProfile = () => {
   const current = new Date();
   let state;
   for (var i = 0; i < meetings_api.length; i++) {
-    const day = meetings_api[i].Date.split("-");
+    const day = meetings_api[i].Date.split('T')[0].split("-").reverse().join("-").split("-");
     if (parseInt(day[2]) < current.getFullYear()) state = "Done"; //year check
     else if (parseInt(day[2]) > current.getFullYear())
       state = "Pending"; //next year
