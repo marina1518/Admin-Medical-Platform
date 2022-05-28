@@ -642,7 +642,7 @@ const DoctorProfile = () => {
                                 : { opacity: "0.5" }
                             }
                           >
-                            <td width="20%">{item.date}</td>
+                            <td width="20%">{item.date.split('T')[0].split("-").reverse().join("-")}</td>
                             <td width="20%">{item.slot}</td>
                             <td
                               style={{ cursor: "pointer" }}
