@@ -50,7 +50,9 @@ const Pres=(props)=>{
           navigate("/doctor");
         }
         console.log(medicine);
-
+        var today = new Date();
+        today = String(today.getDate()).padStart(2, '0') + '-'+ String(today.getMonth() + 1).padStart(2, '0') + '-'  + today.getFullYear();
+        
         const write_pres = async (patient_email,medicine)=>{
           try {
                 const res = await axios.post('https://future-medical.herokuapp.com/doctor/prescription/save' ,
@@ -84,7 +86,7 @@ const Pres=(props)=>{
                     <br/>
                     <Form.Label>Patient: {patient_name} - {patient_email}</Form.Label>
                     <br/>
-                    <Form.Label>{date}</Form.Label>
+                    <Form.Label>{today}</Form.Label>
                     <br/>
 
                   </Form.Group>
