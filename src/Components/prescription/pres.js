@@ -4,28 +4,22 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import {GiMedicines} from 'react-icons/gi';
 import SendIcon from '@mui/icons-material/Send';
 import { useNavigate } from "react-router";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from 'axios';
+import {patient_details} from '../../actions';
 const Pres=(props)=>{
 
         
         const token = JSON.parse(useSelector(state => state.auth));
+        const pat = JSON.parse(useSelector(state => state.patient_reducer));
+        console.log(pat);
+        const dispatch = useDispatch();
         const config = {headers: {'Authorization': `Bearer ${token.token}`}};
         const [show, setShow] = useState(props.show);
         const [s,sets] = useState(false);
         const [med,setmed] = useState("");
         const handleClose = () => setShow(false);
         let navigate = useNavigate();
-        const patient_email = JSON.parse(
-          JSON.stringify(localStorage.getItem("patient_email"))
-        );
-        const date = JSON.parse(
-          JSON.stringify(localStorage.getItem("date"))
-        );
-        const patient_name = JSON.parse(
-          JSON.stringify(localStorage.getItem("patient_name"))
-        );
-        //const handleShow = () => setShow(props.show);
       
         const [show_med, setnew]=useState([])
         const medicine=[...show_med];
@@ -39,24 +33,22 @@ const Pres=(props)=>{
             
         }
         console.log(show_med)
+        var today = new Date();
+        today = String(today.getDate()).padStart(2, '0') + '-'+ String(today.getMonth() + 1).padStart(2, '0') + '-'  + today.getFullYear();
         const send_pres=()=>{
           navigate("/doctor");
-          write_pres(patient_email, medicine);
-          localStorage.removeItem("date");
-          localStorage.removeItem("patient_email");
-          localStorage.removeItem("patient_name");
+          write_pres( medicine);
+          dispatch(patient_details(""));
         }
         const close_pres=()=>{
           navigate("/doctor");
         }
         console.log(medicine);
-        var today = new Date();
-        today = String(today.getDate()).padStart(2, '0') + '-'+ String(today.getMonth() + 1).padStart(2, '0') + '-'  + today.getFullYear();
-        
-        const write_pres = async (patient_email,medicine)=>{
+
+        const write_pres = async (medicine)=>{
           try {
                 const res = await axios.post('https://future-medical.herokuapp.com/doctor/prescription/save' ,
-                {"user_email":patient_email,
+                {"user_email":pat.email,
                 "medicines":medicine}
                 ,config)
                   alert("Prescription is sent to the user.");
@@ -67,8 +59,9 @@ const Pres=(props)=>{
                 console.error(err);
             }
         }
-
-      
+        var today = new Date();
+        today = String(today.getDate()).padStart(2, '0') + '-'+ String(today.getMonth() + 1).padStart(2, '0') + '-'  + today.getFullYear();
+        console.log(today);
         return (
           <>
             {/* <Button variant="primary" onClick={handleShow}>
@@ -76,7 +69,7 @@ const Pres=(props)=>{
             </Button> */}
       
             <Modal show={show} onHide={handleClose}>
-              <Modal.Header closeButton>
+              <Modal.Header >
                 <Modal.Title>Write Prescription</Modal.Title>
               </Modal.Header>
               <Modal.Body>
@@ -84,7 +77,7 @@ const Pres=(props)=>{
                   <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                     <Form.Label>Dr {token.username}</Form.Label>
                     <br/>
-                    <Form.Label>Patient: {patient_name} - {patient_email}</Form.Label>
+                    <Form.Label>Patient: {pat.name} - {pat.email}</Form.Label>
                     <br/>
                     <Form.Label>{today}</Form.Label>
                     <br/>
