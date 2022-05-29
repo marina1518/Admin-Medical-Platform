@@ -20,12 +20,18 @@ const Appointments_Entity_Api = async ()=>{
         if (data === 'no appointments available') 
         {return }
         let i = 1 ;
+         var meet_date = "";
+        var meet_day = "";
+        var meeting_date = "";
         data.forEach((x) => {
                 
                 appointment.doctorname = x.doctor.username;
                 appointment.doctoremail = x.doctor.email;
-                appointment.id = i;                
-                appointment.date = x.day + " "+ x.Date ;
+                appointment.id = i;  
+                meet_date = x.Date.split('-');
+                meet_day = meet_date[2].split('T')
+                meeting_date =  meet_day[0]+'-'+meet_date[1]+'-' +meet_date[0] ;              
+                appointment.date = x.day + " "+ meeting_date ;
                 appointment.slot = x.slot ;
                 appointment.patientname = x.user.username;
                 appointment.patientemail = x.user.email;
