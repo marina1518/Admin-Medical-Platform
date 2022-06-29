@@ -71,26 +71,53 @@ const ChatUI = () => {
     if (!file) return;
     console.log(file);
     console.log(file.name);
+
     const storageRef = ref(storage, `/files/${file.name}`);
-    const uploadTask = uploadBytesResumable(storageRef, file);
-    uploadTask.on("state_changed", () => {
-      getDownloadURL(uploadTask.snapshot.ref)
-        .then((url) => {
-          console.log(url);
-          setChat([...chat, { name: name, msg: url, type: "img" }]);
-          socketRef.current.emit("message", {
-            name: name,
-            msg: url,
-            type: "img",
-            room: email
-          });
-          setopen(false);
-          window.scrollTo({ bottom: 0, behavior: "smooth" });
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    });
+
+    //check if image already exists
+    getDownloadURL(storageRef)
+            .then((url) => {
+              console.log(url);
+              console.log("yes");
+              //send image without upload again 
+              setChat([...chat, { name: name, msg: url, type: "img", room: email }]);
+                    socketRef.current.emit("message", {
+                      name: name,
+                      msg: url,
+                      type: "img",
+                      room: email
+                    });
+                    setopen(false);
+                    window.scrollTo({ bottom: 0, behavior: "smooth" });
+            
+            })
+            .catch((err) => {
+              console.log("don't exist");
+              console.log(err);
+              //upload image on firebase then send it 
+              const uploadTask = uploadBytesResumable(storageRef, file);
+
+              uploadTask.on("state_changed", () => {
+                getDownloadURL(uploadTask.snapshot.ref)
+                  .then((url) => {
+                    console.log(url);
+                    setChat([...chat, { name: name, msg: url, type: "img", room: email }]);
+                    socketRef.current.emit("message", {
+                      name: name,
+                      msg: url,
+                      type: "img",
+                      room: email
+                    });
+                    setopen(false);
+                    window.scrollTo({ bottom: 0, behavior: "smooth" });
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                  });
+              });
+            });
+
+   
   };
 
   const renderChat = () => {
