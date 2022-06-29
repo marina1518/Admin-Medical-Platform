@@ -62,6 +62,10 @@ const Ph_admin = () => {
   var [phorder, setphorder] = useState([]);
   const [order2_details, setorder2_details] = useState([]);
   const [pending_orders, setpending_details] = useState([]);
+  const [open, setOpen] = useState(false);
+  // const [open2, setOpen2] = useState(false);
+  // const [open3, setOpen3] = useState(false);
+  // const [open4, setOpen4] = useState(false);
   var order_list = JSON.parse(JSON.stringify(phorder));
   var order_details = {};
   const config = { headers: { Authorization: `Bearer ${token.token}` } };
@@ -665,8 +669,23 @@ const setdata = () => {
                         <Col>{item.Date} </Col>
                       </Accordion.Header>
                       <Accordion.Body>
-                        {item.flag === "image" ? <img src={item.form} width="300px" height="300px" /> : <div><h4>{item.form.map((f)=><li>{f.medicine} with Quantity={f.quanity}</li>)}</h4></div>}
-                        
+                        {item.flag === "image" ? <img src={item.form} width="300px" height="300px" onClick={(e)=>setOpen(true)}/> : <div><h4>{item.form.map((f)=><li>{f.medicine} with Quantity={f.quanity}</li>)}</h4></div>}
+                        {open ? (
+                                      <div id="myModal" class="modal_image">
+                                        <span
+                                          class="close"
+                                          onClick={(e) => setOpen(false)}
+                                        >
+                                          &times;
+                                        </span>
+                                        <img
+                                          class="modal-content"
+                                          src={item.form}
+                                        />
+                                      </div>
+                                    ) : (
+                                      ""
+                                    )}
                         <h3>Address : {item.address}</h3>
                         <h3>Phone : {item.phone}</h3>
                         <h3>Email : {item.email}</h3>
@@ -737,7 +756,23 @@ const setdata = () => {
                         <Col>{item.Date} </Col>
                       </Accordion.Header>
                       <Accordion.Body>
-                      {item.flag === "image" ? <img src={item.form} width="300px" height="300px" /> : <div><h4>{item.form.map((f)=><li>{f.medicine} with Quantity={f.quanity}</li>)}</h4></div>}
+                      {item.flag === "image" ? <img src={item.form} width="300px" height="300px" onClick={(e)=>setOpen(true)}/> : <div><h4>{item.form.map((f)=><li>{f.medicine} with Quantity={f.quanity}</li>)}</h4></div>}
+                      {open ? (
+                                      <div id="myModal" class="modal_image">
+                                        <span
+                                          class="close"
+                                          onClick={(e) => setOpen(false)}
+                                        >
+                                          &times;
+                                        </span>
+                                        <img
+                                          class="modal-content"
+                                          src={item.form}
+                                        />
+                                      </div>
+                                    ) : (
+                                      ""
+                                    )}
                         <h3>Address : {item.address}</h3>
                         <h3>Phone : {item.phone}</h3>
                         <h3>Email : {item.email}</h3>
@@ -766,7 +801,23 @@ const setdata = () => {
                         <Col>{item.Date} </Col>
                       </Accordion.Header>
                       <Accordion.Body>
-                      {item.flag === "image" ? <img src={item.form} width="300px" height="300px" /> : <div><h4>{item.form.map((f)=><li>{f.medicine} with Quantity={f.quanity}</li>)}</h4></div>}
+                      {item.flag === "image" ? <img src={item.form} width="300px" height="300px" onClick={(e)=>setOpen(true)}/> : <div><h4>{item.form.map((f)=><li>{f.medicine} with Quantity={f.quanity}</li>)}</h4></div>}
+                      {open ? (
+                                      <div id="myModal" class="modal_image">
+                                        <span
+                                          class="close"
+                                          onClick={(e) => setOpen(false)}
+                                        >
+                                          &times;
+                                        </span>
+                                        <img
+                                          class="modal-content"
+                                          src={item.form}
+                                        />
+                                      </div>
+                                    ) : (
+                                      ""
+                                    )}
                         <h3>Address : {item.address}</h3>
                         <h3>Phone : {item.phone}</h3>
                         <h3>Email : {item.email}</h3>
@@ -805,7 +856,29 @@ const setdata = () => {
                         <Col>{item.status}</Col>
                       </Accordion.Header>
                       <Accordion.Body>
-                      {item.flag === "image" ? <img src={item.form} width="300px" height="300px" /> : <div><h4>{item.form.map((f)=><li>{f.medicine} with Quantity={f.quanity}</li>)}</h4></div>}
+                      {item.flag === "image" ? <img
+                                      id="myImg"
+                                      src={item.form}
+                                      width="300px"
+                                      height="300px"
+                                      onClick={(e) => setOpen(true)}
+                                    /> : <div><h4>{item.form.map((f)=><li>{f.medicine} with Quantity={f.quanity}</li>)}</h4></div>}
+                      {open ? (
+                                      <div id="myModal" class="modal_image">
+                                        <span
+                                          class="close"
+                                          onClick={(e) => setOpen(false)}
+                                        >
+                                          &times;
+                                        </span>
+                                        <img
+                                          class="modal-content"
+                                          src={item.form}
+                                        />
+                                      </div>
+                                    ) : (
+                                      ""
+                                    )}
                         <h3>Address : {item.address}</h3>
                         <h3>Phone : {item.phone}</h3>
                         <h3>Email : {item.email}</h3>
