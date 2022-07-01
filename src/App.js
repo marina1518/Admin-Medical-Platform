@@ -19,6 +19,7 @@ import VideoCall from "./Components/Meeting_room/Video_chat/VideoCall";
 import ProfileUi from "./Pages/User_profile/ProfileUI"
 import { useLocation } from "react-router-dom";
 import AlertDelete from "./Components/AdminApp/AlertDelete/AlertDelete"
+import  Customchart  from './Components/AdminApp/Dashboard/Customchart';
 function App() {
 const token = JSON.parse(useSelector((state) => state.auth)); //state of token
 const location = useLocation();
@@ -31,7 +32,7 @@ const location = useLocation();
   </Routes>*/}
          <div className='body'>
       <Routes>
-        {/*<Route path="/" element={<AlertDelete/>}> </Route>*/}
+        {/*<Route path="/" element={<Customchart/>}> </Route>*/}
         {<Route path="/" element={<Login/>}> </Route>}
         {<Route path="/user" element={<ProfileUi/>}> </Route>}
         <Route path="/AppAdmin" element={<PrivateAdmin><AppAdmin style={{marginTop:'200px'}}/></PrivateAdmin>}> </Route>

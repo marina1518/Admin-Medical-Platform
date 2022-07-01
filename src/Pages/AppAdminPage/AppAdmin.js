@@ -17,7 +17,7 @@ import AppOrders from '../../Components/AdminApp/Orders/AppOrders';
 import Info from '../../Components/AdminApp/PersonalInfo/Info';
 import { useNavigate } from 'react-router-dom';
 import Barchart from '../../Components/AdminApp/Dashboard/Barchart';
-
+import Customchart from '../../Components/AdminApp/Dashboard/Customchart'
 
 function AppAdmin() {
   
@@ -70,9 +70,9 @@ console.log(token)
         <div className="profile-container">
         <div className='otherpages'>
            { (chosencomp==='chart') && <Barchart/>}
-          { (chosencomp==='chart') && <Chart data={data} dataKey={"Active Hospital profit"} title={"Hospital Analytics"}/>}
-        { (chosencomp==='chart') &&  <Chart data={Clinic} dataKey={"Active Clinic profit"} title={"Clinic Analytics"}/>}
-        { (chosencomp==='chart') && <Chart data={pharmacy} dataKey={"Active Pharmacy profit"} title={"Pharmacy Analytics"}/>}
+          { (chosencomp==='chart') && <Customchart  title={"Hospital Analytics"} parent={"hospitals"}/> }
+        { (chosencomp==='chart') &&  <Customchart   title={"Clinic Analytics"} parent={"clinics"}/>}
+        { (chosencomp==='chart') && <Customchart   title={"Pharmacy Analytics"} parent={"pharmacies"}/>}
         { (chosencomp==='hospitals') && <Hospitals/>}
         { (chosencomp==='clinics') && <Clinics/>}
         { (chosencomp==='pharmacies') && <Pharmacies/>}
