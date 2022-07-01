@@ -41,6 +41,9 @@ const Orders_Api = async ()=>{
         if (data === 'no orders available') 
         {return }
         let i = 1 ;
+        var meet_date = "";
+        var meet_day = "";
+        var meeting_date = ""; 
         console.log(data);
         data.forEach((x) => {
                 
@@ -52,8 +55,16 @@ const Orders_Api = async ()=>{
                  order.status = x.status;
                  order.photo = x.order_data.form ;
                  order.address = x.order_data.address ;
-                 order.phone = x.order_data.phone ;      
-                 order.date = x.order_data.Date ;
+                 order.phone = x.order_data.phone ;     
+                 if(x.order_data.Date){
+                meet_date =x.order_data.Date.split('-');
+                meet_day = meet_date[2].split('T')
+                meeting_date =  meet_day[0]+'-'+meet_date[1]+'-' +meet_date[0] ;
+                order.date = meeting_date ; }
+                else{
+                  order.date = x.order_data.Date ;
+                }
+                 //order.date = x.order_data.Date ;
                  order.username = x.user.username;
                  order.useremail = x.user.email;
                  if (x.price == null){
