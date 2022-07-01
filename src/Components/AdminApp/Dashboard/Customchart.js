@@ -9,12 +9,25 @@ import {
 } from "recharts";
 import './chart.css'
 
-function generateRandomColor() {
+function generateRandomColor(Colors_list) {
+    console.log("color_list",Colors_list);
   var letters = '0123456789ABCDEF';
   var color = '#';
+  var flag = true ;
+  while (flag){
+    flag = false ;
   for (var i = 0; i < 6; i++) {
     color += letters[Math.floor(Math.random() * 16)];
   }
+  for (var i = 0 ; i < Colors_list.length ; i++)
+  {
+    if (color === Colors_list[i])
+    {
+        flag = true;
+        break ;
+    }
+  }
+}
   return color;
 }
 
@@ -26,9 +39,12 @@ export default function Customchart(props) {
 
  const [data1,setdata1]=useState([]);
  const [show,setshow]=useState(false);
+ const [no_profit_flag,set_no_profit]=useState(false);
  let hospitals_list = [];
  let clinics_list = [];
  let pharmacies_list = [];
+ let color_list = [];
+ let col = "";
  let temp_list = [];
    let start = new Date;
    let end = new Date ;
@@ -84,40 +100,71 @@ export default function Customchart(props) {
         calc: 'stringify',
       },
     ]);
-        for(let x in data.hospitals){
-            temp_list=[x,data.hospitals[x],generateRandomColor(),null];
-         
+        for(let x in data.hospitals){            
+            col = generateRandomColor(color_list);
+            color_list.push(col)
+            temp_list=[x,data.hospitals[x],col,null];         
             console.log("temp list", temp_list )
             hospitals_list.push(temp_list);
             temp_list=[]
+            col=""
+            
         }
+        color_list=[];
          for(let x in data.clinics){
-            temp_list=[x,data.clinics[x],generateRandomColor(),null];
+            col = generateRandomColor(color_list);
+            color_list.push(col)
+            temp_list=[x,data.clinics[x],col,null];
          
             console.log("temp list", temp_list )
             clinics_list.push(temp_list);
             temp_list=[]
+            col =""
         }
+        color_list=[];
           for(let x in data.pharmacies){
-            temp_list=[x,data.pharmacies[x],generateRandomColor(),null];
+             col = generateRandomColor(color_list);
+            color_list.push(col)
+            temp_list=[x,data.pharmacies[x],col,null];
          
             console.log("temp list", temp_list )
             pharmacies_list.push(temp_list);
             temp_list=[]
+            col=""
         }
+        color_list=[];
         //['Women', 24, generateRandomColor(), null]
         console.log("hospitals_list",hospitals_list)
+
         if (props.parent === "hospitals" )
         {
           setdata1(hospitals_list)
+          if(hospitals_list.length>1){
+            setshow(true);
+          }
+          else {
+            set_no_profit(true)
+          }
         }
         else if (props.parent === "clinics")
         {
              setdata1(clinics_list)
+            if(clinics_list.length>1){
+            setshow(true);
+          }
+           else {
+            set_no_profit(true)
+          }
         }
         else if (props.parent === "pharmacies")
         {
              setdata1(pharmacies_list)
+                if(pharmacies_list.length>1){
+            setshow(true);
+          }
+           else {
+            set_no_profit(true)
+          }
         }
         
     } 
@@ -140,7 +187,8 @@ const handlechange = (e)=>{
          {
             setFormerrors(validate({...FormValues, [name] : value}))
          }
-         
+         set_no_profit(false); //in change the date 
+         setshow(false); //in change the date  
         // console.log(FormValues);
     }
     function validate (values)
@@ -169,7 +217,6 @@ const submithandle =(e)=>{
         {
             //empty
             setissubmit(true);
-            setshow(true);
             //POST
              Profit_hospitals_Api()  
         }
@@ -204,9 +251,8 @@ const submithandle =(e)=>{
    Show
   </Button>
 </Form>
-     { /*(props.parent==="clinics") && show && !clinics_list[1] && <p>No profit in this period</p>*/}
-     { /*(props.parent==="hospitals") && show && !hospitals_list[1] && <p>No profit in this period</p>*/}
-     { /*(props.parent==="pharmacies") && show && !pharmacies_list[1] && <p>No profit in this period</p>*/}
+     
+     { no_profit_flag && <p style={{fontSize:'25px'}}>No profit in this period</p>}
      { show && <Chart style={{marginBottom:'100px'}}
   width={'500px'}
   height={'300px'}
