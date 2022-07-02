@@ -94,7 +94,7 @@ const Ph_admin = () => {
       data.forEach((x) => {
         order_details.form = x.order_data.form;
         //let b=x.order_data.Date.split("T")
-        order_details.Date = x.order_data.Date;
+        order_details.Date = x.order_data.Date.split('T')[0].split('-').reverse().join("-");
         order_details.address = x.order_data.address;
         order_details.phone = x.order_data.phone;
         order_details.price = x.price;
@@ -132,8 +132,8 @@ const Ph_admin = () => {
       }
       data.forEach((x) => {
         order_details.form = x.order_data.form;
-        let b = x.order_data.Date.split("T");
-        order_details.Date = b[0];
+        //let b = x.order_data.Date.split('T')[0].split('-').reverse().join("-");
+        order_details.Date = x.order_data.Date.split('T')[0].split('-').reverse().join("-");
         order_details.address = x.order_data.address;
         order_details.phone = x.order_data.phone;
         order_details.price = x.price;
@@ -173,8 +173,8 @@ const Ph_admin = () => {
       }
       data.forEach((x) => {
         order_details.form = x.order_data.form;
-        let b = x.order_data.Date.split("T");
-        order_details.Date = b[0];
+        //let b = x.order_data.Date.split("T");
+        order_details.Date = x.order_data.Date.split('T')[0].split('-').reverse().join("-");;
         order_details.address = x.order_data.address;
         order_details.phone = x.order_data.phone;
         order_details.price = x.price;
@@ -214,8 +214,8 @@ const Ph_admin = () => {
       }
       data.forEach((x) => {
         order_details.form = x.order_data.form;
-        let b = x.order_data.Date.split("T");
-        order_details.Date = b[0];
+        //let b = x.order_data.Date.split("T");
+        order_details.Date = x.order_data.Date.split('T')[0].split('-').reverse().join("-");
         order_details.address = x.order_data.address;
         order_details.phone = x.order_data.phone;
         order_details.price = x.price;
