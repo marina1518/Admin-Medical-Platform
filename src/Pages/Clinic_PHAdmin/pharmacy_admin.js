@@ -9,7 +9,7 @@ import {
   Accordion,
   Col,
   Row,
-  ListGroup
+  ListGroup,
 } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { MdOutlineDoneOutline, MdOutlineDone, MdCancel } from "react-icons/md";
@@ -20,20 +20,34 @@ import { useLocation } from "react-router-dom";
 import SideBarUI from "../../Components/SideBarUi/Sidebar";
 import { blueGrey } from "@material-ui/core/colors";
 import Tooltip from "@mui/material/Tooltip";
-import {pharmacy_info ,pharma_history , orders_pharma, pending_orders_red,approved_orders} from "../../actions/index"
-import {AiOutlineComment} from 'react-icons/ai';
-import {BsInfoCircleFill} from 'react-icons/bs';
+import {
+  pharmacy_info,
+  pharma_history,
+  orders_pharma,
+  pending_orders_red,
+  approved_orders,
+} from "../../actions/index";
+import { AiOutlineComment } from "react-icons/ai";
+import { BsInfoCircleFill } from "react-icons/bs";
 import EditIcon from "@material-ui/icons/Edit";
 import { signin } from "../../actions/index";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { storage } from "../../Firebase";
-import  ModalImage  from 'react-modal-image'
+import ModalImage from "react-modal-image";
 // import { Bar} from "react-chartjs-2";
+
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
 
 const Ph_admin = () => {
   const dispatch = useDispatch();
 
-   const chosencomp = useSelector(state => state.Pharmacy_reducer);
+  const chosencomp = useSelector((state) => state.Pharmacy_reducer);
   const [compact, setCompact] = useState(false);
   const compacthandler = () => {
     setCompact(!compact);
@@ -88,7 +102,9 @@ const Ph_admin = () => {
         order_details.email = x.user.email;
         order_details.id = x._id;
         order_details.flag = x.flag;
-        if(order_details.flag === "text"){order_details.form=JSON.parse(order_details.form)}
+        if (order_details.flag === "text") {
+          order_details.form = JSON.parse(order_details.form);
+        }
         order_list.push(order_details);
         console.log(order_details);
         order_details = {};
@@ -125,7 +141,9 @@ const Ph_admin = () => {
         order_details.email = x.user.email;
         order_details.id = x._id;
         order_details.flag = x.flag;
-        if(order_details.flag === "text"){order_details.form=JSON.parse(order_details.form)}
+        if (order_details.flag === "text") {
+          order_details.form = JSON.parse(order_details.form);
+        }
         order_list2.push(order_details);
         console.log(order_details);
         order_details = {};
@@ -164,7 +182,9 @@ const Ph_admin = () => {
         order_details.id = x._id;
         order_details.email = x.user.email;
         order_details.flag = x.flag;
-        if(order_details.flag === "text"){order_details.form=JSON.parse(order_details.form)}
+        if (order_details.flag === "text") {
+          order_details.form = JSON.parse(order_details.form);
+        }
         order_list3.push(order_details);
         console.log(order_details);
         order_details = {};
@@ -204,7 +224,9 @@ const Ph_admin = () => {
         order_details.id = x._id;
         order_details.status = x.status;
         order_details.flag = x.flag;
-        if(order_details.flag === "text"){order_details.form=JSON.parse(order_details.form)}
+        if (order_details.flag === "text") {
+          order_details.form = JSON.parse(order_details.form);
+        }
         order_list4.push(order_details);
         console.log(order_details);
         order_details = {};
@@ -222,116 +244,108 @@ const Ph_admin = () => {
     Get_history_Api();
     Get_pending_Api();
   }, []);
-  
-//edit
-const Edit_personal_info = async (info) => {
-  try {
-    const res = await axios.patch(
-      "https://future-medical.herokuapp.com/admin/edit",
-      info,
-      config
-    );
-    console.log(info);
-    alert(res.data);
-    console.log(res.data);
-  } catch (err) {
-    console.error(err);
-  }
-};
 
-const [username, setusername] = useState(null);
-const [email, setemail] = useState(null);
-const [phone, setphone] = useState(null);
-const [address, setaddress] = useState(null);
-const [edit, setEdit] = useState(false);
-const [phone_error, setphone_error] = useState("");
-const [ph_name, setph_name] = useState(null);
-const [temp, edit_pic_temp] = useState(null);
-const editted = {};
-var Edit_data = {};
-const setdata = () => {
-  editted.username = username;
-  editted.phone = phone;
-  editted.email = email;
-  editted.address = address
-  editted.ph_name = ph_name;
-  editted.file = temp;
-  if (editted.username === null) {
-    Edit_data.admin_username = token.username;
-  }
-  else{
-    Edit_data.admin_username = editted.username;
-    token_copy.username = editted.username;
-  }
-  if (editted.ph_name === null) {
-    Edit_data.entity_name = token.entity.name;
-  }
-  else{
-    Edit_data.entity_name = editted.ph_name;
-    token_copy.entity.name = editted.ph_name;
-  }
-  if (editted.address === null) {
-    Edit_data.entity_address = token.entity.address;
-  }
-  else{
-    Edit_data.entity_address = editted.address;
-    token_copy.entity.address = editted.address;
-  }
-  if (editted.email === null) {
-    Edit_data.admin_email = token.email;
-  }
-  else{
-    Edit_data.admin_email = editted.email;
-    token_copy.email = editted.email;
-  }
-  if (editted.phone === null) {
-    Edit_data.entity_telephone = token.entity.telephone;
-  }
-  else{
-  if (editted.phone.length === 11) {
-      Edit_data.entity_telephone = editted.phone;
-      token_copy.entity.telephone = editted.phone;
+  //edit
+  const Edit_personal_info = async (info) => {
+    try {
+      const res = await axios.patch(
+        "https://future-medical.herokuapp.com/admin/edit",
+        info,
+        config
+      );
+      console.log(info);
+      alert(res.data);
+      console.log(res.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const [username, setusername] = useState(null);
+  const [email, setemail] = useState(null);
+  const [phone, setphone] = useState(null);
+  const [address, setaddress] = useState(null);
+  const [edit, setEdit] = useState(false);
+  const [phone_error, setphone_error] = useState("");
+  const [ph_name, setph_name] = useState(null);
+  const [temp, edit_pic_temp] = useState(null);
+  const editted = {};
+  var Edit_data = {};
+  const setdata = () => {
+    editted.username = username;
+    editted.phone = phone;
+    editted.email = email;
+    editted.address = address;
+    editted.ph_name = ph_name;
+    editted.file = temp;
+    if (editted.username === null) {
+      Edit_data.admin_username = token.username;
     } else {
-      setphone_error("invalid phone number");
-    }}
-    if (editted.file === null) 
-    {
+      Edit_data.admin_username = editted.username;
+      token_copy.username = editted.username;
+    }
+    if (editted.ph_name === null) {
+      Edit_data.entity_name = token.entity.name;
+    } else {
+      Edit_data.entity_name = editted.ph_name;
+      token_copy.entity.name = editted.ph_name;
+    }
+    if (editted.address === null) {
+      Edit_data.entity_address = token.entity.address;
+    } else {
+      Edit_data.entity_address = editted.address;
+      token_copy.entity.address = editted.address;
+    }
+    if (editted.email === null) {
+      Edit_data.admin_email = token.email;
+    } else {
+      Edit_data.admin_email = editted.email;
+      token_copy.email = editted.email;
+    }
+    if (editted.phone === null) {
+      Edit_data.entity_telephone = token.entity.telephone;
+    } else {
+      if (editted.phone.length === 11) {
+        Edit_data.entity_telephone = editted.phone;
+        token_copy.entity.telephone = editted.phone;
+      } else {
+        setphone_error("invalid phone number");
+      }
+    }
+    if (editted.file === null) {
       Edit_data.admin_profilePic = token.profilePic;
       Edit_data.role = "p_admin";
       dispatch(signin(token_copy));
       Edit_personal_info(Edit_data);
+    } else {
+      console.log(editted.file);
+      console.log(editted.file.name);
+
+      const storageRef = ref(storage, `/files/${editted.file.name}`);
+      const uploadTask = uploadBytesResumable(storageRef, editted.file);
+      uploadTask.on("state_changed", () => {
+        getDownloadURL(uploadTask.snapshot.ref)
+          .then((url) => {
+            Edit_data.admin_profilePic = url;
+            token_copy.profilePic = url;
+            Edit_data.role = "p_admin";
+            dispatch(signin(token_copy));
+            Edit_personal_info(Edit_data);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      });
     }
-    else{
-    console.log(editted.file);
-    console.log(editted.file.name);
-    
-    const storageRef = ref(storage, `/files/${editted.file.name}`);
-    const uploadTask = uploadBytesResumable(storageRef, editted.file);
-    uploadTask.on("state_changed", () => {
-      getDownloadURL(uploadTask.snapshot.ref)
-        .then((url) => {
-          Edit_data.admin_profilePic = url;
-          token_copy.profilePic = url;
-          Edit_data.role = "p_admin";
-          dispatch(signin(token_copy));
-          Edit_personal_info(Edit_data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    });
-    };
-  //console.log(Edit_data.admin_profilePic);
-  //dispatch(signin(token_copy));
-  //Edit_data.role = "p_admin";
-  //console.log(Edit_data.entity_telephone);
-  //Edit_personal_info(Edit_data);
-  Edit_data = {};
-  setEdit(false);
-  setphone_error("");
-};
-
-
+    //console.log(Edit_data.admin_profilePic);
+    //dispatch(signin(token_copy));
+    //Edit_data.role = "p_admin";
+    //console.log(Edit_data.entity_telephone);
+    //Edit_personal_info(Edit_data);
+    Edit_data = {};
+    setEdit(false);
+    setphone_error("");
+  };
 
   const [price, setPrice] = useState("");
   const [comment, setComment] = useState("");
@@ -443,17 +457,16 @@ const setdata = () => {
                   <i class="bi bi-info-circle-fill"></i>
                 </li>
               </Tooltip>
-              {
-                token.entity.active ? 
-                (
-                  <Tooltip title="Orders" placement="right">
+              {token.entity.active ? (
+                <Tooltip title="Orders" placement="right">
                   <li onClick={() => dispatch(orders_pharma())}>
                     <i class="bi bi-chat-left-text-fill"></i>
                   </li>
                 </Tooltip>
-                ):""
-              }
-              
+              ) : (
+                ""
+              )}
+
               <Tooltip title="Pending Orders" placement="right">
                 <li onClick={() => dispatch(pending_orders_red())}>
                   <i class="bi bi-clock-fill"></i>
@@ -497,162 +510,170 @@ const setdata = () => {
         </div>
       </SideBarUI>
       <main>
-      <div className="profile-container">
-        {(chosencomp == "pharmacy_info") ? (
-          <div className="card">
-          <div className="card-header bg-transparent">
-            <h3 className="mb-0">
-              <BsInfoCircleFill /> Personal Information
-              {
-                token.entity.active ? 
-                (
-                  <EditIcon
-                style={{ cursor: "pointer" }}
-                onClick={(e) => setEdit(true)}
-              ></EditIcon>
-                ):""
-              }
-            </h3>
-          </div>
-          <div className="card-body pt-0">
-            <div className="row personnal-image">
-              <Avatar
-                className="profile_img"
-                src={token.profilePic}
-                style={{ height: "150px", width: "150px" }}
-                sx={{ bgcolor: blueGrey[400] }}
-              />
-              {edit ? (
-                <>
-                  <input
-                    className="edit-photo"
-                    type="file"
-                    onChange={(e) => edit_pic_temp(e.target.files[0])}
-                  ></input>
-                </>
-              ) : (
-                ""
-              )}
-              {edit ? (
-                <input
-                  style={{ cursor: "pointer" }}
-                  placeholder={token.username}
-                  type="text"
-                  onChange={(e) => setusername(e.target.value)}
-                ></input>
-              ) : (
-                <h3 style={{ textAlign: "center" }}>{token.username}</h3>
-              )}
+        <div className="profile-container">
+          {chosencomp == "pharmacy_info" ? (
+            <div className="card">
+              <div className="card-header bg-transparent">
+                <h3 className="mb-0">
+                  <BsInfoCircleFill /> Personal Information
+                  {token.entity.active ? (
+                    <EditIcon
+                      style={{ cursor: "pointer" }}
+                      onClick={(e) => setEdit(true)}
+                    ></EditIcon>
+                  ) : (
+                    ""
+                  )}
+                </h3>
               </div>
-            <div class="row mt-3">
-              <div class="col-sm-3">
-                <h6 class="mb-0">Pharmacy Name</h6>
-              </div>
-              <div class="col-sm-9 text-secondary">
-                {edit ? (
-                  <input
-                    style={{ cursor: "pointer" }}
-                    placeholder={token.entity.name}
-                    type="text"
-                    onChange={(e) => setph_name(e.target.value)}
-                  ></input>
-                ) : (
-                  token.entity.name
-                )}
-              </div>
-            </div>
-            <hr id="profile-hr" />
-            <div class="row mt-3">
-              <div class="col-sm-3">
-                <h6 class="mb-0">Email</h6>
-              </div>
-              <div class="col-sm-9 text-secondary">
-                {edit ? (
-                  <input
-                    style={{ cursor: "pointer" }}
-                    placeholder={token.email}
-                    type="text"
-                    onChange={(e) => setemail(e.target.value)}
-                  ></input>
-                ) : (
-                  token.email
-                )}
-              </div>
-            </div>
-            <hr id="profile-hr" />
-            <div class="row mt-3">
-              <div class="col-sm-3">
-                <h6 class="mb-0">Phone Number</h6>
-              </div>
-              <div class="col-sm-9 text-secondary">
-                {edit ? (
-                  <input
-                    placeholder={token.entity.telephone}
-                    type="text"
-                    onChange={(e) => {
-                      setphone(e.target.value);
-                      if(phone !== null){
-                      if (phone.length !== 11 && phone.length !== 0 && edit)
-                        setphone_error("invalid phone number");}
-                    }}
-                  ></input>
-                ) : (
-                  token.entity.telephone)
-                }
-                {phone!==null ? phone.length !== 11 && phone.length !== 0 && edit  ? (
-                  <h6 style={{ color: "red" }}>{phone_error}</h6>
-                ) : (
-                  "" 
-                ) : ""}
-              </div>
-            </div>
-            <hr id="profile-hr" />
-            <div class="row mt-3">
-              <div class="col-sm-3">
-                <h6 class="mb-0">Address</h6>
-              </div>
-              <div class="col-sm-9 text-secondary">
-                {edit ? (
-                  <input
-                    placeholder={token.entity.address}
-                    type="text"
-                    onChange={(e) =>setaddress(e.target.value)}></input>
-                ) : (
-                token.entity.address )
-                }
-              </div>
-            </div>
+              <div className="card-body pt-0">
+                <div className="row personnal-image">
+                  <Avatar
+                    className="profile_img"
+                    src={token.profilePic}
+                    style={{ height: "150px", width: "150px" }}
+                    sx={{ bgcolor: blueGrey[400] }}
+                  />
+                  {edit ? (
+                    <>
+                      <input
+                        className="edit-photo"
+                        type="file"
+                        onChange={(e) => edit_pic_temp(e.target.files[0])}
+                      ></input>
+                    </>
+                  ) : (
+                    ""
+                  )}
+                  {edit ? (
+                    <input
+                      style={{ cursor: "pointer" }}
+                      placeholder={token.username}
+                      type="text"
+                      onChange={(e) => setusername(e.target.value)}
+                    ></input>
+                  ) : (
+                    <h3 style={{ textAlign: "center" }}>{token.username}</h3>
+                  )}
+                </div>
+                <div class="row mt-3">
+                  <div class="col-sm-3">
+                    <h6 class="mb-0">Pharmacy Name</h6>
+                  </div>
+                  <div class="col-sm-9 text-secondary">
+                    {edit ? (
+                      <input
+                        style={{ cursor: "pointer" }}
+                        placeholder={token.entity.name}
+                        type="text"
+                        onChange={(e) => setph_name(e.target.value)}
+                      ></input>
+                    ) : (
+                      token.entity.name
+                    )}
+                  </div>
+                </div>
+                <hr id="profile-hr" />
+                <div class="row mt-3">
+                  <div class="col-sm-3">
+                    <h6 class="mb-0">Email</h6>
+                  </div>
+                  <div class="col-sm-9 text-secondary">
+                    {edit ? (
+                      <input
+                        style={{ cursor: "pointer" }}
+                        placeholder={token.email}
+                        type="text"
+                        onChange={(e) => setemail(e.target.value)}
+                      ></input>
+                    ) : (
+                      token.email
+                    )}
+                  </div>
+                </div>
+                <hr id="profile-hr" />
+                <div class="row mt-3">
+                  <div class="col-sm-3">
+                    <h6 class="mb-0">Phone Number</h6>
+                  </div>
+                  <div class="col-sm-9 text-secondary">
+                    {edit ? (
+                      <input
+                        placeholder={token.entity.telephone}
+                        type="text"
+                        onChange={(e) => {
+                          setphone(e.target.value);
+                          if (phone !== null) {
+                            if (
+                              phone.length !== 11 &&
+                              phone.length !== 0 &&
+                              edit
+                            )
+                              setphone_error("invalid phone number");
+                          }
+                        }}
+                      ></input>
+                    ) : (
+                      token.entity.telephone
+                    )}
+                    {phone !== null ? (
+                      phone.length !== 11 && phone.length !== 0 && edit ? (
+                        <h6 style={{ color: "red" }}>{phone_error}</h6>
+                      ) : (
+                        ""
+                      )
+                    ) : (
+                      ""
+                    )}
+                  </div>
+                </div>
+                <hr id="profile-hr" />
+                <div class="row mt-3">
+                  <div class="col-sm-3">
+                    <h6 class="mb-0">Address</h6>
+                  </div>
+                  <div class="col-sm-9 text-secondary">
+                    {edit ? (
+                      <input
+                        placeholder={token.entity.address}
+                        type="text"
+                        onChange={(e) => setaddress(e.target.value)}
+                      ></input>
+                    ) : (
+                      token.entity.address
+                    )}
+                  </div>
+                </div>
 
-            {edit ? (
-              <ButtonGroup>
-                <Button
-                  variant="outline-success"
-                  className="col-md-12 text-right"
-                  onClick={setdata}
-                >
-                  Submit
-                </Button>
-                <Button
-                  variant="outline-danger"
-                  className="col-md-12 text-right"
-                  onClick={(e) => setEdit(false)}
-                >
-                  Cancel
-                </Button>
-              </ButtonGroup>
-            ) : (
-              ""
-            )}
-            {/* {edit ? <Button variant="outline-danger" className="col-md-12 text-right" onClick={(e)=>setEdit(false)}>Cancel</Button>:""} */}
-            </div>
+                {edit ? (
+                  <ButtonGroup>
+                    <Button
+                      variant="outline-success"
+                      className="col-md-12 text-right"
+                      onClick={setdata}
+                    >
+                      Submit
+                    </Button>
+                    <Button
+                      variant="outline-danger"
+                      className="col-md-12 text-right"
+                      onClick={(e) => setEdit(false)}
+                    >
+                      Cancel
+                    </Button>
+                  </ButtonGroup>
+                ) : (
+                  ""
+                )}
+                {/* {edit ? <Button variant="outline-danger" className="col-md-12 text-right" onClick={(e)=>setEdit(false)}>Cancel</Button>:""} */}
+              </div>
             </div>
           ) : (
             ""
           )}
-          </div>
-     
-       
-        {(chosencomp == "orders_pharma") ? (
+        </div>
+
+        {chosencomp == "orders_pharma" ? (
           <div className="card">
             <div className="card-header bg-transparent border-0">
               {order2_details.length === 0 ? (
@@ -666,66 +687,128 @@ const setdata = () => {
                         <Col>{item.Date} </Col>
                       </Accordion.Header>
                       <Accordion.Body>
-                        {item.flag === "image" ? <div size='small'>
-        <div >    
-        <ModalImage
-          small={item.form}
-          large={item.form}
-          alt={"Order Image"}
-          hideDownload={true}
-          hideZoom={true}
-          className="modal-image" 
-        />    
-</div>
-</div>: <div><h4>{item.form.map((f)=><li>{f.medicine} with Quantity={f.quanity}</li>)}</h4></div>}
-                        
-                                    
-                        <h3>Address : {item.address}</h3>
-                        <h3>Phone : {item.phone}</h3>
-                        <h3>Email : {item.email}</h3>
-                        <br />
-                        <Row>
-                          <Col>
-                            <input
-                              type="text"
-                              placeholder="Price"
-                              onChange={(e) => {
-                                setPrice(parseFloat(e.target.value));
-                              }}
-                            />
-                          </Col>
-                          <Col>
-                            <textarea
-                              type="text"
-                              placeholder="Comment"
-                              onChange={(e) => {
-                                setComment(e.target.value);
-                              }}
-                            />
-                          </Col>
-                          <Col>
-                            <ButtonGroup>
-                              <Button
-                                variant="outline-success"
-                                className="col-md-12 text-right"
-                                onClick={(e) =>
-                                  Approve_api(item.id, price, comment)
-                                }
+                        <div className="order-body">
+                          {item.flag === "image" ? (
+                            <div size="small">
+                              <div className="medicine-image">
+                                <ModalImage
+                                  small={item.form}
+                                  large={item.form}
+                                  alt={"Order Image"}
+                                  hideDownload={true}
+                                  hideZoom={true}
+                                  className="modal-image"
+                                />
+                              </div>
+                            </div>
+                          ) : (
+                            <div>
+                              <TableContainer
+                                component={Paper}
+                                style={{
+                                  marginBottom: 20,
+                                  marginTop: 20,
+                                  width: "60%",
+                                  marginLeft: "auto",
+                                  marginRight: "auto",
+                                }}
                               >
-                                <MdOutlineDone />
-                              </Button>
-                              <Button
-                                variant="outline-danger"
-                                className="col-md-12 text-right"
-                                onClick={(e) =>
-                                  disapprove_order(item.id, comment)
-                                }
-                              >
-                                <MdCancel />
-                              </Button>
-                            </ButtonGroup>
-                          </Col>
-                        </Row>
+                                <Table
+                                  sx={{ minWidth: 250 }}
+                                  size="small"
+                                  aria-label="a dense table"
+                                >
+                                  <TableHead>
+                                    <TableRow>
+                                      <TableCell
+                                        style={{
+                                          paddingBottom: 5,
+                                          paddingTop: 5,
+                                          fontWeight: "bold",
+                                        }}
+                                      >
+                                        Medicine Name
+                                      </TableCell>
+                                      <TableCell
+                                        style={{
+                                          paddingBottom: 5,
+                                          paddingTop: 0,
+                                          fontWeight: "bold",
+                                        }}
+                                      >
+                                        Quantity
+                                      </TableCell>
+                                    </TableRow>
+                                  </TableHead>
+                                  <TableBody>
+                                    {item.form.map((f) => (
+                                      <TableRow
+                                        key="Medicinies"
+                                        sx={{
+                                          "&:last-child td, &:last-child th": {
+                                            border: 0,
+                                          },
+                                        }}
+                                      >
+                                        <TableCell component="th" scope="row">
+                                          {f.medicine}
+                                        </TableCell>
+                                        <TableCell>{f.quanity}</TableCell>
+                                      </TableRow>
+                                    ))}
+                                  </TableBody>
+                                </Table>
+                              </TableContainer>
+                            </div>
+                          )}
+
+                          <p>Address : {item.address}</p>
+                          <p>Phone : {item.phone}</p>
+                          <p>Email : {item.email}</p>
+                          <br />
+                          <Row className="order-comments">
+                            <Col>
+                              <input
+                                type="text"
+                                placeholder="Price"
+                                onChange={(e) => {
+                                  setPrice(parseFloat(e.target.value));
+                                }}
+                              />
+                            </Col>
+                            <Col>
+                              <textarea
+                                type="text"
+                                placeholder="Comment"
+                                onChange={(e) => {
+                                  setComment(e.target.value);
+                                }}
+                              />
+                            </Col>
+                            <Col>
+                              <ButtonGroup>
+                                <Button
+                                  variant="outline-success"
+                                  className="col-md-12 text-right"
+                                  onClick={(e) =>
+                                    Approve_api(item.id, price, comment)
+                                  }
+                                >
+                                  <MdOutlineDone />
+                                </Button>
+                                <Button
+                                  variant="outline-danger"
+                                  className="col-md-12 text-right"
+                                  onClick={(e) =>
+                                    disapprove_order(item.id, comment)
+                                  }
+                                >
+                                  <MdCancel />
+                                </Button>
+                              </ButtonGroup>
+                            </Col>
+                          </Row>
+                        </div>
                       </Accordion.Body>
                     </Accordion.Item>
                   ))}
@@ -736,7 +819,7 @@ const setdata = () => {
         ) : (
           ""
         )}
-        {(chosencomp == "pending_orders") ? (
+        {chosencomp == "pending_orders" ? (
           <div className="card">
             <div className="card-header bg-transparent border-0">
               {pending_orders.length === 0 ? (
@@ -750,22 +833,85 @@ const setdata = () => {
                         <Col>{item.Date} </Col>
                       </Accordion.Header>
                       <Accordion.Body>
-                      {item.flag === "image" ? <div size='small'>
-        <div >    
-        <ModalImage
-          small={item.form}
-          large={item.form}
-          alt={"Order Image"}
-          hideDownload={true}
-          hideZoom={true}
-          className="modal-image" 
-        />    
-</div>
-</div> : <div><h4>{item.form.map((f)=><li>{f.medicine} with Quantity={f.quanity}</li>)}</h4></div>}
-                        <h3>Address : {item.address}</h3>
-                        <h3>Phone : {item.phone}</h3>
-                        <h3>Email : {item.email}</h3>
-                        <h3>Price : {item.price} LE</h3>
+                        <div className="order-body">
+                          {item.flag === "image" ? (
+                            <div size="small">
+                              <div className="medicine-image">
+                                <ModalImage
+                                  small={item.form}
+                                  large={item.form}
+                                  alt={"Order Image"}
+                                  hideDownload={true}
+                                  hideZoom={true}
+                                  className="modal-image"
+                                />
+                              </div>
+                            </div>
+                          ) : (
+                            <div>
+                              <TableContainer
+                                component={Paper}
+                                style={{
+                                  marginBottom: 20,
+                                  marginTop: 20,
+                                  width: "60%",
+                                  marginLeft: "auto",
+                                  marginRight: "auto",
+                                }}
+                              >
+                                <Table
+                                  sx={{ minWidth: 250 }}
+                                  size="small"
+                                  aria-label="a dense table"
+                                >
+                                  <TableHead>
+                                    <TableRow>
+                                      <TableCell
+                                        style={{
+                                          paddingBottom: 5,
+                                          paddingTop: 5,
+                                          fontWeight: "bold",
+                                        }}
+                                      >
+                                        Medicine Name
+                                      </TableCell>
+                                      <TableCell
+                                        style={{
+                                          paddingBottom: 5,
+                                          paddingTop: 0,
+                                          fontWeight: "bold",
+                                        }}
+                                      >
+                                        Quantity
+                                      </TableCell>
+                                    </TableRow>
+                                  </TableHead>
+                                  <TableBody>
+                                    {item.form.map((f) => (
+                                      <TableRow
+                                        key="Medicinies"
+                                        sx={{
+                                          "&:last-child td, &:last-child th": {
+                                            border: 0,
+                                          },
+                                        }}
+                                      >
+                                        <TableCell component="th" scope="row">
+                                          {f.medicine}
+                                        </TableCell>
+                                        <TableCell>{f.quanity}</TableCell>
+                                      </TableRow>
+                                    ))}
+                                  </TableBody>
+                                </Table>
+                              </TableContainer>
+                            </div>
+                          )}
+                          <p>Address : {item.address}</p>
+                          <p>Phone : {item.phone}</p>
+                          <p>Email : {item.email}</p>
+                          <p>Price : {item.price} LE</p>
+                        </div>
                       </Accordion.Body>
                     </Accordion.Item>
                   ))}
@@ -776,7 +922,7 @@ const setdata = () => {
         ) : (
           ""
         )}
-        {(chosencomp == "approved_orders") ? (
+        {chosencomp == "approved_orders" ? (
           <div className="card shadow-sm">
             <div className="card-header bg-transparent border-0">
               {approved.length === 0 ? (
@@ -790,31 +936,93 @@ const setdata = () => {
                         <Col>{item.Date} </Col>
                       </Accordion.Header>
                       <Accordion.Body>
-                      {item.flag === "image" ? <div size='small'>
-        <div >    
-        <ModalImage
-          small={item.form}
-          large={item.form}
-          alt={"Order Image"}
-          hideDownload={true}
-          hideZoom={true}
-          className="modal-image" 
-        />    
-</div>
-</div> : <div><h4>{item.form.map((f)=><li>{f.medicine} with Quantity={f.quanity}</li>)}</h4></div>}
-                        <h3>Address : {item.address}</h3>
-                        <h3>Phone : {item.phone}</h3>
-                        <h3>Email : {item.email}</h3>
-                        <h3>Price : {item.price} LE</h3>
-                        <br />
-                        <Button
-                          variant="outline-success"
-                          className="col-md-12 text-right"
-                          onClick={(e) => Done_Api(item.id)}
-                        >
-                          Done
-                          <MdOutlineDoneOutline />
-                        </Button>
+                        <div className="order-body">
+                          {item.flag === "image" ? (
+                            <div size="small">
+                              <div className="medicine-image">
+                                <ModalImage
+                                  small={item.form}
+                                  large={item.form}
+                                  alt={"Order Image"}
+                                  hideDownload={true}
+                                  hideZoom={true}
+                                  className="modal-image"
+                                />
+                              </div>
+                            </div>
+                          ) : (
+                            <div>
+                              <TableContainer
+                                component={Paper}
+                                style={{
+                                  marginBottom: 20,
+                                  marginTop: 20,
+                                  width: "60%",
+                                  marginLeft: "auto",
+                                  marginRight: "auto",
+                                }}
+                              >
+                                <Table
+                                  sx={{ minWidth: 250 }}
+                                  size="small"
+                                  aria-label="a dense table"
+                                >
+                                  <TableHead>
+                                    <TableRow>
+                                      <TableCell
+                                        style={{
+                                          paddingBottom: 5,
+                                          paddingTop: 5,
+                                          fontWeight: "bold",
+                                        }}
+                                      >
+                                        Medicine Name
+                                      </TableCell>
+                                      <TableCell
+                                        style={{
+                                          paddingBottom: 5,
+                                          paddingTop: 0,
+                                          fontWeight: "bold",
+                                        }}
+                                      >
+                                        Quantity
+                                      </TableCell>
+                                    </TableRow>
+                                  </TableHead>
+                                  <TableBody>
+                                    {item.form.map((f) => (
+                                      <TableRow
+                                        key="Medicinies"
+                                        sx={{
+                                          "&:last-child td, &:last-child th": {
+                                            border: 0,
+                                          },
+                                        }}
+                                      >
+                                        <TableCell component="th" scope="row">
+                                          {f.medicine}
+                                        </TableCell>
+                                        <TableCell>{f.quanity}</TableCell>
+                                      </TableRow>
+                                    ))}
+                                  </TableBody>
+                                </Table>
+                              </TableContainer>
+                            </div>
+                          )}
+                          <p>Address : {item.address}</p>
+                          <p>Phone : {item.phone}</p>
+                          <p>Email : {item.email}</p>
+                          <p>Price : {item.price} LE</p>
+                          <br />
+                          <Button
+                            variant="outline-success"
+                            className="col-md-12 text-right"
+                            onClick={(e) => Done_Api(item.id)}
+                          >
+                            Done <MdOutlineDoneOutline />
+                          </Button>
+                        </div>
                       </Accordion.Body>
                     </Accordion.Item>
                   ))}
@@ -825,7 +1033,7 @@ const setdata = () => {
         ) : (
           ""
         )}
-        {(chosencomp == "pharma_history") ? (
+        {chosencomp == "pharma_history" ? (
           <div className="card shadow-sm">
             <div className="card-header bg-transparent border-0">
               {history.length === 0 ? (
@@ -840,29 +1048,92 @@ const setdata = () => {
                         <Col>{item.status}</Col>
                       </Accordion.Header>
                       <Accordion.Body>
-                      {item.flag === "image" ? <div size='small'>
-        <div >    
-        <ModalImage
-          small={item.form}
-          large={item.form}
-          alt={"Order Image"}
-          hideDownload={true}
-          hideZoom={true}
-          className="modal-image" 
-        />    
-</div>
-</div> : <div><h4>{item.form.map((f)=><li>{f.medicine} with Quantity={f.quanity}</li>)}</h4></div>}
+                        <div className="order-body">
+                          {item.flag === "image" ? (
+                            <div size="small">
+                              <div className="medicine-image">
+                                <ModalImage
+                                  small={item.form}
+                                  large={item.form}
+                                  alt={"Order Image"}
+                                  hideDownload={true}
+                                  hideZoom={true}
+                                  className="modal-image"
+                                />
+                              </div>
+                            </div>
+                          ) : (
+                            <div>
+                              <TableContainer
+                                component={Paper}
+                                style={{
+                                  marginBottom: 20,
+                                  marginTop: 20,
+                                  width: "60%",
+                                  marginLeft: "auto",
+                                  marginRight: "auto",
+                                }}
+                              >
+                                <Table
+                                  sx={{ minWidth: 250 }}
+                                  size="small"
+                                  aria-label="a dense table"
+                                >
+                                  <TableHead>
+                                    <TableRow>
+                                      <TableCell
+                                        style={{
+                                          paddingBottom: 5,
+                                          paddingTop: 5,
+                                          fontWeight: "bold",
+                                        }}
+                                      >
+                                        Medicine Name
+                                      </TableCell>
+                                      <TableCell
+                                        style={{
+                                          paddingBottom: 5,
+                                          paddingTop: 0,
+                                          fontWeight: "bold",
+                                        }}
+                                      >
+                                        Quantity
+                                      </TableCell>
+                                    </TableRow>
+                                  </TableHead>
+                                  <TableBody>
+                                    {item.form.map((f) => (
+                                      <TableRow
+                                        key="Medicinies"
+                                        sx={{
+                                          "&:last-child td, &:last-child th": {
+                                            border: 0,
+                                          },
+                                        }}
+                                      >
+                                        <TableCell component="th" scope="row">
+                                          {f.medicine}
+                                        </TableCell>
+                                        <TableCell>{f.quanity}</TableCell>
+                                      </TableRow>
+                                    ))}
+                                  </TableBody>
+                                </Table>
+                              </TableContainer>
+                            </div>
+                          )}
 
-                        <h3>Address : {item.address}</h3>
-                        <h3>Phone : {item.phone}</h3>
-                        <h3>Email : {item.email}</h3>
-                        {item.status === "disapproved" ? (
-                          ""
-                        ) : item.status === "cancelled" ? (
-                          ""
-                        ) : (
-                          <h3>Price : {item.price} LE</h3>
-                        )}
+                          <p>Address : {item.address}</p>
+                          <p>Phone : {item.phone}</p>
+                          <p>Email : {item.email}</p>
+                          {item.status === "disapproved" ? (
+                            ""
+                          ) : item.status === "cancelled" ? (
+                            ""
+                          ) : (
+                            <p>Price : {item.price} LE</p>
+                          )}
+                        </div>
                       </Accordion.Body>
                     </Accordion.Item>
                   ))}

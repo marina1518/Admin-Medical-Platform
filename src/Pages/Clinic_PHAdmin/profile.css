@@ -4,10 +4,10 @@ body {
   /* background: rgb(216, 216, 247); */
   /* background: rgba(0, 128, 0, 0.3); */
   /* //background: linear-gradient(to right, #b3b7e9, #fafafa); W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-  padding: 0;
+  /* padding: 0;
   margin: 0;
   font-family: "Lato", sans-serif;
-  color: #000;
+  color: #000; */
 }
 
 .student-profile .card {
@@ -45,8 +45,6 @@ body {
   cursor: pointer;
   padding: 0.5rem;
   align-items: center;
-  
-
 }
 
 /* button{
@@ -54,3 +52,38 @@ body {
     border-color: ;
     font-size: small;
 } */
+
+.card {
+  margin-left: 1.5rem;
+  margin-right: 1.5rem;
+}
+
+.order-body {
+  font-family: sans-serif;
+  padding: 0;
+  margin: 0;
+}
+
+.order-body p {
+  margin-bottom: 0;
+  margin-left: 2rem;
+}
+
+.order-body h4 {
+  text-transform: capitalize;
+}
+
+.order-comments {
+  width: fit-content;
+  margin-left: 1rem;
+}
+.order-comments textarea {
+  max-height: 2.4rem;
+}
+.order-comments input {
+  height: 2.4rem;
+}
+
+.medicine-image {
+  text-align: center;
+}
