@@ -8,6 +8,7 @@ import Admin_Entity_reducer from './AdminEntity';
 import Doctor_reducer from "./DoctorReducer";
 import Pharmacy_reducer from "./PharmacyReducer";
 import profile_reducer from './Profilesidebar';
+import page_reducer from './page';
 
 const allreducers = combineReducers ({
    sidebarcomp:sidebarstate_reducer,
@@ -17,7 +18,8 @@ const allreducers = combineReducers ({
   Admin_Entity_reducer:Admin_Entity_reducer,
   Doctor_reducer:Doctor_reducer,
   Pharmacy_reducer:Pharmacy_reducer,
-  profile_reducer :profile_reducer
+  profile_reducer :profile_reducer,
+  page_reducer : page_reducer
 })
 
 export default allreducers ;

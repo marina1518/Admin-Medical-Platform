@@ -12,11 +12,7 @@ const VideoChat = (props) => {
   const dispatch = useDispatch();
   
   const handleJoinMeeting = () => {
-    // localStorage.setItem("Dr_email", dr_email);
-    // localStorage.setItem("patient_email", props.patient_email);
-    // localStorage.setItem("date", props.date);
-    // localStorage.setItem("patient_name", props.patient_name);
-    dispatch(channel_name(props.dr_email));
+    dispatch(channel_name(`${props.dr_email} ${props.slot}`));
     dispatch(patient_details({email:props.patient_email, name:props.patient_name}));
   };
 

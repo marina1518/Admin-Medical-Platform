@@ -49,7 +49,7 @@ export const logout = ()=>{
     return {type : "logout"} 
 }
 
-
+//meeting room
 
 export const channel_name = (state)=>{
     return {type : "channel_name", state:state} 
@@ -58,6 +58,12 @@ export const patient_details = (state)=>{
     return {type : "patient_details", state:state} 
 }
 
+export const join = ()=>{
+    return {type : "join"} 
+}
+export const leave = ()=>{
+    return {type : "leave"} 
+}
 /*********** ADMIN ENTITY */
 
 export const entity_info = (state)=>{

@@ -11,7 +11,7 @@ import Grid from "@mui/material/Grid";
 import { useNavigate } from "react-router";
 import Pres from "./../../prescription/pres";
 import { useDispatch } from "react-redux";
-
+import { leave } from "../../../actions";
 
 const Controls = (props) => {
   let navigate = useNavigate();
@@ -43,7 +43,7 @@ const Controls = (props) => {
     tracks[1].close();
     setStart(false);
     localStorage.removeItem("Dr_email");
-    
+    dispatch(leave());
     show_pres(true);
     //navigate("/doctor");
     // setInCall(false);

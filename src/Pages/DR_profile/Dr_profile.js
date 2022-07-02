@@ -167,6 +167,73 @@ const DoctorProfile = () => {
     return c - d;
   });
 
+  
+  //meeting button
+  const local_date = new Date();
+  var utc_offset = local_date.getTimezoneOffset()/60;
+  console.log(utc_offset)
+  var utc = (2+utc_offset)*60;
+  var hour = local_date.getHours();
+  var min = local_date.getMinutes();
+  local_date.setMinutes(min+utc);
+  hour = local_date.getHours();
+  min = local_date.getMinutes();
+  console.log(hour, min);
+  console.log(local_date);
+  
+
+  const check_button_state=(item)=>{
+    if(item.state === "Today" && hour === parseInt(item.slot.split('-')[0].split(':')[0]) ) 
+    {
+      if(min < 30 &&  parseInt(item.slot.split('-')[0].split(':')[1]) === 0)
+      {
+        return(
+          <VideoChat
+          dr_email={token.email}
+          button_state={true}
+          patient_email={item.patient_email}
+          patient_name={item.patient}
+          slot={item.slot}
+        />
+        )
+      }
+      else if(min >= 30 &&  parseInt(item.slot.split('-')[0].split(':')[1]) === 30)
+      {
+        return(
+          <VideoChat
+          dr_email={token.email}
+          button_state={true}
+          patient_email={item.patient_email}
+          patient_name={item.patient}
+          slot={item.slot}
+        />
+        )
+      }
+      else {
+        return(
+          <VideoChat
+          dr_email={token.email}
+          button_state={false}
+          patient_email={item.patient_email}
+          patient_name={item.patient}
+          slot={item.slot}
+        />
+        )
+      }
+    }
+    else {
+      return(
+        <VideoChat
+        dr_email={token.email}
+        button_state={false}
+        patient_email={item.patient_email}
+        patient_name={item.patient}
+        slot={item.slot}
+      />
+      )
+    }
+  }
+
   //edit
   const Edit_personal_info = async (info) => {
     try {
@@ -269,6 +336,8 @@ const DoctorProfile = () => {
         });
     });
   };
+
+  
 
   let compactName = "";
   const CompactNameHandler = () => {
@@ -654,21 +723,7 @@ const DoctorProfile = () => {
                               <Link to={`/user/`}>{item.patient}</Link>
                             </td>
                             <td width="20%">
-                              {item.state === "Today" ? (
-                                <VideoChat
-                                  dr_email={token.email}
-                                  button_state={true}
-                                  patient_email={item.patient_email}
-                                  patient_name={item.patient}
-                                />
-                              ) : (
-                                <VideoChat
-                                  dr_email={token.email}
-                                  button_state={false}
-                                  patient_email={item.patient_email}
-                                  patient_name={item.patient}
-                                />
-                              )}
+                              {check_button_state(item)}
                             </td>
                             <td width="20%">{item.state}</td>
                           </tr>
@@ -715,7 +770,7 @@ const DoctorProfile = () => {
                                 onChange={(e) => setday(e.target.value)}
                                 className="ll"
                               >
-                                <option value="">Choose the day</option>
+                                <option value="" selected disabled hidden>Choose the day</option>
                                 <option value="Sunday">Sunday</option>
                                 <option value="Monday">Monday</option>
                                 <option value="Tuesday">Tuesday</option>
