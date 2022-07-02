@@ -9,12 +9,52 @@ import { signin } from '../../actions';
 import {useSelector,useDispatch} from 'react-redux'
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import {storage} from '../../Firebase'
+import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
+import Tooltip from '@mui/material/Tooltip';
+import Snackbar from '@material-ui/core/Snackbar';
+
+import MuiAlert from '@material-ui/lab/Alert';
+
 function AdminInformation() {
 
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+         const [state, setState] = React.useState({
+         open: false,
+         vertical: 'top',
+         horizontal: 'right',
+        });
+       const { vertical, horizontal, open } = state;
+         const handleClose = () => {
+         setState({ ...state, open: false });
+         } ;
        const token = JSON.parse(useSelector(state => state.auth)) //state of token 
        var Copy_token = token ; //Toupdate redux state 
        console.log(token) 
        const dispatch = useDispatch();
+
+const handle_Location = ()=>{
+  navigator.geolocation.getCurrentPosition(function (position) {
+
+         console.log("Latitude is :", position.coords.latitude);
+
+         console.log("Longitude is :", position.coords.longitude);
+        setState({ ...state, open: true });
+        
+         //set_latitude(position.coords.latitude)
+         //set_longitude(position.coords.longitude)
+         FormValues.latitude = position.coords.latitude ;
+         FormValues.longitude = position.coords.longitude ;
+         ////// TO REMOVE THE ERROR WHEN CLICKED 
+          /* if (issubmit)
+         {
+             //if it already submitted , so if change happen make the validation to remove the error
+            setFormerrors(validate({...FormValues, latitude :  position.coords.latitude}))
+         } */
+      });
+}
+
 
 const Edit_Admin_Api = async ()=>{
  try {
@@ -28,6 +68,8 @@ const Edit_Admin_Api = async ()=>{
               arabic_entity_name:FormValues.entitynamearabic,
               entity_address:FormValues.entityaddress,
               entity_telephone:FormValues.contactnumber,
+              longitude:FormValues.longitude,
+              latitude:FormValues.latitude,
               role:token.role
         } ,{
           headers: {
@@ -55,7 +97,7 @@ const Edit_Admin_Api = async ()=>{
 } 
     
    
-    const initial_state = {username:token.username , contactnumber : token.entity.telephone[0], entityname : token.entity.name,entityaddress: token.entity.address[0],email:token.email , entitynamearabic:token.entity.arabic_name ,imageurl : token.profilePic}
+    const initial_state = {username:token.username , contactnumber : token.entity.telephone[0], entityname : token.entity.name,entityaddress: token.entity.address[0],email:token.email , entitynamearabic:token.entity.arabic_name ,imageurl : token.profilePic , latitude :token.entity.latitude , longitude: token.entity.longitude}
     const [edit,setedit]=useState(false)
     const [FormValues, setFormvalues ] = useState(initial_state);
     const [updatedpic,setupdatedpic] = useState({});
@@ -163,6 +205,8 @@ function validate (values)
         Copy_token.entity.arabic_name = FormValues.entitynamearabic;
         Copy_token.entity.address[0] =FormValues.entityaddress;
         Copy_token.email = FormValues.email ;
+        Copy_token.entity.latitude = FormValues.latitude;
+        Copy_token.entity.longitude = FormValues.longitude;
         dispatch(signin(Copy_token));
     } 
     
@@ -218,6 +262,29 @@ function validate (values)
             {edit ? ( <input className='input-form' type="text" onChange={(e)=>handlechange(e)} defaultValue={FormValues.email} name="email" placeholder="Enter Admin email"/>) : <span> {token.email}</span>}       
             <p style={{padding:'0',margin:'0',color:'red',marginTop:'6px'}} >{Formerrors.email}</p> 
           <br></br> 
+            <span className="mb-0"><strong className="pr-1">{token.role === "h_admin" ?"Hospital Location :" : "Clinic Location :"}  </strong></span>    
+            {edit ? ( 
+                <>  
+                 <Tooltip title="Click it to set your location" placement="bottom" >
+                 <AddLocationAltIcon style={{"cursor": "pointer"}} onClick={handle_Location} htmlColor='#06a3da'></AddLocationAltIcon>
+                 </Tooltip>
+                       <Snackbar
+                       anchorOrigin={{ vertical, horizontal }}
+                       open={open}
+                       autoHideDuration={4000}
+                       onClose={handleClose}
+                       //message="Location detected"
+                       key={vertical + horizontal}
+                       >
+                                <Alert onClose={handleClose} variant="filled" severity="success">
+                                  Location detected
+                                </Alert>
+                       </Snackbar>
+                       
+                       </> )
+            : <span> {token.entity.latitude}  {token.entity.longitude}</span>}       
+            <p style={{padding:'0',margin:'0',color:'red',marginTop:'6px'}} >{Formerrors.latitude}</p> 
+          <br></br>
          {edit && 
                   <ButtonGroup>
                     <Button variant="outline-success"  className="col-md-12 text-right" onClick={Submit_edit} >

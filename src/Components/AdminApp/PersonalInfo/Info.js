@@ -51,7 +51,7 @@ const Edit_Admin_Api = async ()=>{
 } 
     
    
-    const initial_state = {username:token.username, email:token.email ,imageurl : token.profilePic}
+    const initial_state = {username:token.username, email:token.email ,imageurl : token.profilePic }
     const [edit,setedit]=useState(false)
     const [FormValues, setFormvalues ] = useState(initial_state);
     const [updatedpic,setupdatedpic] = useState({});

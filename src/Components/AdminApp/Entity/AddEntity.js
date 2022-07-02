@@ -5,8 +5,23 @@ import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import { storage } from '../../../Firebase';
 import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
 import Tooltip from '@mui/material/Tooltip';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+
 export default function AddEntity(props) {
-   
+  function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+            const [state, setState] = React.useState({
+         open: false,
+         vertical: 'top',
+         horizontal: 'right',
+        });
+       const { vertical, horizontal, open } = state;
+         const handleClose = () => {
+         setState({ ...state, open: false });
+         } ;
+
     const [FormValues, setFormvalues ] = useState({}); //FORM VALUES 
     const [Formerrors, setFormerrors ] = useState({}); //ERROR 
     const [issubmit, setissubmit ] = useState(false);  //SUBMITTED OR NOT 
@@ -20,7 +35,7 @@ const handle_Location = ()=>{
 
          console.log("Longitude is :", position.coords.longitude);
 
-        
+        setState({ ...state, open: true });
          set_latitude(position.coords.latitude)
          set_longitude(position.coords.longitude)
          FormValues.latitude = position.coords.latitude ;
@@ -31,15 +46,9 @@ const handle_Location = ()=>{
              //if it already submitted , so if change happen make the validation to remove the error
             setFormerrors(validate({...FormValues, latitude :  position.coords.latitude}))
          } 
-          
-            //latitude: position.coords.latitude,
-
-            //longitude: position.coords.longitude,
-
-        
-
       });
 }
+
 const Add_hospital_api = ()=>{
         console.log(FormValues.Admin)  
             axios.post('https://future-medical.herokuapp.com/register/hospitalAdmin',
@@ -342,6 +351,19 @@ const uploadTask = uploadBytesResumable(storageRef,file);
     <Tooltip title="Click it to set your location" placement="bottom" >
   <AddLocationAltIcon style={{"cursor": "pointer"}} onClick={handle_Location} htmlColor='#06a3da'></AddLocationAltIcon>
   </Tooltip>
+                         <Snackbar
+                       anchorOrigin={{ vertical, horizontal }}
+                       open={open}
+                       autoHideDuration={4000}
+                       onClose={handleClose}
+                       //message="Location detected"
+                       key={vertical + horizontal}
+                       >
+                                <Alert onClose={handleClose} variant="filled" severity="success">
+                                  Location detected
+                                </Alert>
+                       </Snackbar>
+                       
  <Form.Label style={{'marginLeft':'0.7rem'}}>Location</Form.Label>
  <p style={{padding:'0',color:'red',marginTop:'6px'}} >{Formerrors.latitude}</p>
  </Form.Group>
