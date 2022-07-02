@@ -15,7 +15,9 @@ case "appointments" :
 case "orders" :
     return "orders"  ;   
 case "info" :
-    return "info"  ;            
+    return "info"  ;           
+case "complaints" :
+    return "complaints"  ;      
 default :
      return state ;
 }

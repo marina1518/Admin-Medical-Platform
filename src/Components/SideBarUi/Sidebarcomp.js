@@ -15,10 +15,11 @@ import VaccinesIcon from "@mui/icons-material/Vaccines";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import MedicalServicesIcon from "@mui/icons-material/MedicalServices";
 import Tooltip from "@mui/material/Tooltip";
+import UpcomingIcon from '@mui/icons-material/Upcoming';
 //import { blueGrey } from "@material-ui/core/colors";
 
 import { useSelector, useDispatch } from "react-redux";
-import {   hospitals,  clinics,  announcments,  pharmacies,  chart,  appointments,  orders,  info,entity_appointments,entity_doctors,entity_info} from "../../actions";
+import {   hospitals,  clinics,  announcments,  pharmacies,  chart,  appointments,  orders,  info,entity_appointments,entity_doctors,entity_info , complaints} from "../../actions";
 
 export default function Sidebarcomp(props) {
   const dispatch = useDispatch();
@@ -225,6 +226,17 @@ export default function Sidebarcomp(props) {
                   </i>
                 </li>
               </Tooltip>
+              <Tooltip title="complaints" placement="right">
+                <li
+                  onClick={() => {
+                    dispatch(complaints());
+                  }}
+                >
+                  <i>
+                    <UpcomingIcon htmlColor="#06a3da" />
+                  </i>
+                </li>
+              </Tooltip>
             </>
           ) : (
             <>
@@ -310,6 +322,16 @@ export default function Sidebarcomp(props) {
                   <VaccinesIcon htmlColor="#06a3da" />
                 </i>
                 <span> orders </span>
+              </li>
+                <li
+                onClick={() => {
+                  dispatch(complaints());
+                }}
+              >
+                <i>
+                  <UpcomingIcon htmlColor="#06a3da" />
+                </i>
+                <span> Complaints </span>
               </li>
             </>
           )}

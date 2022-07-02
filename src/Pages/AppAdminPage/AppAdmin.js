@@ -18,7 +18,7 @@ import Info from '../../Components/AdminApp/PersonalInfo/Info';
 import { useNavigate } from 'react-router-dom';
 import Barchart from '../../Components/AdminApp/Dashboard/Barchart';
 import Customchart from '../../Components/AdminApp/Dashboard/Customchart'
-
+import Complaints from '../../Components/AdminApp/Complaints/Complaints'
 function AppAdmin() {
   
 /*const [ locationKeys, setLocationKeys ] = useState([])
@@ -80,7 +80,7 @@ console.log(token)
         { (chosencomp==='appointments') && <AppAppointments/>}
         { (chosencomp==='orders') && <AppOrders/>}
         { (chosencomp==='info') && <Info/>}
-         
+        { (chosencomp==='complaints') && <Complaints/>} 
     
  
          </div>

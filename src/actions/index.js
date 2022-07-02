@@ -24,6 +24,11 @@ export const appointments = ()=>{
 export const orders = ()=>{
     return {type : "orders"} 
 }
+
+export const complaints = ()=>{
+    return {type : "complaints"} 
+}
+
 export const info = ()=>{
     return {type : "info"} 
 }
