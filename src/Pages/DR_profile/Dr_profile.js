@@ -264,6 +264,7 @@ const DoctorProfile = () => {
   };
 
   const [username, setusername] = useState(null);
+  const[university , setuniversity] = useState(null);
   const [email, setemail] = useState(null);
   const [gender, setGender] = useState(null);
   const [date, setDob] = useState(null);
@@ -281,10 +282,15 @@ const DoctorProfile = () => {
     editted.date = date;
     editted.phone = phone;
     editted.email = email;
+    editted.university = university;
 
     if (editted.username !== null) {
       Edit_data.username = editted.username;
       token_copy.username = editted.username;
+    }
+    if (editted.university !== null) {
+      Edit_data.university = editted.university;
+      token_copy.university = editted.university;
     }
     if (editted.bio !== null) {
       Edit_data.bio = editted.bio;
@@ -517,7 +523,19 @@ const DoctorProfile = () => {
                   <div class="col-sm-3">
                     <h6 class="mb-0">University</h6>
                   </div>
-                  <div class="col-sm-9 text-secondary">{token.university}</div>
+                  <div class="col-sm-9 text-secondary">
+                    {edit ? (
+                      <input
+                        style={{ cursor: "pointer" }}
+                        placeholder={token.university}
+                        type="text"
+                        onChange={(e) => setuniversity(e.target.value)}
+                      ></input>
+                    ) : (
+                      token.university
+                    )}
+                  </div>
+                  {/* <div class="col-sm-9 text-secondary">{token.university}</div> */}
                 </div>
                 <hr id="profile-hr" />
                 <div class="row mt-3">
