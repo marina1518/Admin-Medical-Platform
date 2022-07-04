@@ -184,6 +184,7 @@ const [Entity_dec, set_Entity_dec] = useState("");
                   onChange={(e) => {
                     setEmail(e.target.value);
                     sete_error("");
+                    seterror_e("");
                   }}
                 />
                 <h6 style={{ color: "red" }}>{error_email}</h6>
@@ -199,6 +200,7 @@ const [Entity_dec, set_Entity_dec] = useState("");
                   onChange={(e) => {
                     setPassword(e.target.value);
                     setp_error("");
+                    seterror_p("");
                   }}
                 />
                 <h6 style={{ color: "red" }}>{error_pass}</h6>
