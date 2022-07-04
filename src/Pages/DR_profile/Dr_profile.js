@@ -274,7 +274,7 @@ const DoctorProfile = () => {
           to : to},
         config
       );
-      alert(res.data);
+      alert("You have meetings in this day, you can't delete this time");
       console.log(res.data);
       if(res.data === "you have meetings in this day, you can't delete this time") return;
       
