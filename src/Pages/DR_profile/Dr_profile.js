@@ -29,7 +29,7 @@ import { RiSubtractLine } from "react-icons/ri";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation } from "react-router-dom";
-import { doctor_info, doctor_meeting, doctor_review, doctor_timetable, signin, timetable_status } from "../../actions";
+import { doctor_info, doctor_meeting, doctor_review, doctor_timetable, signin } from "../../actions";
 import SideBarUI from "../../Components/SideBarUi/Sidebar";
 import "./profileui.css";
 import { blueGrey } from "@material-ui/core/colors";
@@ -52,10 +52,7 @@ const DoctorProfile = () => {
   };
   
   const chosencomp = useSelector(state => state.Doctor_reducer)
-  const get_timetable_store = JSON.parse(
-    useSelector((state) => state.timetable_reducer)
-  );
-  console.log(get_timetable_store);
+  
   const [compact, setCompact] = useState(false);
 
   const compacthandler = () => {
