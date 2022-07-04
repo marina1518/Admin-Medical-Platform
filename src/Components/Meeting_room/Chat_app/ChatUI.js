@@ -136,7 +136,7 @@ const ChatUI = () => {
       <div className="chatboxui">
         <div className="topui">
           <div className="topbar">
-            <p className="msg-avatar-text">CHAT WITH DOCTOR</p>
+            <p className="msg-avatar-text">CHAT WITH PATIENT</p>
           </div>
 
           {renderChat()}
