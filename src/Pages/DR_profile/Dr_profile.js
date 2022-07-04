@@ -92,6 +92,7 @@ const DoctorProfile = () => {
   var [to, setto] = useState(0);
 
   var token_copy = token;
+  console.log(token_copy);
   const add_slot = () => {
     const data = { day: `${day}`, from: `${from}:00`, to: `${to}:00` };
     Set_timetable(data);
@@ -265,24 +266,30 @@ const DoctorProfile = () => {
       console.error(err);
     }
   };
-  const delete_timetable = async (day,from,to) => {
+  var o = [];
+  const delete_timetable = async (day, from, to) => {
     console.log("MADONNAAA" , day , from , to);
     try {
       const res = await axios.patch(
         "https://future-medical.herokuapp.com/doctor/timetable/cancel",
         {day : day,
-        from : from,
-        to : to},
+          from : from,
+          to : to},
         config
       );
       alert(res.data);
       console.log(res.data);
-      var o = [];
-      for (var i = 0; i < get_timetable_store.length; i++) {
-        if ((get_timetable_store[i].day !== day) && (get_timetable_store[i].from !== from) && (get_timetable_store[i].to !== to))
-          o.push(get_timetable_store[i]);
+      if(res.data === "you have meetings in this day, you can't delete this time") return;
+      
+      for (var i = 0; i < token_copy.timetable.length; i++) {
+        if (!((token_copy.timetable[i].day === day) 
+        && (token_copy.timetable[i].from === from) 
+        && (token_copy.timetable[i].to === to)))
+          o.push(token_copy.timetable[i]);
       }
-      dispatch(timetable_status(o));
+      token_copy.timetable = o;
+      console.log(token_copy);
+      dispatch(signin(token_copy)); //update the state
     } catch (err) {
       console.error(err);
     }
