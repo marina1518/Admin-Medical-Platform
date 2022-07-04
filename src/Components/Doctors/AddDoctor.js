@@ -15,6 +15,7 @@ const Add_doctor_api = ()=>{
                     gender : FormValues.Gender,
                     telephone: FormValues.number,
                     meeting_price: FormValues.price ,
+                    university :FormValues.university,
                     specialization : FormValues.specialization,
                     entityName: props.entityname ,//Added
                     profilePic: FormValues.imageurl,
@@ -140,6 +141,11 @@ const Add_doctor_api = ()=>{
                 
                 errors.Gender="Doctor Gender is required!";  
             }  
+       if (!values.university )
+            {
+                
+                errors.university="Doctor university is required!";  
+            }       
         return errors ;
     }
 const uploadFiles = (file) =>{
@@ -248,6 +254,14 @@ uploadTask.on("state_changed",()=>{
   <option >Female</option>
 </Form.Select>
 <p style={{padding:'0',color:'red',marginTop:'6px'}} >{Formerrors.Gender}</p>
+
+        <Form.Group className="mb-9" controlId="formGriduniversity">
+      <Form.Label>Doctor University</Form.Label>
+      <Form.Control onChange={(e)=>handlechange(e)} value={FormValues.university} name="university" type="text" placeholder="Enter Doctor University" />
+    <p style={{padding:'0',color:'red',marginTop:'6px'}} >{Formerrors.university}</p>
+    </Form.Group>
+
+
   </Form.Group>
   </Col>
   </Row>

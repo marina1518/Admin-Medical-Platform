@@ -127,8 +127,8 @@ const Get_Doctors__Deactivated_Api = async (hospitalname , activateList)=>{
                 doctor.Email = x.email;
                 doctor.specialization = x.specialization;
                 doctor.active = false 
-                //doctor.number = x.telephone[0];
-                //doctor.price = x.meeting_price;
+                doctor.number = x.telephone[0];
+                doctor.price = x.meeting_price;
                 doctors_list.push(doctor);
                 doctor={}
                 ++i;
