@@ -29,7 +29,7 @@ import { RiSubtractLine } from "react-icons/ri";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation } from "react-router-dom";
-import { doctor_info, doctor_meeting, doctor_review, doctor_timetable, signin } from "../../actions";
+import { doctor_info, doctor_meeting, doctor_review, doctor_timetable, signin, timetable_status } from "../../actions";
 import SideBarUI from "../../Components/SideBarUi/Sidebar";
 import "./profileui.css";
 import { blueGrey } from "@material-ui/core/colors";
@@ -52,7 +52,10 @@ const DoctorProfile = () => {
   };
   
   const chosencomp = useSelector(state => state.Doctor_reducer)
-
+  const get_timetable_store = JSON.parse(
+    useSelector((state) => state.timetable_reducer)
+  );
+  console.log(get_timetable_store);
   const [compact, setCompact] = useState(false);
 
   const compacthandler = () => {
@@ -76,7 +79,7 @@ const DoctorProfile = () => {
   const [Docid, setdoctorid] = useState(location.state ? location.state : "");
   console.log(Docid);
   const token = JSON.parse(useSelector((state) => state.auth));
-  console.log(token);
+  console.log(token.token);
 
   const config = { headers: { Authorization: `Bearer ${token.token}` } };
   useEffect(() => {
@@ -262,6 +265,28 @@ const DoctorProfile = () => {
       console.error(err);
     }
   };
+  const delete_timetable = async (day,from,to) => {
+    console.log("MADONNAAA" , day , from , to);
+    try {
+      const res = await axios.patch(
+        "https://future-medical.herokuapp.com/doctor/timetable/cancel",
+        {day : day,
+        from : from,
+        to : to},
+        config
+      );
+      alert(res.data);
+      console.log(res.data);
+      var o = [];
+      for (var i = 0; i < get_timetable_store.length; i++) {
+        if ((get_timetable_store[i].day !== day) && (get_timetable_store[i].from !== from) && (get_timetable_store[i].to !== to))
+          o.push(get_timetable_store[i]);
+      }
+      dispatch(timetable_status(o));
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const [username, setusername] = useState(null);
   const[university , setuniversity] = useState(null);
@@ -323,6 +348,31 @@ const DoctorProfile = () => {
     setEdit(false);
     setphone_error("");
   };
+  // const editted2= {};
+  // var Edit_data2 = {};
+
+  // const setdelete = () => {
+  //   editted2.day = day;
+  //   editted2.from = from;
+  //   editted2.to = to;
+  //   if (editted2.day !== null) {
+  //     Edit_data2.day = editted2.day;
+  //     token_copy.day = editted2.day;
+  //   }
+  //   if (editted2.from !== null) {
+  //     Edit_data2.from = editted2.from;
+  //     token_copy.from = editted2.from;
+  //   }
+  //   if (editted2.to !== null) {
+  //     Edit_data2.to = editted2.to;
+  //     token_copy.to = editted2.to;
+  //   }
+  //   console.log(Edit_data2);
+  //   dispatch(signin(token_copy));
+  //   delete_timetable(Edit_data2);
+  //   Edit_data2 = {};
+  //   //setEdit(false);
+  // };
   const [temp, edit_pic_temp] = useState("");
   const edit_pic = (file) => {
     if (!file) return;
@@ -820,7 +870,7 @@ const DoctorProfile = () => {
                               <Button
                                 variant="outline-danger"
                                 className="col-md-12 text-right"
-                                onClick={(e) => setadd(0)}
+                                onClick={(e) => setadd(0) }
                               >
                                 <MdCancel />
                               </Button>
@@ -859,7 +909,7 @@ const DoctorProfile = () => {
                         <td width="33%">{item.to}</td>
                         <td width="33%">
                           {" "}
-                          <Button variant="outline-danger">
+                          <Button variant="outline-danger" onClick = {(e) => delete_timetable(item.day,item.from,item.to)}>
                             <MdDelete />
                           </Button>
                         </td>

@@ -110,3 +110,6 @@ export const pharma_history = (state)=>{
     return {type : "pharma_history", state:state} 
 } 
 
+export const timetable_status = (state)=>{
+    return {type : "timetable_status", state:state} 
+}
