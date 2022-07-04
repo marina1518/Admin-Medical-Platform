@@ -9,7 +9,6 @@ import Doctor_reducer from "./DoctorReducer";
 import Pharmacy_reducer from "./PharmacyReducer";
 import profile_reducer from './Profilesidebar';
 import page_reducer from './page';
-import timetable_reducer from './timetable'
 
 const allreducers = combineReducers ({
    sidebarcomp:sidebarstate_reducer,
@@ -20,8 +19,7 @@ const allreducers = combineReducers ({
     Doctor_reducer:Doctor_reducer,
     Pharmacy_reducer:Pharmacy_reducer,
     profile_reducer :profile_reducer,
-    page_reducer : page_reducer ,
-    timetable_reducer : timetable_reducer
+    page_reducer : page_reducer 
 })
 
 export default allreducers ;
