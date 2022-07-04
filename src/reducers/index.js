@@ -20,6 +20,7 @@ const allreducers = combineReducers ({
     Pharmacy_reducer:Pharmacy_reducer,
     profile_reducer :profile_reducer,
     page_reducer : page_reducer 
+    
 })
 
 export default allreducers ;
