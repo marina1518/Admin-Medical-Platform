@@ -38,7 +38,7 @@ const location = useLocation();
         {<Route path="/user" element={<ProfileUi/>}> </Route>}
         <Route path="/AppAdmin" element={<PrivateAdmin><AppAdmin style={{marginTop:'200px'}}/></PrivateAdmin>}> </Route>
         <Route path="/HospitalAdmin" element={<PrivateEntity> <Adminhospital /> </PrivateEntity>}> </Route>
-        {/*<Route path='/ClinicAdmin' element={<Clinic_admin />}> </Route>*/}
+        {<Route path='/ClinicAdmin' element={<PrivateEntity> <Adminhospital /> </PrivateEntity>}> </Route>}
         <Route path='/PharmacyAdmin' element={<PrivatePharmacy><Pharmacy_admin /> </PrivatePharmacy>}> </Route>
         <Route path='/Doctor' element={<Privatedoctor><DoctorProfile /> </Privatedoctor> }> </Route>
         <Route path="/doctor/meetingroom" element={<VideoCall />}></Route>

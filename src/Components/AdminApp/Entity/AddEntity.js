@@ -343,7 +343,10 @@ const uploadTask = uploadBytesResumable(storageRef,file);
     <Form.Group  className="mb-3" controlId="formGridLocation">
    
     <Form.Label>Address</Form.Label>
-    <Form.Control onChange={(e)=>handlechange(e)} value={FormValues.Location} name="Location" type="string" placeholder="Enter the locaion of the clinic " />
+    {/*<Form.Control onChange={(e)=>handlechange(e)} value={FormValues.Location} name="Location" type="string" placeholder="Enter the location of the clinic " />*/}
+    {props.entity === 'hospitals' &&  <Form.Control onChange={(e)=>handlechange(e)} value={FormValues.Location} name="Location" type="text" placeholder="Enter the address of the hospital" />}
+    {props.entity === 'clinics' &&  <Form.Control onChange={(e)=>handlechange(e)} value={FormValues.Location} name="Location" type="text" placeholder="Enter the address of the clinic" />}
+    {props.entity === 'pharmacies' &&  <Form.Control onChange={(e)=>handlechange(e)} value={FormValues.Location} name="Location" type="text" placeholder="Enter the address of the pharmacy" />}
   <p style={{padding:'0',color:'red',marginTop:'6px'}} >{Formerrors.Location}</p>
   </Form.Group>
 

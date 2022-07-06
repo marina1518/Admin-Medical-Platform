@@ -25,7 +25,7 @@ const Login = () => {
     if (type === "owner") {
       navigate("/appadmin");
     } else if (type === "c_admin") {
-      navigate("/HospitalAdmin");
+      navigate("/ClinicAdmin");
     } //remove clinic admin page same as hospital admin
     else if (type === "p_admin") {
       navigate("/pharmacyadmin");
