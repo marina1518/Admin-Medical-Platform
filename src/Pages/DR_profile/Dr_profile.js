@@ -111,8 +111,14 @@ const DoctorProfile = () => {
       const data = await res.data;
       console.log(data);
     } catch (err) {
-      console.error(err);
-    }
+      if (err.response) {
+        if(err.response.data === "not authorized, token is failed"){
+          dispatch(logout());
+          navigate("/")
+        }
+      }
+  //console.error(error);
+}
   };
   const [meetings_api, setmeetings] = useState([]);
   const get_meetings = async () => {
