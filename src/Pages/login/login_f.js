@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState , useEffect } from "react";
 import {
   Form,
   Button,
@@ -47,7 +47,18 @@ const [modalShow, setModalShow] = React.useState(false);
 const [Entity_dec, set_Entity_dec] = useState("");
 
   const dispatch = useDispatch();
-
+   
+  const handle_logined = ()=>{
+    if (token.token)
+    {
+      //Already logined 
+      //gp to profile 
+      routing_login(token.role);
+    }
+  }
+useEffect(() => {
+ handle_logined()
+}, []);
 
   const login_api = async () => {
     try {
