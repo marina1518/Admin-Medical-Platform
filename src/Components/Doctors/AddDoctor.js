@@ -208,7 +208,7 @@ uploadTask.on("state_changed",()=>{
       <Form.Group className="mb-3" controlId="formGridspecial">
       <Form.Label>Specialization</Form.Label>
   <Form.Select aria-label="Default select example2" defaultValue="Select Doctor Specialization" name="specialization" value={FormValues.specialization} onChange={(e)=>handlechange(e)}>      
-  <option>Select Doctor Specialization</option>
+  <option selected disabled hidden>Select Doctor Specialization</option>
   <option >Psychiatry</option>
   <option >Dermatology (Skin)</option>
   <option >Cardiologist</option>
