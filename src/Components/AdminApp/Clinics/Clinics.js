@@ -95,13 +95,7 @@ const Get_Clinics_Api = async ()=>{
         Get_Clinics_Deactivated_Api(clinics_list);
     } 
     catch (err) {
-        console.error(err);
-             if (err.response) {
-               if (err.response.data === "not authorized, token is failed") {
-            dispatch(logout())
-            navigate("/")
-          }
-    }
+        console.log(err);
     }
 }
 

@@ -94,12 +94,7 @@ const Get_Pharmacies_Api = async ()=>{
         Get_Pharmacies_Deactivated_Api(pharmacies_list)  
     } 
     catch (err) {
-           if (err.response) {
-               if (err.response.data === "not authorized, token is failed") {
-            dispatch(logout())
-            navigate("/")
-          }
-    }
+          console.log(err);
     }
 }
 

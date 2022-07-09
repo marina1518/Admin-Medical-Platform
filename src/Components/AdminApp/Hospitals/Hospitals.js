@@ -98,12 +98,7 @@ const Get_Hospitals_Api = async ()=>{
         Get_Hospitals_Deactivated_Api(hospitals_list)
     } 
     catch (err) {
-             if (err.response) {
-               if (err.response.data === "not authorized, token is failed") {
-            dispatch(logout())
-            navigate("/")
-          }
-    }
+      console.log(err);
     }
 }
 const Get_Hospitals_Deactivated_Api = async (activateList)=>{
