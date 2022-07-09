@@ -25,6 +25,7 @@ import {
   MdCancel,
   MdDelete,
 } from "react-icons/md";
+import { logout } from "../../actions";
 import { RiSubtractLine } from "react-icons/ri";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
