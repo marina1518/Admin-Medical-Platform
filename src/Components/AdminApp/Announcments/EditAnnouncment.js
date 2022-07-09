@@ -1,8 +1,13 @@
 import React,{useState} from 'react'
 import {Form,Button,Row,Col} from 'react-bootstrap'
 import axios from 'axios'
-import { useSelector } from 'react-redux';
+import { useSelector ,useDispatch} from 'react-redux';
+import { logout } from '../../../actions';
+import { Link, useNavigate } from "react-router-dom";
+
 export default function EditAnnouncment(props) {
+      const navigate = useNavigate();
+      const dispatch = useDispatch();
      const [FormValues, setFormvalues ] = useState(props.editdata);
     const [Formerrors, setFormerrors ] = useState({});
     const [issubmit, setissubmit ] = useState(false);
@@ -26,11 +31,17 @@ export default function EditAnnouncment(props) {
            props.goback();
                      
          })
-         .catch(function (error) {
-       if (error.response) {
+         .catch(function (err) {
+       if (err.response) {
       //Formerrors.Admin = "the hospital or doctor already exist" ;
-      console.log(error.response.data);
-      console.log(error.response.status);      
+                  
+          console.log(err.response.data);
+          if (err.response.data === "not authorized, token is failed") {
+            dispatch(logout())
+            navigate("/")
+          }
+    
+    
     }
 })
     } 

@@ -5,7 +5,12 @@ import Table from '../../Table/Table'
 import { Button } from 'react-bootstrap';
 import OrderDetails from './OrderDetails';
 import OrderImage from './OrderImage'
+import { logout } from '../../../actions';
+import { Link, useNavigate } from "react-router-dom";
+
 function AppOrders() {
+        const navigate = useNavigate();
+      const dispatch = useDispatch();
        const token = JSON.parse(useSelector(state => state.auth)) //state of token      
        console.log(token) 
  
@@ -78,11 +83,13 @@ const Orders_Api = async ()=>{
         setdata( orders_list); 
         console.log(orders_list)     
     } 
-    catch (error) {
-            if (error.response) {
-      console.log(error.response.data);
-      console.log(error.response.status);}
-        console.error(error);
+    catch (err) {
+               if (err.response) {
+               if (err.response.data === "not authorized, token is failed") {
+            dispatch(logout())
+            navigate("/")
+          }
+    }
     }
 }
 useEffect(()=>{Orders_Api()},[])

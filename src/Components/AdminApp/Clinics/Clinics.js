@@ -6,12 +6,16 @@ import Table from '../../Table/Table';
 import axios from 'axios';
 import AddClinic from './AddClinic';
 import EditClinic from './EditClinic';
-import { useSelector } from 'react-redux';
+import { useSelector , useDispatch} from 'react-redux';
 import AlertDelete from "../AlertDelete/AlertDelete"
 import AlertActivate from '../AlertDelete/AlertActivate';
+import { logout } from '../../../actions';
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Clinics() {
-
+ 
+          const navigate = useNavigate();
+      const dispatch = useDispatch();
  const token = JSON.parse(useSelector(state => state.auth)); //state of token    
 const [data,setdata] = useState([]) //FROM API CLINICS LIST
 var clinics_list = JSON.parse(JSON.stringify(data));
@@ -36,7 +40,12 @@ const Dectivate_Clinic_Api = async (clinic_name)=>{
         console.log(data)
       }
     catch (err) {
-        console.error(err);
+             if (err.response) {
+               if (err.response.data === "not authorized, token is failed") {
+            dispatch(logout())
+            navigate("/")
+          }
+    }        
     }
 }
 const Activate_Clinic_Api = async (clinic_name)=>{
@@ -53,12 +62,14 @@ const Activate_Clinic_Api = async (clinic_name)=>{
         Get_Clinics_Api() ; //IT WILL GET THE All clinics
         console.log(data)
       }
-    catch (error) {
+    catch (err) {
         //console.error(err);
-        console.error(error);
-        if (error.response) {
-          console.log(error.response.data);
-          console.log(error.response.status);}
+            if (err.response) {
+               if (err.response.data === "not authorized, token is failed") {
+            dispatch(logout())
+            navigate("/")
+          }
+    }
     }
 }
 const Get_Clinics_Api = async ()=>{
@@ -85,6 +96,12 @@ const Get_Clinics_Api = async ()=>{
     } 
     catch (err) {
         console.error(err);
+             if (err.response) {
+               if (err.response.data === "not authorized, token is failed") {
+            dispatch(logout())
+            navigate("/")
+          }
+    }
     }
 }
 
@@ -127,11 +144,14 @@ const Get_Clinics_Deactivated_Api = async (activateList)=>{
           
         setdata(activateList.concat(clinics_list));  
     } 
-    catch (error) {
-        console.error(error);
-        if (error.response) {
-          console.log(error.response.data);
-          console.log(error.response.status);}
+    catch (err) {
+        
+           if (err.response) {
+               if (err.response.data === "not authorized, token is failed") {
+            dispatch(logout())
+            navigate("/")
+          }
+    }
     }
 }
 

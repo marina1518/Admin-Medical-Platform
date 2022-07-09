@@ -6,12 +6,16 @@ import Table from '../../Table/Table';
 import axios from 'axios';
 import AddPharmacy from './AddPharmacy';
 import EditPharmacy from './EditPharmacy';
-import { useSelector } from 'react-redux';
+import { useSelector ,useDispatch} from 'react-redux';
 import AlertDelete from "../AlertDelete/AlertDelete"
 import AlertActivate from '../AlertDelete/AlertActivate';
+import { logout } from '../../../actions';
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Pharmacies() {
 
+       const navigate = useNavigate();
+      const dispatch = useDispatch();
      const token = JSON.parse(useSelector(state => state.auth)); //state of token  
     const [data,setdata] = useState([]) //FROM API PHARMACIES LIST 
     var pharmacies_list = JSON.parse(JSON.stringify(data));
@@ -35,7 +39,12 @@ const Dectivate_Pharmacy_Api = async (hospital_name)=>{
         console.log(data)
       }
     catch (err) {
-        console.error(err);
+           if (err.response) {
+               if (err.response.data === "not authorized, token is failed") {
+            dispatch(logout())
+            navigate("/")
+          }
+    }
     }
 }
 
@@ -53,12 +62,13 @@ const Activate_Pharmacy_Api = async (pharmacy_name)=>{
         Get_Pharmacies_Api() ; //IT WILL GET THE All Pharmacies
         console.log(data)
       }
-    catch (error) {
-        //console.error(err);
-        console.error(error);
-        if (error.response) {
-          console.log(error.response.data);
-          console.log(error.response.status);}
+    catch (err) {
+           if (err.response) {
+               if (err.response.data === "not authorized, token is failed") {
+            dispatch(logout())
+            navigate("/")
+          }
+    }
     }
 }
 const Get_Pharmacies_Api = async ()=>{
@@ -84,7 +94,12 @@ const Get_Pharmacies_Api = async ()=>{
         Get_Pharmacies_Deactivated_Api(pharmacies_list)  
     } 
     catch (err) {
-        console.error(err);
+           if (err.response) {
+               if (err.response.data === "not authorized, token is failed") {
+            dispatch(logout())
+            navigate("/")
+          }
+    }
     }
 }
 
@@ -128,11 +143,13 @@ const Get_Pharmacies_Deactivated_Api = async (activateList)=>{
           
         setdata(activateList.concat(pharmacies_list));  
     } 
-    catch (error) {
-        console.error(error);
-        if (error.response) {
-          console.log(error.response.data);
-          console.log(error.response.status);}
+    catch (err) {
+           if (err.response) {
+               if (err.response.data === "not authorized, token is failed") {
+            dispatch(logout())
+            navigate("/")
+          }
+    }
     }
 }
     /*const Get_Pharmacies_Api = ()=>{

@@ -28,13 +28,13 @@ const Add_doctor_api = ()=>{
            props.goback();
            props.Get_Doctors_Api(props.entityname);
                      
-         }).catch(function (error) {
-    if (error.response) {      
-      console.log(error.response.data);
-      console.log(error.response.status);
-      /*const errors = {};      
-      errors.pharmacyname = "the pharmacy or admin already exist"
-      setFormerrors(errors);*/
+         }).catch(function (err) {
+    if (err.response) {      
+      if (err.response.data==="email already exist")
+      {
+      const errors = {};      
+      errors.Email = "Doctor email already exist"
+      setFormerrors(errors);}
     }
 })
     }  

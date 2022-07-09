@@ -14,8 +14,14 @@ import Tooltip from "@mui/material/Tooltip";
 import Snackbar from "@material-ui/core/Snackbar";
 
 import MuiAlert from "@material-ui/lab/Alert";
+import { logout } from '../../actions'
+import { Link, useNavigate } from "react-router-dom";
+
 
 function AdminInformation() {
+        const navigate = useNavigate();
+      
+
   function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
   }
@@ -85,12 +91,14 @@ function AdminInformation() {
       //مستشفى الراعى الصالح
       //set_model_response(data.response); //response out of model
       //handle_response(data.response); //handle model response
-    } catch (error) {
-      if (error.response) {
-        console.log(error.response.data);
-        console.log(error.response.status);
-      }
-      console.error(error);
+    } catch (err) {
+           if (err.response) {
+               if (err.response.data === "not authorized, token is failed") {
+            dispatch(logout())
+            navigate("/")
+          }
+
+    }
     }
   };
 

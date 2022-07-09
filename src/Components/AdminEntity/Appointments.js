@@ -2,7 +2,12 @@ import React,{useEffect,useState} from 'react'
 import axios from 'axios'
 import {useSelector,useDispatch} from 'react-redux'
 import Table from '../../Components/Table/Table';
+import { logout } from '../../actions';
+import { Link, useNavigate } from "react-router-dom";
+
 function Appointments() {
+   const navigate = useNavigate();
+      const dispatch = useDispatch(); 
        const token = JSON.parse(useSelector(state => state.auth)) //state of token      
        console.log(token) 
  
@@ -43,11 +48,15 @@ const Appointments_Entity_Api = async ()=>{
         setdata(appointments_list); 
         console.log(appointments_list)     
     } 
-    catch (error) {
-            if (error.response) {
-      console.log(error.response.data);
-      console.log(error.response.status);}
-        console.error(error);
+    catch (err) {
+             if (err.response) {
+          console.log(err.response.data);
+          if (err.response.data === "not authorized, token is failed") {
+            dispatch(logout())
+            navigate("/")
+          }
+    
+    }
     }
 }
 useEffect(()=>{Appointments_Entity_Api()},[])

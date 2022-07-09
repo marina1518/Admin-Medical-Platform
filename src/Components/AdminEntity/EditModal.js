@@ -2,11 +2,13 @@ import React,{useState,useEffect} from 'react'
 import {Modal,Button,Form} from 'react-bootstrap'
 //import {Form,Row,Col} from 'react-bootstrap'
 import axios from 'axios'
-import { useSelector } from 'react-redux';
-
+import { useSelector , useDispatch} from 'react-redux';
+import { logout } from '../../actions';
+import { Link, useNavigate } from "react-router-dom";
 
 function EditModal(props) {
- 
+       const navigate = useNavigate();
+      const dispatch = useDispatch(); 
 
     useEffect(()=>{
         //INITIAL STATES
@@ -36,12 +38,16 @@ function EditModal(props) {
            //props.changeedit(copy_doc);
                      
          })
-         .catch(function (error) {
-       if (error.response) {
-      //Formerrors.Admin = "the hospital or doctor already exist" ;
-      console.log(error.response.data);
-      console.log(error.response.status);      
+         .catch(function (err) {
+            if (err.response) {
+          console.log(err.response.data);
+          if (err.response.data === "not authorized, token is failed") {
+            dispatch(logout())
+            navigate("/")
+          }
+    
     }
+    
 })
     }
 

@@ -2,10 +2,13 @@
 import React,{useState} from 'react'
 import {Form,Button,Row,Col} from 'react-bootstrap'
 import axios from 'axios';
-import { useSelector } from 'react-redux';
+import { useSelector , useDispatch } from 'react-redux';
+import { logout } from '../../../actions';
+import { Link, useNavigate } from "react-router-dom";
 
 export default function AddAnnouncment(props) {
-
+               const navigate = useNavigate();
+      const dispatch = useDispatch();
          const token = JSON.parse(useSelector(state => state.auth)) //state of token 
      const [FormValues, setFormvalues ] = useState({});
     const [Formerrors, setFormerrors ] = useState({});
@@ -27,11 +30,18 @@ export default function AddAnnouncment(props) {
            props.changeadd(FormValues);  //go to all hospitals
                      
          })
-         .catch(function (error) {
-       if (error.response) {
+         .catch(function (err) {
+     
+              if (err.response) {
       //Formerrors.Admin = "the hospital or doctor already exist" ;
-      console.log(error.response.data);
-      console.log(error.response.status);      
+                  
+          console.log(err.response.data);
+          if (err.response.data === "not authorized, token is failed") {
+            dispatch(logout())
+            navigate("/")
+          }
+    
+    
     }
 })
     } 

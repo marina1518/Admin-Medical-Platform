@@ -11,9 +11,13 @@ import AlertDelete from '../AdminApp/AlertDelete/AlertDelete';
 import EditModal from './EditModal';
 import { async } from '@firebase/util';
 import AlertActivate from '../AdminApp/AlertDelete/AlertActivate';
+import { logout } from '../../actions';
+import { Link, useNavigate } from "react-router-dom";
+
 //import './HospitalAdmin.css'
 function DoctorsList() {
-
+      const navigate = useNavigate();
+      const dispatch = useDispatch(); 
       const token = JSON.parse(useSelector(state => state.auth)) //state of token 
 console.log(token)
    //const { decodedToken, isExpired } = useJwt(token.token);
@@ -44,7 +48,14 @@ const Dectivate_Doctor_Api = async (doc_email)=>{
         console.log(data)
       }
     catch (err) {
-        console.error(err);
+          if (err.response) {
+          console.log(err.response.data);
+          if (err.response.data === "not authorized, token is failed") {
+            dispatch(logout())
+            navigate("/")
+          }
+    
+    }
     }
 }
 
@@ -62,7 +73,14 @@ const Activate_Doctor_Api = async (doctor_email)=>{
         console.log(data)
       }
     catch (err) {
-        console.error(err);
+          if (err.response) {
+          console.log(err.response.data);
+          if (err.response.data === "not authorized, token is failed") {
+            dispatch(logout())
+            navigate("/")
+          }
+    
+    }
     }
 } 
 
@@ -93,11 +111,15 @@ const Get_Doctors_Api = async (hospitalname)=>{
         setdata(doctors_list);  
         Get_Doctors__Deactivated_Api(token.entity.name,doctors_list)
     } 
-    catch (error) {
-        console.error(error);
-        if (error.response) {
-          console.log(error.response.data);
-          console.log(error.response.status);}
+    catch (err) {
+         if (err.response) {
+          console.log(err.response.data);
+          if (err.response.data === "not authorized, token is failed") {
+            dispatch(logout())
+            navigate("/")
+          }
+    
+    }
     }
 } 
 
@@ -136,11 +158,15 @@ const Get_Doctors__Deactivated_Api = async (hospitalname , activateList)=>{
           
         setdata(activateList.concat(doctors_list));  
     } 
-    catch (error) {
-        console.error(error);
-        if (error.response) {
-          console.log(error.response.data);
-          console.log(error.response.status);}
+    catch (err) {
+          if (err.response) {
+          console.log(err.response.data);
+          if (err.response.data === "not authorized, token is failed") {
+            dispatch(logout())
+            navigate("/")
+          }
+    
+    }
     }
 } 
 

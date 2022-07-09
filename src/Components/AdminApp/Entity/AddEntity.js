@@ -76,10 +76,16 @@ const Add_hospital_api = ()=>{
          .catch(function (error) {
        if (error.response) {
       //Formerrors.Admin = "the hospital or doctor already exist" ;
-      console.log(error.response.data);
-      console.log(error.response.status);      
+         
       const errors = {};
-      errors.hospitalname = "the hospital or admin already exist"
+      console.log(error.response.data)
+      if (error.response.data === "hospital already exists")
+      {
+      errors.hospitalname = "the hospital name already exist"}
+      if (error.response.data === "this email already exists")
+      {
+      errors.Email = "admin email already exists"}
+      
       setFormerrors(errors);
     }
 })
@@ -106,11 +112,18 @@ const Add_pharmacy_api = ()=>{
            props.getpharmacies();         
          }).catch(function (error) {
     if (error.response) {      
-      console.log(error.response.data);
-      console.log(error.response.status);
-      const errors = {};            
-      errors.pharmacyname = "the pharmacy or admin already exist"
+            const errors = {};
+      console.log(error.response.data)
+      if (error.response.data === "pharmacy already exists")
+      {
+      errors.pharmacyname = "the pharmacy name already exist"}
+      if (error.response.data === "this email already exists")
+      {
+      errors.Email = "admin email already exists"}
+      
       setFormerrors(errors);
+           
+     
       
     }
 })
@@ -138,12 +151,19 @@ const Add_clinic_api = ()=>{
            props.getclinics();
 
          }).catch(function (error) {
-    if (error.response) {    
-      console.log(error.response.data);
-      console.log(error.response.status);
-      const errors = {};  
-      errors.clinicname = "the clinic or admin already exist"
+    if (error.response) {   
+                   const errors = {};
+      console.log(error.response.data)
+      if (error.response.data === "clinic already exists")
+      {
+     errors.clinicname = "the clinic name already exist"}
+      if (error.response.data === "this email already exists")
+      {
+      errors.Email = "admin email already exists"}
+      
       setFormerrors(errors);
+ 
+
       //return errors;
     }
 })

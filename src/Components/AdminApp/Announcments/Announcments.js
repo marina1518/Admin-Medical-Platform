@@ -6,11 +6,14 @@ import { Button } from 'react-bootstrap';
 import AddAnnouncment from './AddAnnouncment';
 import EditAnnouncment from './EditAnnouncment';
 import axios from 'axios';
-import { useSelector } from 'react-redux';
+import { useSelector , useDispatch} from 'react-redux';
 import AlertDelete from "../AlertDelete/AlertDelete"
+import { logout } from '../../../actions';
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Announcemts() {
-    
+      const navigate = useNavigate();
+      const dispatch = useDispatch(); 
       const token = JSON.parse(useSelector(state => state.auth)); //state of token 
       //console.log(token)
     const [data,setdata] = useState([]) //FROM API Announcments LIST 
@@ -44,8 +47,16 @@ const Get_Announcments_Api = async ()=>{
         setdata(announcments_list);  
     } 
     catch (err) {
-        console.error(err);
+        console.log(err);
+                if (err.response) {
+          console.log(err.response.data);
+          if (err.response.data === "not authorized, token is failed") {
+            dispatch(logout())
+            navigate("/")
+          }
+    
     }
+}
 }
 const Delete_Announcments_Api = async (title,id)=>{
  try {
@@ -66,6 +77,14 @@ const Delete_Announcments_Api = async (title,id)=>{
     } 
     catch (err) {
         console.error(err);
+                 if (err.response) {
+          console.log(err.response.data);
+          if (err.response.data === "not authorized, token is failed") {
+            dispatch(logout())
+            navigate("/")
+          }
+    
+    }
     }
 }
 

@@ -9,7 +9,12 @@ import { signin } from "../../../actions";
 import { useSelector, useDispatch } from "react-redux";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { storage } from "../../../Firebase";
+import { logout } from '../../../actions';
+import { Link, useNavigate } from "react-router-dom";
+
 function Info() {
+         const navigate = useNavigate();
+      
   const token = JSON.parse(useSelector((state) => state.auth)); //state of token
   var Copy_token = token; //Toupdate redux state
   console.log(token);
@@ -41,12 +46,13 @@ function Info() {
       //مستشفى الراعى الصالح
       //set_model_response(data.response); //response out of model
       //handle_response(data.response); //handle model response
-    } catch (error) {
-      if (error.response) {
-        console.log(error.response.data);
-        console.log(error.response.status);
-      }
-      console.error(error);
+    } catch (err) {
+            if (err.response) {
+               if (err.response.data === "not authorized, token is failed") {
+            dispatch(logout())
+            navigate("/")
+          }
+    }
     }
   };
 

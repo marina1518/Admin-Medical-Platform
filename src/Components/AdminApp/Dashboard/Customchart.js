@@ -11,12 +11,14 @@ import {
   Button,
 } from "react-bootstrap";
 import axios, * as others from "axios";
-import { useSelector } from "react-redux";
+import { useSelector , useDispatch} from "react-redux";
 import { ResponsiveContainer } from "recharts";
 import "./chart.css";
+import { logout } from '../../../actions';
+import { Link, useNavigate } from "react-router-dom";
 
 function generateRandomColor(Colors_list) {
-  console.log("color_list", Colors_list);
+    console.log("color_list", Colors_list);
   var letters = "0123456789ABCDEF";
   var color = "#";
   var flag = true;
@@ -36,6 +38,8 @@ function generateRandomColor(Colors_list) {
 }
 
 export default function Customchart(props) {
+  const navigate = useNavigate();
+      const dispatch = useDispatch();
   const token = JSON.parse(useSelector((state) => state.auth)); //state of token
 
   const [data1, setdata1] = useState([]);
@@ -162,7 +166,13 @@ export default function Customchart(props) {
         }
       }
     } catch (err) {
-      console.error(err);
+        if (err.response) {
+               if (err.response.data === "not authorized, token is failed") {
+            dispatch(logout())
+            navigate("/")
+          }
+
+    }
     }
   };
   const [FormValues, setFormvalues] = useState({});
