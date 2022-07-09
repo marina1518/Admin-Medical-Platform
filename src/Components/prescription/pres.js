@@ -6,7 +6,7 @@ import SendIcon from '@mui/icons-material/Send';
 import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import axios from 'axios';
-import {patient_details} from '../../actions';
+import {patient_details , logout} from '../../actions';
 const Pres=(props)=>{
 
         
@@ -56,8 +56,14 @@ const Pres=(props)=>{
               
             } 
             catch (err) {
-                console.error(err);
-            }
+              if (err.response) {
+                if(err.response.data === "not authorized, token is failed"){
+                  dispatch(logout());
+                  navigate("/")
+                }
+              }
+          //console.error(error);
+        }
         }
         var today = new Date();
         today = String(today.getDate()).padStart(2, '0') + '-'+ String(today.getMonth() + 1).padStart(2, '0') + '-'  + today.getFullYear();

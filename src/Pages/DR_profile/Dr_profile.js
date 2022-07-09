@@ -133,8 +133,14 @@ const DoctorProfile = () => {
       if (res.data === "you have no meetings yet") return;
       setmeetings(res.data);
     } catch (err) {
-      console.error(err);
-    }
+      if (err.response) {
+        if(err.response.data === "not authorized, token is failed"){
+          dispatch(logout());
+          navigate("/")
+        }
+      }
+  //console.error(error);
+}
   };
 
   var meetings = [];
@@ -253,8 +259,14 @@ const DoctorProfile = () => {
       alert(res.data);
       console.log(res.data);
     } catch (err) {
-      console.error(err);
-    }
+      if (err.response) {
+        if(err.response.data === "not authorized, token is failed"){
+          dispatch(logout());
+          navigate("/")
+        }
+      }
+  //console.error(error);
+}
   };
 
   const Edit_profile_pic = async (url) => {
@@ -267,8 +279,14 @@ const DoctorProfile = () => {
       alert(res.data);
       console.log(res.data);
     } catch (err) {
-      console.error(err);
-    }
+      if (err.response) {
+        if(err.response.data === "not authorized, token is failed"){
+          dispatch(logout());
+          navigate("/")
+        }
+      }
+  //console.error(error);
+}
   };
   var o = [];
   const delete_timetable = async (day, from, to) => {
@@ -295,8 +313,14 @@ const DoctorProfile = () => {
       console.log(token_copy);
       dispatch(signin(token_copy)); //update the state
     } catch (err) {
-      console.error(err);
-    }
+      if (err.response) {
+        if(err.response.data === "not authorized, token is failed"){
+          dispatch(logout());
+          navigate("/")
+        }
+      }
+  //console.error(error);
+}
   };
 
   const [username, setusername] = useState(null);

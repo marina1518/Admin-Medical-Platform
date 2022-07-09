@@ -5,10 +5,12 @@ import {GiMedicines} from 'react-icons/gi';
 import SendIcon from '@mui/icons-material/Send';
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
+import {logout} from '../../actions'
+import { useDispatch } from "react-redux";
 
 const Choose_pres=()=>{
 
-    
+        const dispatch = useDispatch();
         const [show, setShow] = useState(false);
         const handleClose = () => setShow(false);
         const handleShow = () => setShow(true);
@@ -32,8 +34,14 @@ const Choose_pres=()=>{
               
             } 
             catch (err) {
-                console.error(err);
-            }
+              if (err.response) {
+                if(err.response.data === "not authorized, token is failed"){
+                  dispatch(logout());
+                  navigate("/")
+                }
+              }
+          //console.error(error);
+        }
         }
      const[medicine,setmedicine]=useState([]);
      console.log(medicine);

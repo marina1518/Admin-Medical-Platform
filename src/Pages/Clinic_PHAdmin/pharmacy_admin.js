@@ -43,6 +43,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import {logout} from '../../actions';
 
 const Ph_admin = () => {
   const dispatch = useDispatch();
@@ -112,8 +113,14 @@ const Ph_admin = () => {
       });
       setorder2_details(order_list);
     } catch (err) {
-      console.error(err);
-    }
+      if (err.response) {
+        if(err.response.data === "not authorized, token is failed"){
+          dispatch(logout());
+          navigate("/")
+        }
+      }
+  //console.error(error);
+}
   };
   const [phorder2, setphorder2] = useState([]);
   var order_list2 = JSON.parse(JSON.stringify(phorder2));
@@ -152,8 +159,14 @@ const Ph_admin = () => {
       setpending_details(order_list2);
       console.log(pending_orders);
     } catch (err) {
-      console.error(err);
-    }
+      if (err.response) {
+        if(err.response.data === "not authorized, token is failed"){
+          dispatch(logout());
+          navigate("/")
+        }
+      }
+  //console.error(error);
+}
   };
   const [approved, setapproved] = useState([]);
   const [phorder3, setphorder3] = useState([]);
@@ -193,8 +206,14 @@ const Ph_admin = () => {
       setapproved(order_list3);
       console.log(approved);
     } catch (err) {
-      console.error(err);
-    }
+      if (err.response) {
+        if(err.response.data === "not authorized, token is failed"){
+          dispatch(logout());
+          navigate("/")
+        }
+      }
+  //console.error(error);
+}
   };
   const [history, sethistory] = useState([]);
   const [phorder4, setphorder4] = useState([]);
@@ -235,8 +254,14 @@ const Ph_admin = () => {
       sethistory(order_list4);
       console.log(history);
     } catch (err) {
-      console.error(err);
-    }
+      if (err.response) {
+        if(err.response.data === "not authorized, token is failed"){
+          dispatch(logout());
+          navigate("/")
+        }
+      }
+  //console.error(error);
+}
   };
   useEffect(() => {
     Get_orders_Api();
@@ -257,8 +282,14 @@ const Ph_admin = () => {
       alert(res.data);
       console.log(res.data);
     } catch (err) {
-      console.error(err);
-    }
+      if (err.response) {
+        if(err.response.data === "not authorized, token is failed"){
+          dispatch(logout());
+          navigate("/")
+        }
+      }
+  //console.error(error);
+}
   };
 
   const [username, setusername] = useState(null);
@@ -368,8 +399,14 @@ const Ph_admin = () => {
       setorder2_details(new_orders);
       console.log(data);
     } catch (err) {
-      console.error(err);
-    }
+      if (err.response) {
+        if(err.response.data === "not authorized, token is failed"){
+          dispatch(logout());
+          navigate("/")
+        }
+      }
+  //console.error(error);
+}
   };
   const Done_Api = async (id) => {
     try {
@@ -390,8 +427,14 @@ const Ph_admin = () => {
       setapproved(new_orders);
       console.log(data);
     } catch (err) {
-      console.error(err);
-    }
+      if (err.response) {
+        if(err.response.data === "not authorized, token is failed"){
+          dispatch(logout());
+          navigate("/")
+        }
+      }
+  //console.error(error);
+}
   };
   const disapprove_order = async (id, comment_api) => {
     try {
@@ -416,8 +459,14 @@ const Ph_admin = () => {
       setorder2_details(new_orders);
       console.log(order2_details);
     } catch (err) {
-      console.error(err);
-    }
+      if (err.response) {
+        if(err.response.data === "not authorized, token is failed"){
+          dispatch(logout());
+          navigate("/")
+        }
+      }
+  //console.error(error);
+}
   };
 
   let compactName = "";
