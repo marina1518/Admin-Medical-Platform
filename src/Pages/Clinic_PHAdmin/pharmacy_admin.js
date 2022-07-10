@@ -44,10 +44,11 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import {logout} from '../../actions';
+import { useNavigate } from "react-router-dom";
 
 const Ph_admin = () => {
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   const chosencomp = useSelector((state) => state.Pharmacy_reducer);
   const [compact, setCompact] = useState(false);
   const compacthandler = () => {
