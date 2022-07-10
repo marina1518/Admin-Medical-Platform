@@ -3,7 +3,9 @@ import {Form,Button,Row,Col} from 'react-bootstrap'
 import axios from 'axios'
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import { storage } from '../../Firebase';
+import Spinner from "react-bootstrap/Spinner";
 export default function Adddoctor(props) {
+      //const [loading, setloading] = useState(false);
 
 const Add_doctor_api = ()=>{
    //console.log("in api")
@@ -29,6 +31,7 @@ const Add_doctor_api = ()=>{
            props.Get_Doctors_Api(props.entityname);
                      
          }).catch(function (err) {
+            
     if (err.response) {      
       if (err.response.data==="email already exist")
       {
@@ -61,13 +64,13 @@ const Add_doctor_api = ()=>{
                 case 'Cardiologist' :
                     FormValues.arabicdep = 'القلب'
                 break;
-                case 'Chest/Respiratory Medicine' :
+                case 'Respiratory(Chest) Medicine' :
                     FormValues.arabicdep = 'الصدر و التنفس'
                 break;
                 case 'Dietetics' :
                     FormValues.arabicdep = 'التغذية'
                 break;
-                case 'Gastroenterology (Bowel)' :
+                case 'Urology' :
                     FormValues.arabicdep = 'مسالك بولية'
                 break;
                 case 'Pediatrics' :
@@ -168,6 +171,7 @@ uploadTask.on("state_changed",()=>{
         setissubmit(true);
         if(Object.keys(validate(FormValues)).length === 0)
         {
+            //setloading(true)
             //empty
             if(FormValues.Image)
             {
@@ -181,8 +185,11 @@ uploadTask.on("state_changed",()=>{
         }
       }
     return (
-        <div>
- <Form onSubmit={submithandle} className="rounded p-4" style={{ margin : '80px 80px' ,borderWidth:'1px',borderColor:'#06a3da' , borderStyle:'solid',width:'90%'} }>
+        
+ <>
+  
+    <div>
+    <Form onSubmit={submithandle} className="rounded p-4" style={{ margin : '80px 80px' ,borderWidth:'1px',borderColor:'#06a3da' , borderStyle:'solid',width:'90%'} }>
   <Row>
     <p style={{textAlign: 'center',fontSize:'27px' , color :'#06a3da'} }> Add Doctor </p>
      <Col>
@@ -212,9 +219,9 @@ uploadTask.on("state_changed",()=>{
   <option >Psychiatry</option>
   <option >Dermatology (Skin)</option>
   <option >Cardiologist</option>
-  <option >Chest/Respiratory Medicine</option>
+  <option >Respiratory(Chest) Medicine</option>
   <option >Dietetics</option>
-   <option >Gastroenterology (Bowel)</option>
+   <option >Urology</option>
   <option >Pediatrics</option>
 </Form.Select>     
     <p style={{padding:'0',color:'red',marginTop:'6px'}} >{Formerrors.specialization}</p>
@@ -277,7 +284,9 @@ uploadTask.on("state_changed",()=>{
   </Button>
   </Col>
   </Row>
-  </Form>
-        </div>
+   </Form>
+   </div>
+  </>
+       
     )
 }
