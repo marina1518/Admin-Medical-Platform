@@ -18,9 +18,11 @@ import { useJwt } from "react-jwt";
 //import pass from "./../image/pass.png";
 import "./login.css";
 import Deactivate from "./ModalDeactivate";
+import Spinner from "react-bootstrap/Spinner";
 
 const Login = () => {
   let navigate = useNavigate();
+  const [loading,setloading]=useState(false);
   const routing_login = (type) => {
     if (type === "owner") {
       navigate("/appadmin");
@@ -90,6 +92,7 @@ useEffect(() => {
       }
     } catch (error) {
         // Handle Error Here
+        setloading(false)
         console.error(error);
         if (error.response) {
           console.log(error.response.data);
@@ -158,13 +161,16 @@ useEffect(() => {
       //setflag(1);
       flag = 1;
       console.log(flag);
+      setloading(false)
     }
     if (password === "") {
       seterror_p("Password required");
       // setflag(1);
       flag = 1;
+      setloading(false)
     }
     if (flag === 0) {
+      setloading(true);
       data.email = email;
       data.password = password;
       data.type = type;
@@ -174,7 +180,10 @@ useEffect(() => {
   };
 
   return (
-    <div className="login_container">
+    
+      <>
+        {!loading?(
+        <div className="login_container">
       <Container>
         <div className="form-container">
           <h1
@@ -197,6 +206,7 @@ useEffect(() => {
                     sete_error("");
                     seterror_e("");
                   }}
+                  value={email}
                 />
                 <h6 style={{ color: "red" }}>{error_email}</h6>
                 <h6 style={{ color: "red" }}>{error_e}</h6>
@@ -208,6 +218,7 @@ useEffect(() => {
                 <Form.Control
                   type="password"
                   placeholder="Password"
+                  value={password}
                   onChange={(e) => {
                     setPassword(e.target.value);
                     setp_error("");
@@ -236,7 +247,13 @@ useEffect(() => {
           </div>
         </div>
       </Container>
-    </div>
+        </div>):(
+            <div style={{margin:'auto'}}>
+                <Spinner animation="border" variant="primary" />
+              </div>
+        )}
+      </>
+  
   );
 };
 export default Login;
