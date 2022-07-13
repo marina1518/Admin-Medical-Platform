@@ -32,6 +32,7 @@
   flex-direction: column;
   /* box-shadow: 0 -1px 0 0 rgba(255, 255, 255, 0.1); */
   background: #6d90c242;
+  text-transform: capitalize;
 }
 
 .personnal-image {
@@ -113,6 +114,28 @@
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
   background-color: rgba(184, 183, 183, 0.068);
 }
+
+.rate_star_container {
+  text-align: center;
+  padding-bottom: 10px;
+  font-size: 1rem;
+}
+.rate_star_container_compact {
+  text-align: center;
+  padding-bottom: 10px;
+  font-size: 10px;
+}
+
+.rate-star {
+  padding-left: 0.1rem;
+  padding-right: 0.1rem;
+  color: orange;
+}
+
+.card {
+  margin-left: 1.5rem;
+  margin-right: 1.5rem;
+}
 /* 
 .card {
   position: relative;
@@ -167,9 +190,8 @@
   /* opacity: 0; */
   opacity: inherit;
   background-color: inherit;
+  width: 99%;
 }
-
-
 
 /*image enlargement*/
 
@@ -179,7 +201,9 @@
   transition: 0.3s;
 }
 
-#myImg:hover {opacity: 0.7;}
+#myImg:hover {
+  opacity: 0.7;
+}
 
 /* The Modal (background) */
 .modal_image {
@@ -191,25 +215,24 @@
   top: 100px;
   width: 100%; /* Full width */
   height: 80%; /* Full height */
- overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0,0,0); /* Fallback color */
-  background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.9); /* Black w/ opacity */
 }
 
 /* Modal Content (image) */
 .modal-content {
   margin: auto;
   display: block;
-  left:10%;
+  left: 10%;
   width: 80%;
   height: 100%;
   max-width: 700px;
 }
 
-
-
 /* Add Animation */
-.modal-content, #caption {  
+.modal-content,
+#caption {
   -webkit-animation-name: zoom;
   -webkit-animation-duration: 0.6s;
   animation-name: zoom;
@@ -217,13 +240,21 @@
 }
 
 @-webkit-keyframes zoom {
-  from {-webkit-transform:scale(0)} 
-  to {-webkit-transform:scale(1)}
+  from {
+    -webkit-transform: scale(0);
+  }
+  to {
+    -webkit-transform: scale(1);
+  }
 }
 
 @keyframes zoom {
-  from {transform:scale(0)} 
-  to {transform:scale(1)}
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
 }
 
 /* The Close Button */
@@ -246,8 +277,12 @@
 }
 
 /* 100% Image Width on Smaller Screens */
-@media only screen and (max-width: 700px){
+@media only screen and (max-width: 700px) {
   .modal-content {
     width: 100%;
   }
+}
+
+.pres-container {
+  min-height: 12rem;
 }

@@ -85,7 +85,8 @@ const ProfileUI = () => {
             <Avatar
             className="profile_img"
             src={user.profilePic}
-            sx={{ width: 50, height: 50, bgcolor: blueGrey[400] }}
+             style={{ height: "70px", width: "70px" }}
+                    sx={{ bgcolor: blueGrey[400] }}
             />
             <h3>{user.username}</h3>
          </div>
@@ -143,7 +144,8 @@ const ProfileUI = () => {
                   <Avatar
                      className="profile_img"
                      src={user.profilePic}
-                  sx={{ width: 56, height: 56, bgcolor: blueGrey[400] }}
+                     style={{ height: "150px", width: "150px" }}
+                    sx={{ bgcolor: blueGrey[400] }}
                   />
                   <h3 style={{textAlign:'center'}}>{user.username}</h3>
                </div>
@@ -210,31 +212,34 @@ const ProfileUI = () => {
       </>
       :
       <>
-      <CardGroup>
-         <Row xs={1} md={2} className="g-4">
-            {
-            user.prescription.map((p) => 
-            <Col>
-            <Card>
-               <Card.Body>
-                  <Card.Title>Prescriptions</Card.Title>
-                  <Card.Subtitle className="mb-2 text-muted">{p.Date.split('T')[0].split('-').reverse().join('-')}</Card.Subtitle>
-                  <Card.Subtitle className="mb-2 text-muted">Dr {p.doctor.username}</Card.Subtitle>
-                  <Card.Subtitle className="mb-2 text-muted">{p.doctor.email}</Card.Subtitle>
-                  <Card.Text>
-                     {p.medicines.map((m)=>
-                     <li>{m}</li>
-                     )}
-                  </Card.Text>
-               </Card.Body>
-            </Card>
-            </Col>
-            )
-            } 
-         </Row> 
-      </CardGroup></>
-      : 
-      ""
+     <Row xs={1} md={3} className="g-4">
+              {user.prescription.map((p) => (
+                <Col>
+                  <Card className="pres-container">
+                    <Card.Body>
+                      <Card.Title>Prescriptions</Card.Title>
+                      <Card.Subtitle className="mb-2 text-muted">
+                        {p.Date.split("T")[0].split("-").reverse().join("-")}
+                      </Card.Subtitle>
+                      <Card.Subtitle className="mb-2 text-muted">
+                        Dr {p.doctor.username}
+                      </Card.Subtitle>
+                      <Card.Subtitle className="mb-2 text-muted">
+                        {p.doctor.email}
+                      </Card.Subtitle>
+                      <Card.Text>
+                        {p.medicines.map((m) => (
+                          <li>{m}</li>
+                        ))}
+                      </Card.Text>
+                    </Card.Body>
+                  </Card>
+                </Col>
+              ))}
+            </Row>
+            </>
+            : ""
+      
       }  
    </main>
 </div>
