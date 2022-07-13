@@ -14,12 +14,17 @@ import AlertActivate from '../AdminApp/AlertDelete/AlertActivate';
 import { logout } from '../../actions';
 import { Link, useNavigate } from "react-router-dom";
 import Spinner from "react-bootstrap/Spinner";
+import {Alert} from "react-bootstrap";
 
 //import './HospitalAdmin.css'
 function DoctorsList() {
       const navigate = useNavigate();
       const dispatch = useDispatch(); 
        const [loading,setloading]=useState(true)
+
+const setloading_true =()=>{
+  setloading(true)
+}       
       const token = JSON.parse(useSelector(state => state.auth)) //state of token 
 console.log(token)
    //const { decodedToken, isExpired } = useJwt(token.token);
@@ -87,6 +92,7 @@ const Activate_Doctor_Api = async (doctor_email)=>{
 } 
 
 const Get_Doctors_Api = async (hospitalname)=>{
+  console.log(hospitalname)
  try {
         const res = await axios.get(`https://future-medical.herokuapp.com/entity/${hospitalname}/doctors`)
         const data = await res.data;
@@ -333,7 +339,27 @@ const [viewedit,setedit]=useState(true) //WHEN FALSE SHOW COMPONENT ADD HOSPITAL
      {/*viewedit && viewadd && <h3 className="spec-title" style={{color:'#06a3da' , marginTop:'15px' , textAlign:'center' }}><strong>Doctors List</strong></h3>*/}
               <h3  style={{'color': '#06a3da' ,'font-size': '20px' ,margin: '1rem 2rem' }}>
             Doctors</h3>
-            {loading?(
+            { data.length === 0 ? (
+             loading?(
+               <div style={{ 'position': 'absolute',  'top': '50%', 'left': '60%',  'margin': '-25px 0 0 -25px'}}>
+                <Spinner animation="border" variant="primary" />
+            </div>
+            ):(
+              <>
+              {!viewadd && <Adddoctor changeadd={changeadd} goback={goback} setloading_true={setloading_true} Get_Doctors_Api={Get_Doctors_Api} entityname={token.entity.name}/>}
+                 {viewedit && viewadd && <Alert
+                           key="primary"
+                           variant="primary"
+                           style={{ margin: "1rem 2rem" }}
+                          >
+                     There are no doctors yet.
+                     </Alert>}
+                     {viewedit && viewadd &&<Button variant="primary" onClick={()=>{setadd(false)}} style={{margin: "1rem 2rem"}}>Add Doctor</Button>  }
+           
+            </>
+            )
+            ):(
+               loading?(
                <div style={{ 'position': 'absolute',  'top': '50%', 'left': '60%',  'margin': '-25px 0 0 -25px'}}>
                 <Spinner animation="border" variant="primary" />
             </div>
@@ -341,13 +367,15 @@ const [viewedit,setedit]=useState(true) //WHEN FALSE SHOW COMPONENT ADD HOSPITAL
     <div style={{ height: 540, width: '90%' , margin: '1rem 2rem' ,marginBottom:'60px' }}>
      {viewedit && viewadd && <Table rows={data} columns={columns}></Table> }
     {/*!viewedit && <Editdoctor editdata={editdata} changeedit={changeedit} goback={goback}/>*/}
-    {!viewadd && <Adddoctor changeadd={changeadd} goback={goback} Get_Doctors_Api={Get_Doctors_Api} entityname={token.entity.name}/>}      
+    {!viewadd && <Adddoctor changeadd={changeadd} goback={goback} Get_Doctors_Api={Get_Doctors_Api} setloading_true={setloading_true} entityname={token.entity.name}/>}      
     {viewedit && viewadd &&<Button variant="primary" onClick={()=>{setadd(false)}} style={{marginTop:'10px'}}>Add Doctor</Button>  }
      {alert_delete && <AlertDelete open={alert_delete} Close_Alert_No={Close_Alert_No} Close_Alert_yes={Close_Alert_yes} clicked_hos={clicked_doc} parent={"doctor"}></AlertDelete>}
      <EditModal show={modalShow} onHide={() => setModalShow(false)} Doctor={doctor_data}  Get_Doctors_Api={Get_Doctors_Api} Entity_Name={token.entity.name} 
                 />
      {alert_active && <AlertActivate open={alert_active} Close_Alert_No_activate={Close_Alert_No_activate} Close_Alert_yes_activate={Close_Alert_yes_activate} clicked_item={clicked_doc} parent={"doctor"}></AlertActivate>}           
-    </div>)}
+    </div>)
+            )
+           }
     </div>
   )
 }

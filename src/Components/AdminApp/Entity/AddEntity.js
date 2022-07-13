@@ -77,6 +77,7 @@ const Add_hospital_api = ()=>{
            //return errors;           
          })
          .catch(function (error) {
+          setloading(false); 
        if (error.response) {
       //Formerrors.Admin = "the hospital or doctor already exist" ;
          
@@ -114,6 +115,7 @@ const Add_pharmacy_api = ()=>{
            props.goback()
            props.getpharmacies();         
          }).catch(function (error) {
+          setloading(false); 
     if (error.response) {      
       
             const errors = {};
@@ -459,7 +461,7 @@ const uploadTask = uploadBytesResumable(storageRef,file);
   </Row>
   </Form>
   </div>):(
-                  <div style={{'margin':'auto'}}>
+                  <div style={{ 'position': 'absolute',  'top': '50%', 'left': '60%',  'margin': '-25px 0 0 -25px'}}>
                 <Spinner animation="border" variant="primary" />
               </div>
   )}

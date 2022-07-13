@@ -5,7 +5,7 @@ import Table from '../../Components/Table/Table';
 import { logout } from '../../actions';
 import { Link, useNavigate } from "react-router-dom";
 import Spinner from "react-bootstrap/Spinner";
-
+import {Alert} from "react-bootstrap";
 function Appointments() {
    const navigate = useNavigate();
       const dispatch = useDispatch(); 
@@ -48,7 +48,8 @@ const Appointments_Entity_Api = async ()=>{
           }})
         const data = await res.data;
         if (data === 'no appointments available') 
-        {return }
+        { setloading(false) 
+          return }
         let i = 1 ;
          var meet_date = "";
         var meet_day = "";
@@ -147,14 +148,33 @@ const columns = [
            <>
              <h3  style={{'color': '#06a3da' ,'font-size': '20px' ,margin: '1rem 2rem' }}>
             Appointments</h3>
-            {loading?(
+            {data.length === 0 ?(
+            loading?(
+               <div style={{ 'position': 'absolute',  'top': '50%', 'left': '60%',  'margin': '-25px 0 0 -25px'}}>
+                <Spinner animation="border" variant="primary" />
+            </div>
+            ):( 
+                    <Alert
+                           key="primary"
+                           variant="primary"
+                           style={{ margin: "1rem 2rem" }}
+                          >
+                     There are no meetings yet.
+                     </Alert>
+            )
+            ):(
+               loading?(
                <div style={{ 'position': 'absolute',  'top': '50%', 'left': '60%',  'margin': '-25px 0 0 -25px'}}>
                 <Spinner animation="border" variant="primary" />
             </div>
             ):( 
     <div style={{ height: 560, width: '90%' , margin: '1rem 2rem' ,marginBottom:'60px' }}>
      { <Table rows={data} columns={columns}></Table> }
-     </div>)}
+     </div>)
+            )
+            
+            
+           }
      </>
   )
 }

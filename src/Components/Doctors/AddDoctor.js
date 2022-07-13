@@ -5,8 +5,8 @@ import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import { storage } from '../../Firebase';
 import Spinner from "react-bootstrap/Spinner";
 export default function Adddoctor(props) {
-      //const [loading, setloading] = useState(false);
-
+      const [loading, setloading] = useState(false);
+      const [Image_Value,setImageValue] = useState("");
 const Add_doctor_api = ()=>{
    //console.log("in api")
             axios.post('https://future-medical.herokuapp.com/register/doctor',
@@ -24,15 +24,18 @@ const Add_doctor_api = ()=>{
                     arabic_username:FormValues.arabicname,
                     arabic_specialization:FormValues.arabicdep
          }).then((res)=>{
+           //setloading(true) 
            console.log(res.data);
            console.log(props.changeadd)
            //props.changeadd(FormValues);  //go to the list
+           props.setloading_true(); // to make loading till get doctors done
            props.goback();
            props.Get_Doctors_Api(props.entityname);
                      
          }).catch(function (err) {
             
-    if (err.response) {      
+    if (err.response) {   
+        setloading(false)   
       if (err.response.data==="email already exist")
       {
       const errors = {};      
@@ -80,7 +83,13 @@ const Add_doctor_api = ()=>{
             }
         } 
          setFormvalues({...FormValues, [name] : value});
-         
+         if (name === "Image")
+         {
+             console.log(e.target.files[0]);
+             setImageValue(e.target.files[0])
+              //setFormvalues({...FormValues, [name] : value});
+         }
+
          if (issubmit)
          {
             setFormerrors(validate({...FormValues, [name] : value}))
@@ -171,11 +180,11 @@ uploadTask.on("state_changed",()=>{
         setissubmit(true);
         if(Object.keys(validate(FormValues)).length === 0)
         {
-            //setloading(true)
+            setloading(true)
             //empty
             if(FormValues.Image)
             {
-            uploadFiles(e.target[4].files[0]) }//The image
+            uploadFiles(Image_Value) }//The image
             else{Add_doctor_api()}
             console.log(FormValues)
             setissubmit(true);
@@ -187,7 +196,8 @@ uploadTask.on("state_changed",()=>{
     return (
         
  <>
-  
+     
+          {!loading?(
     <div>
     <Form onSubmit={submithandle} className="rounded p-4" style={{ margin : '80px 80px' ,borderWidth:'1px',borderColor:'#06a3da' , borderStyle:'solid',width:'90%'} }>
   <Row>
@@ -228,7 +238,13 @@ uploadTask.on("state_changed",()=>{
     </Form.Group>
  <Form.Group  className="mb-3" controlId="formGridimage">
     <Form.Label>Doctor Image</Form.Label>
-    <Form.Control onChange={(e)=>handlechange(e)} value={FormValues.Image} name="Image" type="file" placeholder="Enter Admin image " />
+    
+         <Form.Control onChange={(e)=>handlechange(e)}  name="Image" type="file" placeholder="Enter Doctor image " />
+    {/*(Image_Value==="") ?(
+    <Form.Control onChange={(e)=>handlechange(e)}  name="Image" type="file" placeholder="Enter Admin image " />):
+    ( <><Form.Control onChange={(e)=>handlechange(e)}  name="Image" type="file" placeholder="Enter Admin image " />*/}
+   { !(Image_Value==="") && <p style={{padding:'0',marginTop:'6px'}} >{Image_Value.name}</p> }
+  
   </Form.Group>
 
 
@@ -285,7 +301,11 @@ uploadTask.on("state_changed",()=>{
   </Col>
   </Row>
    </Form>
-   </div>
+   </div>):(
+         <div style={{ 'position': 'absolute',  'top': '50%', 'left': '60%',  'margin': '-25px 0 0 -25px'}}>
+                <Spinner animation="border" variant="primary" />
+              </div>
+   )}
   </>
        
     )
