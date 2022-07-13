@@ -11,10 +11,12 @@ import AlertDelete from "../AlertDelete/AlertDelete";
 import AlertActivate from "../AlertDelete/AlertActivate";
 import { logout } from "../../../actions";
 import { Link, useNavigate } from "react-router-dom";
+import Spinner from "react-bootstrap/Spinner";
 
 export default function Hospitals() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [loading,setloading]=useState(true)
   const token = JSON.parse(useSelector((state) => state.auth)); //state of token
   const [data, setdata] = useState([]); //FROM API HOSPITALS LIST
   const [alert_delete, set_alert_delete] = useState(false);
@@ -100,6 +102,7 @@ export default function Hospitals() {
       });
       setdata(hospitals_list);
       Get_Hospitals_Deactivated_Api(hospitals_list);
+      
     } catch (err) {
       console.log(err);
     }
@@ -118,6 +121,7 @@ export default function Hospitals() {
       const data = await res.data;
       console.log(data);
       if (data === "there is no deactivated hospitals") {
+        setloading(false)
         return;
       }
       let i = 0;
@@ -144,6 +148,7 @@ export default function Hospitals() {
       });
 
       setdata(activateList.concat(hospitals_list));
+      setloading(false)
     } catch (err) {
       if (err.response) {
         if (err.response.data === "not authorized, token is failed") {
@@ -246,6 +251,7 @@ export default function Hospitals() {
 
   const Close_Alert_yes = (clicked_Hos) => {
     Dectivate_Hospital_Api(clicked_Hos.Hospitalname);
+    setloading(true)
     set_alert_delete(false);
   };
   const Close_Alert_No = () => {
@@ -261,6 +267,7 @@ export default function Hospitals() {
 
   const Close_Alert_yes_activate = (clicked_Item) => {
     Activate_Hospital_Api(clicked_Item.Hospitalname);
+    setloading(true)
     set_alert_active(false);
     //Activate_Hospital_Api(clicked_Item.Email)
   };
@@ -330,6 +337,14 @@ export default function Hospitals() {
 
   return (
     <div>
+         
+             <h3  style={{'color': '#06a3da' ,'font-size': '20px' ,margin: '1rem 2rem' }}>
+            Hospitals</h3>
+            {loading?(
+               <div style={{ 'position': 'absolute',  'top': '50%', 'left': '60%',  'margin': '-25px 0 0 -25px'}}>
+                <Spinner animation="border" variant="primary" />
+            </div>
+            ):(  
       <div
         style={{
           height: 540,
@@ -376,7 +391,7 @@ export default function Hospitals() {
             parent={"hospital"}
           ></AlertActivate>
         )}
-      </div>
+      </div>)}
     </div>
   );
 }

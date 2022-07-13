@@ -7,6 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import OneComplaint from './OneComplaint';
 import UpcomingIcon from '@mui/icons-material/Upcoming';
+import Spinner from "react-bootstrap/Spinner";
 import axios from 'axios';
 import { useSelector , useDispatch} from 'react-redux';
 import { logout } from '../../../actions';
@@ -15,6 +16,7 @@ import { Link, useNavigate } from "react-router-dom";
 export default function ControlledAccordions() {
       const navigate = useNavigate();
       const dispatch = useDispatch();
+      const [loading,setloading] = useState(true);
 const token = JSON.parse(useSelector(state => state.auth)); //state of token 
 const [compalints,setcomplaints]=useState([]); 
 const Get_complaints_Api = async ()=>{
@@ -27,6 +29,7 @@ const Get_complaints_Api = async ()=>{
         const data = await res.data;
         setcomplaints(data);
         console.log(data)
+        setloading(false)
         /*announcments_list=[];
         let i = 1;
         data.forEach((x) => {
@@ -57,11 +60,17 @@ useEffect(()=>{
          
         <h3  style={{'color': '#06a3da' ,'font-size': '20px'}}>
             <UpcomingIcon htmlColor="#06a3da" /> Users complaints</h3>
-       {compalints.map((onecomplaint)=>(
+            {loading?(
+               <div style={{ 'position': 'absolute',  'top': '50%', 'left': '60%',  'margin': '-25px 0 0 -25px'}}>
+                             <Spinner animation="border" variant="primary" />
+            </div>
+            ):(
+       compalints.map((onecomplaint)=>(
     
         <OneComplaint item={onecomplaint} key={onecomplaint.id}/>
         
-       ))}
+       ))
+       )}
       
     </div>
   );

@@ -7,8 +7,10 @@ import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
 import Tooltip from '@mui/material/Tooltip';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
+import Spinner from "react-bootstrap/Spinner";
 
 export default function AddEntity(props) {
+  const [loading,setloading]=useState(false);
   function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
@@ -25,9 +27,10 @@ export default function AddEntity(props) {
     const [FormValues, setFormvalues ] = useState({}); //FORM VALUES 
     const [Formerrors, setFormerrors ] = useState({}); //ERROR 
     const [issubmit, setissubmit ] = useState(false);  //SUBMITTED OR NOT 
+    const [Image_Value,setImageValue] = useState("");
     const [latitude,set_latitude]=useState(0.0)
     const [longitude,set_longitude]=useState(0.0)
-
+  console.log("Image VALUE",(Image_Value==""))
 const handle_Location = ()=>{
   navigator.geolocation.getCurrentPosition(function (position) {
 
@@ -112,6 +115,7 @@ const Add_pharmacy_api = ()=>{
            props.getpharmacies();         
          }).catch(function (error) {
     if (error.response) {      
+      
             const errors = {};
       console.log(error.response.data)
       if (error.response.data === "pharmacy already exists")
@@ -151,6 +155,7 @@ const Add_clinic_api = ()=>{
            props.getclinics();
 
          }).catch(function (error) {
+      setloading(false);    
     if (error.response) {   
                    const errors = {};
       console.log(error.response.data)
@@ -176,6 +181,12 @@ const Add_clinic_api = ()=>{
          const value = e.target.value ;
          setFormvalues({...FormValues, [name] : value});
          
+         if (name === "Image")
+         {
+             console.log(e.target.files[0]);
+             setImageValue(e.target.files[0])
+              //setFormvalues({...FormValues, [name] : value});
+         }
          if (issubmit)
          {
              //if it already submitted , so if change happen make the validation to remove the error
@@ -295,8 +306,9 @@ const uploadTask = uploadBytesResumable(storageRef,file);
         {
             //empty
             //setfile(e.target[7].files[0]); //The image
+            setloading(true);
             if (FormValues.Image)
-            {uploadFiles(e.target[8].files[0])} //The image[Calling The Api(ada entity)]
+            {uploadFiles(Image_Value)} //The image[Calling The Api(ada entity)]
             else {
                       if (props.entity === 'hospitals')
                       {Add_hospital_api() ; }//API ADD HOSPITAL
@@ -312,7 +324,9 @@ const uploadTask = uploadBytesResumable(storageRef,file);
         }
       }
     return (
-        <div>
+        <>
+          {!loading?(
+            <div>
     <Form onSubmit={(e)=>submithandle(e)} className="rounded p-4" style={{ margin : '80px 20px' ,borderWidth:'1px',borderColor:'#06a3da' , borderStyle:'solid',width:'90%'} }>
   <Row>
       
@@ -422,10 +436,13 @@ const uploadTask = uploadBytesResumable(storageRef,file);
   </Form.Group>
  <Form.Group  className="mb-3" controlId="formGridimage">
     <Form.Label>Admin Image</Form.Label>
-    <Form.Control onChange={(e)=>handlechange(e)} value={FormValues.Image} name="Image" type="file" placeholder="Enter Admin image " />
+   
+     <Form.Control onChange={(e)=>handlechange(e)}  name="Image" type="file" placeholder="Enter Admin image " />
+    {/*(Image_Value==="") ?(
+    <Form.Control onChange={(e)=>handlechange(e)}  name="Image" type="file" placeholder="Enter Admin image " />):
+    ( <><Form.Control onChange={(e)=>handlechange(e)}  name="Image" type="file" placeholder="Enter Admin image " />*/}
+   { !(Image_Value==="") && <p style={{padding:'0',marginTop:'6px'}} >{Image_Value.name}</p> }
   </Form.Group>
-
-
   </Col>
   </Row>
   <Row>
@@ -441,6 +458,11 @@ const uploadTask = uploadBytesResumable(storageRef,file);
   </Col>
   </Row>
   </Form>
-        </div>
+  </div>):(
+                  <div style={{'margin':'auto'}}>
+                <Spinner animation="border" variant="primary" />
+              </div>
+  )}
+        </>
     )
 }

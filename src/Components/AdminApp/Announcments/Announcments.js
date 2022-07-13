@@ -10,10 +10,12 @@ import { useSelector , useDispatch} from 'react-redux';
 import AlertDelete from "../AlertDelete/AlertDelete"
 import { logout } from '../../../actions';
 import { Link, useNavigate } from "react-router-dom";
+import Spinner from "react-bootstrap/Spinner";
 
 export default function Announcemts() {
       const navigate = useNavigate();
       const dispatch = useDispatch(); 
+      const[loading,setloading] = useState(true)
       const token = JSON.parse(useSelector(state => state.auth)); //state of token 
       //console.log(token)
     const [data,setdata] = useState([]) //FROM API Announcments LIST 
@@ -45,6 +47,7 @@ const Get_Announcments_Api = async ()=>{
                 ++i;
           });
         setdata(announcments_list);  
+        setloading(false)
     } 
     catch (err) {
         console.log(err);
@@ -210,7 +213,15 @@ useEffect(()=>{
 ];
 
   return (
-    <div>
+    <div>    
+         
+        <h3  style={{'color': '#06a3da' ,'font-size': '20px' ,margin: '1rem 2rem' }}>
+            Announcemts</h3>
+            {loading?(
+               <div style={{ 'position': 'absolute',  'top': '50%', 'left': '60%',  'margin': '-25px 0 0 -25px'}}>
+                <Spinner animation="border" variant="primary" />
+            </div>
+            ):(
      <div style={{ height: 540, width: '90%' , margin: '1rem 2rem' ,marginBottom:'60px' }}>
       {viewedit && viewadd && <DataGrid 
         rows={data}
@@ -223,7 +234,7 @@ useEffect(()=>{
     {!viewedit && <EditAnnouncment get_announcments ={Get_Announcments_Api} editdata={editdata} changeedit={changeedit} goback={goback}/>}
     {!viewadd && <AddAnnouncment changeadd={changeadd} goback={goback}/>}
     {alert_delete && <AlertDelete open={alert_delete} Close_Alert_No={Close_Alert_No} Close_Alert_yes={Close_Alert_yes} clicked_hos={clicked_announcment} parent={"announcment"}></AlertDelete>}
-    </div>
+    </div>)}
     </div>
   );
 }

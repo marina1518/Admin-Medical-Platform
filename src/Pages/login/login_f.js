@@ -79,6 +79,7 @@ useEffect(() => {
           set_Entity_dec(data_Api.entity.name)
           console.log("Deactivate")
           //////// MAKE THE FORM EMPTY Ask []
+          setloading(false)
         }
         //console.log(decodetoken)
         else{

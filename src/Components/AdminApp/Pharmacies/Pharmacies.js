@@ -11,6 +11,8 @@ import AlertDelete from "../AlertDelete/AlertDelete";
 import AlertActivate from "../AlertDelete/AlertActivate";
 import { logout } from "../../../actions";
 import { Link, useNavigate } from "react-router-dom";
+import Spinner from "react-bootstrap/Spinner";
+
 
 export default function Pharmacies() {
   const navigate = useNavigate();
@@ -20,7 +22,7 @@ export default function Pharmacies() {
   var pharmacies_list = JSON.parse(JSON.stringify(data));
   const [alert_delete, set_alert_delete] = useState(false);
   const [alert_active, set_alert_active] = useState(false);
-
+    const[loading,setloading] = useState(true)
   const [clicked_pharma, set_clicked_pharma] = useState({});
   let pharmacy = {};
 
@@ -117,6 +119,7 @@ export default function Pharmacies() {
       const data = await res.data;
       console.log(data);
       if (data === "there is no deactivated pharmacies") {
+        setloading(false)
         return;
       }
       let i = 0;
@@ -144,6 +147,7 @@ export default function Pharmacies() {
       });
 
       setdata(activateList.concat(pharmacies_list));
+      setloading(false)
     } catch (err) {
       if (err.response) {
         if (err.response.data === "not authorized, token is failed") {
@@ -246,6 +250,7 @@ export default function Pharmacies() {
 
   const Close_Alert_yes = (clicked_Pharmacy_row) => {
     Dectivate_Pharmacy_Api(clicked_Pharmacy_row.pharmacyname);
+    setloading(true)
     set_alert_delete(false);
   };
   const Close_Alert_No = () => {
@@ -261,6 +266,7 @@ export default function Pharmacies() {
 
   const Close_Alert_yes_activate = (clicked_Item) => {
     Activate_Pharmacy_Api(clicked_Item.pharmacyname);
+    setloading(true)
     set_alert_active(false);
     //Activate_Hospital_Api(clicked_Item.Email)
   };
@@ -330,6 +336,13 @@ export default function Pharmacies() {
 
   return (
     <div>
+       <h3  style={{'color': '#06a3da' ,'font-size': '20px' ,margin: '1rem 2rem' }}>
+            Hospitals</h3>
+            {loading?(
+               <div style={{ 'position': 'absolute',  'top': '50%', 'left': '60%',  'margin': '-25px 0 0 -25px'}}>
+                <Spinner animation="border" variant="primary" />
+            </div>
+            ):( 
       <div
         style={{
           height: 540,
@@ -382,7 +395,7 @@ export default function Pharmacies() {
             parent={"pharmacy"}
           ></AlertActivate>
         )}
-      </div>
+      </div>)}
     </div>
   );
 }

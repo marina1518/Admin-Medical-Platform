@@ -4,6 +4,7 @@ import {useSelector,useDispatch} from 'react-redux'
 import Table from '../../Table/Table'
 import { logout } from '../../../actions';
 import { Link, useNavigate } from "react-router-dom";
+import Spinner from "react-bootstrap/Spinner";
 
 function AppAppointments() {
       const navigate = useNavigate();
@@ -12,6 +13,7 @@ function AppAppointments() {
        console.log(token) 
  
 var [data,setdata] = useState([]) //FROM API appointments LIST 
+const [loading,setloading]=useState(true)
 var appointments_list = JSON.parse(JSON.stringify(data));
 let appointment = {} ;
 
@@ -74,6 +76,7 @@ const Appointments_Entity_Api = async ()=>{
                 ++i;
           });
         setdata(appointments_list); 
+        setloading(false)
         console.log(appointments_list)     
     } 
     catch (err) {
@@ -138,11 +141,18 @@ const columns = [
   },
 
 ];
-  return (     
-          
+  return (     <>
+             <h3  style={{'color': '#06a3da' ,'font-size': '20px' ,margin: '1rem 2rem' }}>
+            Appointments</h3>
+            {loading?(
+               <div style={{ 'position': 'absolute',  'top': '50%', 'left': '60%',  'margin': '-25px 0 0 -25px'}}>
+                <Spinner animation="border" variant="primary" />
+            </div>
+            ):(     
     <div style={{ height: 560, width: '90%' , margin: '1rem 2rem' ,marginBottom:'60px' }}>
      { <Table rows={data} columns={columns}></Table> }
-     </div>
+     </div>)}
+     </>
   )
 }
 

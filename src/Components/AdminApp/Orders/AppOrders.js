@@ -7,10 +7,12 @@ import OrderDetails from './OrderDetails';
 import OrderImage from './OrderImage'
 import { logout } from '../../../actions';
 import { Link, useNavigate } from "react-router-dom";
+import Spinner from "react-bootstrap/Spinner";
 
 function AppOrders() {
         const navigate = useNavigate();
       const dispatch = useDispatch();
+      const[loading,setloading]=useState(true)
        const token = JSON.parse(useSelector(state => state.auth)) //state of token      
        console.log(token) 
  
@@ -81,7 +83,8 @@ const Orders_Api = async ()=>{
                 ++i;
           });
         setdata( orders_list); 
-        console.log(orders_list)     
+        console.log(orders_list)   
+        setloading(false)  
     } 
     catch (err) {
                if (err.response) {
@@ -169,10 +172,18 @@ const columns = [
 
 ];
   return (     
-          
+             <>
+             <h3  style={{'color': '#06a3da' ,'font-size': '20px' ,margin: '1rem 2rem' }}>
+            Orders</h3>
+            {loading?(
+               <div style={{ 'position': 'absolute',  'top': '50%', 'left': '60%',  'margin': '-25px 0 0 -25px'}}>
+                <Spinner animation="border" variant="primary" />
+            </div>
+            ):(  
     <div style={{ height: 560, width: '95%' , margin: '1rem 2rem' ,marginBottom:'60px' }}>
      { <Table rows={data} columns={columns}></Table> }
-     </div>
+     </div>)}
+     </>
   )
 }
 

@@ -11,10 +11,12 @@ import AlertDelete from "../AlertDelete/AlertDelete";
 import AlertActivate from "../AlertDelete/AlertActivate";
 import { logout } from "../../../actions";
 import { Link, useNavigate } from "react-router-dom";
+import Spinner from "react-bootstrap/Spinner";
 
 export default function Clinics() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const[loading,setloading] = useState(true)
   const token = JSON.parse(useSelector((state) => state.auth)); //state of token
   const [data, setdata] = useState([]); //FROM API CLINICS LIST
   var clinics_list = JSON.parse(JSON.stringify(data));
@@ -117,6 +119,7 @@ export default function Clinics() {
       const data = await res.data;
       console.log(data);
       if (data === "there is no deactivated clinics") {
+        setloading(false)
         return;
       }
       let i = 0;
@@ -145,6 +148,7 @@ export default function Clinics() {
       });
 
       setdata(activateList.concat(clinics_list));
+      setloading(false)
     } catch (err) {
       if (err.response) {
         if (err.response.data === "not authorized, token is failed") {
@@ -216,6 +220,7 @@ export default function Clinics() {
 
   const Close_Alert_yes = (clicked_clinic_row) => {
     Dectivate_Clinic_Api(clicked_clinic_row.clinicname);
+    setloading(true)
     set_alert_delete(false);
   };
   const Close_Alert_No = () => {
@@ -231,6 +236,7 @@ export default function Clinics() {
 
   const Close_Alert_yes_activate = (clicked_Item) => {
     Activate_Clinic_Api(clicked_Item.clinicname);
+    setloading(true)
     set_alert_active(false);
     //Activate_Hospital_Api(clicked_Item.Email)
   };
@@ -301,6 +307,13 @@ export default function Clinics() {
 
   return (
     <div>
+      <h3  style={{'color': '#06a3da' ,'font-size': '20px' ,margin: '1rem 2rem' }}>
+            Clinics</h3>
+            {loading?(
+               <div style={{ 'position': 'absolute',  'top': '50%', 'left': '60%',  'margin': '-25px 0 0 -25px'}}>
+                <Spinner animation="border" variant="primary" />
+            </div>
+            ):(  
       <div
         style={{
           height: 540,
@@ -347,7 +360,7 @@ export default function Clinics() {
             parent={"clinic"}
           ></AlertActivate>
         )}
-      </div>
+      </div>)}
     </div>
   );
 }
