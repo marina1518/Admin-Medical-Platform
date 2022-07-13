@@ -13,11 +13,13 @@ import { async } from '@firebase/util';
 import AlertActivate from '../AdminApp/AlertDelete/AlertActivate';
 import { logout } from '../../actions';
 import { Link, useNavigate } from "react-router-dom";
+import Spinner from "react-bootstrap/Spinner";
 
 //import './HospitalAdmin.css'
 function DoctorsList() {
       const navigate = useNavigate();
       const dispatch = useDispatch(); 
+       const [loading,setloading]=useState(true)
       const token = JSON.parse(useSelector(state => state.auth)) //state of token 
 console.log(token)
    //const { decodedToken, isExpired } = useJwt(token.token);
@@ -136,7 +138,8 @@ const Get_Doctors__Deactivated_Api = async (hospitalname , activateList)=>{
         const data = await res.data;
         console.log(data)
         if (data === 'this entity has no deactivated doctors') 
-        {return }
+        { setloading(false)
+          return }
         let i = 0 ;
         if (activateList.length == 0){i = 1}
         else {i = (activateList[activateList.length-1].id) + 1}
@@ -157,6 +160,7 @@ const Get_Doctors__Deactivated_Api = async (hospitalname , activateList)=>{
           });
           
         setdata(activateList.concat(doctors_list));  
+        setloading(false)
     } 
     catch (err) {
           if (err.response) {
@@ -239,6 +243,7 @@ const [viewedit,setedit]=useState(true) //WHEN FALSE SHOW COMPONENT ADD HOSPITAL
     //Dectivate_Hospital_Api(clicked_Hos.Hospitalname);
     set_alert_delete(false)
      Dectivate_Doctor_Api(clicked_Doc.Email)
+     setloading(true)
   }
    const Close_Alert_No = () =>{
     //Dectivate_Hospital_Api(clicked_Hos.Hospitalname);
@@ -252,6 +257,7 @@ const [viewedit,setedit]=useState(true) //WHEN FALSE SHOW COMPONENT ADD HOSPITAL
      set_clicked_doc(clicked_Item)
      console.log(clicked_Item);
      set_alert_active(true)
+
      //setdata(data.filter((item) => item.id !== id)) //DELETE STATIC
   }
 
@@ -259,6 +265,7 @@ const [viewedit,setedit]=useState(true) //WHEN FALSE SHOW COMPONENT ADD HOSPITAL
     //Dectivate_Hospital_Api(clicked_Hos.Hospitalname);
     set_alert_active(false)
      Activate_Doctor_Api(clicked_Item.Email)
+     setloading(true)
   }
    const Close_Alert_No_activate = () =>{
     //Dectivate_Hospital_Api(clicked_Hos.Hospitalname);
@@ -324,7 +331,13 @@ const [viewedit,setedit]=useState(true) //WHEN FALSE SHOW COMPONENT ADD HOSPITAL
   return (
     <div>
      {/*viewedit && viewadd && <h3 className="spec-title" style={{color:'#06a3da' , marginTop:'15px' , textAlign:'center' }}><strong>Doctors List</strong></h3>*/}
-      
+              <h3  style={{'color': '#06a3da' ,'font-size': '20px' ,margin: '1rem 2rem' }}>
+            Doctors</h3>
+            {loading?(
+               <div style={{ 'position': 'absolute',  'top': '50%', 'left': '60%',  'margin': '-25px 0 0 -25px'}}>
+                <Spinner animation="border" variant="primary" />
+            </div>
+            ):(
     <div style={{ height: 540, width: '90%' , margin: '1rem 2rem' ,marginBottom:'60px' }}>
      {viewedit && viewadd && <Table rows={data} columns={columns}></Table> }
     {/*!viewedit && <Editdoctor editdata={editdata} changeedit={changeedit} goback={goback}/>*/}
@@ -334,7 +347,7 @@ const [viewedit,setedit]=useState(true) //WHEN FALSE SHOW COMPONENT ADD HOSPITAL
      <EditModal show={modalShow} onHide={() => setModalShow(false)} Doctor={doctor_data}  Get_Doctors_Api={Get_Doctors_Api} Entity_Name={token.entity.name} 
                 />
      {alert_active && <AlertActivate open={alert_active} Close_Alert_No_activate={Close_Alert_No_activate} Close_Alert_yes_activate={Close_Alert_yes_activate} clicked_item={clicked_doc} parent={"doctor"}></AlertActivate>}           
-    </div>
+    </div>)}
     </div>
   )
 }

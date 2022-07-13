@@ -4,16 +4,41 @@ import {useSelector,useDispatch} from 'react-redux'
 import Table from '../../Components/Table/Table';
 import { logout } from '../../actions';
 import { Link, useNavigate } from "react-router-dom";
+import Spinner from "react-bootstrap/Spinner";
 
 function Appointments() {
    const navigate = useNavigate();
       const dispatch = useDispatch(); 
+      const [loading,setloading]=useState(true)
        const token = JSON.parse(useSelector(state => state.auth)) //state of token      
        console.log(token) 
  
 var [data,setdata] = useState([]) //FROM API appointments LIST 
 var appointments_list = JSON.parse(JSON.stringify(data));
 let appointment = {} ;
+
+const Get_state_meeting = (date) =>{
+   const current = new Date();
+
+// Get the State of the meeting 
+    var state = "Pending"
+    const day = date.split("-");
+    if (parseInt(day[2]) < current.getFullYear()) state = "Done"; //year check
+    else if (parseInt(day[2]) > current.getFullYear())
+      state = "Pending"; //next year
+    else if ( parseInt(day[1]) === current.getMonth() + 1 &&  parseInt(day[0]) === current.getDate() && parseInt(day[2]) === current.getFullYear() )
+      state = "Today";
+    else if (parseInt(day[1]) < current.getMonth() + 1)
+      state = "Done"; //month check
+    else if (
+      parseInt(day[1]) === current.getMonth() + 1 && parseInt(day[0]) < current.getDate()
+    )
+      state = "Done"; //month check
+    else state = "Pending";
+    //meetings_api[i].state = state;
+  return state ;
+
+}
 
 const Appointments_Entity_Api = async ()=>{
  try {
@@ -40,12 +65,13 @@ const Appointments_Entity_Api = async ()=>{
                 appointment.slot = x.slot ;
                 appointment.patientname = x.user.username;
                 appointment.patientemail = x.user.email;
-                appointment.status = x.status ;
+                appointment.status = Get_state_meeting(meeting_date) ;
                 appointments_list.push(appointment);
                 appointment={}
                 ++i;
           });
         setdata(appointments_list); 
+        setloading(false)
         console.log(appointments_list)     
     } 
     catch (err) {
@@ -118,10 +144,18 @@ const columns = [
 
 ];
   return (     
-          
+           <>
+             <h3  style={{'color': '#06a3da' ,'font-size': '20px' ,margin: '1rem 2rem' }}>
+            Appointments</h3>
+            {loading?(
+               <div style={{ 'position': 'absolute',  'top': '50%', 'left': '60%',  'margin': '-25px 0 0 -25px'}}>
+                <Spinner animation="border" variant="primary" />
+            </div>
+            ):( 
     <div style={{ height: 560, width: '90%' , margin: '1rem 2rem' ,marginBottom:'60px' }}>
      { <Table rows={data} columns={columns}></Table> }
-     </div>
+     </div>)}
+     </>
   )
 }
 
