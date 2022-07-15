@@ -11,6 +11,9 @@ import {
   Row,
   ListGroup,
 } from "react-bootstrap";
+import MuiAlert from "@material-ui/lab/Alert";
+import AddLocationAltIcon from "@mui/icons-material/AddLocationAlt";
+import Snackbar from "@material-ui/core/Snackbar";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { MdOutlineDoneOutline, MdOutlineDone, MdCancel } from "react-icons/md";
 import Avatar from "@material-ui/core/Avatar";
@@ -67,11 +70,30 @@ const Ph_admin = () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+  const handle_Location = () => {
+    navigator.geolocation.getCurrentPosition(function (position) {
+      console.log("Latitude is :", position.coords.latitude);
+
+      console.log("Longitude is :", position.coords.longitude);
+      setState2({ ...state2, open: true });
+
+      //set_latitude(position.coords.latitude)
+      //set_longitude(position.coords.longitude)
+      token.entity.latitude = position.coords.latitude;
+      token.entity.longitude = position.coords.longitude;
+      ////// TO REMOVE THE ERROR WHEN CLICKED
+      /* if (issubmit)
+         {
+             //if it already submitted , so if change happen make the validation to remove the error
+            setFormerrors(validate({...FormValues, latitude :  position.coords.latitude}))
+         } */
+    });
+  };
   const location = useLocation();
   const [Docid, setdoctorid] = useState(location.state ? location.state : "");
   console.log(Docid);
   const token = JSON.parse(useSelector((state) => state.auth));
-  console.log(token.token);
+  console.log(token);
   const token_copy = token;
   const [state, setstate] = useState(null);
   const [edit_photo, setEdit_photo] = useState(false);
@@ -409,6 +431,18 @@ const Ph_admin = () => {
   //console.error(error);
 }
   };
+  function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+  }
+  const [state2, setState2] = React.useState({
+    open: false,
+    vertical: "top",
+    horizontal: "right",
+  });
+  const { vertical, horizontal, open } = state2;
+  const handleClose = () => {
+    setState2({ ...state2, open: false });
+  };
   const Done_Api = async (id) => {
     try {
       const res = await axios.patch(
@@ -694,6 +728,61 @@ const Ph_admin = () => {
                     )}
                   </div>
                 </div>
+                <hr id="profile-hr" />
+            <div className="row mt-3">
+              <div className="col-sm-3" >
+                <h6 className="mb-0" >
+                  Pharmacy Location
+                </h6>
+              </div>
+              <div className="col-sm-9 text-secondary" >
+                {edit ? (
+                  <>
+                    <Tooltip
+                      title="Click it to set your location"
+                      placement="bottom"
+                    >
+                      <AddLocationAltIcon
+                        style={{ cursor: "pointer" }}
+                        onClick={handle_Location}
+                        htmlColor="#06a3da"
+                      ></AddLocationAltIcon>
+                    </Tooltip>
+                    <Snackbar
+                      anchorOrigin={{ vertical, horizontal }}
+                      open={open}
+                      autoHideDuration={4000}
+                      onClose={handleClose}
+                      //message="Location detected"
+                      key={vertical + horizontal}
+                    >
+                      <Alert
+                        onClose={handleClose}
+                        variant="filled"
+                        severity="success"
+                      >
+                        Location detected
+                      </Alert>
+                    </Snackbar>
+                  </>
+                ) : (
+                  <span>
+                    {" "}
+                    {token.entity.latitude} {token.entity.longitude}
+                  </span>
+                )}
+                {/* <p
+                  style={{
+                    padding: "0",
+                    margin: "0",
+                    color: "red",
+                    marginTop: "6px",
+                  }}
+                >
+                  {Formerrors.latitude}
+                </p> */}
+              </div>
+            </div>
 
                 {edit ? (
                   <ButtonGroup>
