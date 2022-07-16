@@ -17,7 +17,9 @@ import { useSelector, useDispatch } from "react-redux";
 import OrderImage from './Components/AdminApp/Orders/OrderImage';
 import VideoCall from "./Components/Meeting_room/Video_chat/VideoCall";
 import ProfileUi from "./Pages/User_profile/ProfileUI"
+import {MyMap} from "./Components/AdminEntity/Map"
 import { useLocation } from "react-router-dom";
+import Scrol from './Components/Scrol/Scrol';
 import AlertDelete from "./Components/AdminApp/AlertDelete/AlertDelete"
 import  Customchart  from './Components/AdminApp/Dashboard/Customchart';
 import Complaints from './Components/AdminApp/Complaints/Complaints'
@@ -26,6 +28,7 @@ const token = JSON.parse(useSelector((state) => state.auth)); //state of token
 const location = useLocation();
   return (
     <div >
+      <Scrol>
       {token.token && location.pathname !== "/doctor/meetingroom"&& <Header/>}
       
         {/*<Routes>
@@ -33,7 +36,7 @@ const location = useLocation();
   </Routes>*/}
          <div className='body'>
       <Routes>
-        {/*<Route path="/" element={<Complaints/>}> </Route>*/}
+        {<Route path="/map" element={<MyMap/>}> </Route>}
         {<Route path="/" element={<Login/>}> </Route>}
         {<Route path="/user" element={<ProfileUi/>}> </Route>}
         <Route path="/AppAdmin" element={<PrivateAdmin><AppAdmin style={{marginTop:'200px'}}/></PrivateAdmin>}> </Route>
@@ -44,6 +47,7 @@ const location = useLocation();
         <Route path="/doctor/meetingroom" element={<VideoCall />}></Route>
       </Routes>
       </div>
+      </Scrol>
     </div>
   );
 }

@@ -486,7 +486,19 @@ function AdminInformation() {
                 ) : (
                   <span>
                     {" "}
-                    {token.entity.latitude} {token.entity.longitude}
+
+                        <Tooltip
+                      title="Click it to show entity location on map"
+                      placement="bottom" >
+                        <AddLocationAltIcon
+                        style={{ cursor: "pointer" }}
+                        onClick={()=>{
+                          navigate("/map", { state: { latitude: token.entity.latitude , longitude : token.entity.longitude} })
+                        }}
+                        htmlColor="#06a3da"
+                      ></AddLocationAltIcon>
+                      </Tooltip>
+                    {/*token.entity.latitude} {token.entity.longitude}*/}
                   </span>
                 )}
                 <p

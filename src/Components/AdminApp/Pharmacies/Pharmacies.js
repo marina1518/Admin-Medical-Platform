@@ -337,7 +337,7 @@ export default function Pharmacies() {
   return (
     <div>
        <h3  style={{'color': '#06a3da' ,'font-size': '20px' ,margin: '1rem 2rem' }}>
-            Hospitals</h3>
+            Pharmacies</h3>
             {loading?(
                <div style={{ 'position': 'absolute',  'top': '50%', 'left': '60%',  'margin': '-25px 0 0 -25px'}}>
                 <Spinner animation="border" variant="primary" />
