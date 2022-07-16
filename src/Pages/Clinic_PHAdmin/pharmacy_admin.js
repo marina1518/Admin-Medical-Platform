@@ -367,15 +367,15 @@ const Ph_admin = () => {
       token_copy.email = editted.email;
     }
     if (editted.latitude === null) {
-      Edit_data.entity.latitude= token.entity.latitude;
+      Edit_data.latitude= token.entity.latitude;
     } else {
-      Edit_data.entity_latitude = editted.latitude;
+      Edit_data.latitude = editted.latitude;
       token_copy.entity.latitude = editted.latitude;
     }
     if (editted.longitude === null) {
-      Edit_data.entity_longitude = token.entity.longitude;
+      Edit_data.longitude = token.entity.longitude;
     } else {
-      Edit_data.entity_longitude = editted.longitude;
+      Edit_data.longitude = editted.longitude;
       token_copy.entity.longitude = editted.longitude;
     }
     if (editted.phone === null) {
