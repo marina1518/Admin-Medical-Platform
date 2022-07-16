@@ -31,3 +31,14 @@ body::-webkit-scrollbar-thumb {
 body::-webkit-scrollbar-thumb:hover {
   background: rgba(87, 84, 84, 0.7);
 }
+
+.loading_position {
+  display: flex;
+  justify-content: center;
+  justify-items: center;
+  width: 100%;
+  align-items: center;
+  margin: auto;
+  margin-top: 1rem;
+  margin-left: 170%;
+}
