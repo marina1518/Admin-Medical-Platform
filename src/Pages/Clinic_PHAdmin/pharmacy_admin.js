@@ -70,25 +70,7 @@ const Ph_admin = () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
-  const handle_Location = () => {
-    navigator.geolocation.getCurrentPosition(function (position) {
-      console.log("Latitude is :", position.coords.latitude);
-
-      console.log("Longitude is :", position.coords.longitude);
-      setState2({ ...state2, open: true });
-
-      //set_latitude(position.coords.latitude)
-      //set_longitude(position.coords.longitude)
-      token.entity.latitude = position.coords.latitude;
-      token.entity.longitude = position.coords.longitude;
-      ////// TO REMOVE THE ERROR WHEN CLICKED
-      /* if (issubmit)
-         {
-             //if it already submitted , so if change happen make the validation to remove the error
-            setFormerrors(validate({...FormValues, latitude :  position.coords.latitude}))
-         } */
-    });
-  };
+  
   const location = useLocation();
   const [Docid, setdoctorid] = useState(location.state ? location.state : "");
   console.log(Docid);
@@ -323,8 +305,34 @@ const Ph_admin = () => {
   const [phone_error, setphone_error] = useState("");
   const [ph_name, setph_name] = useState(null);
   const [temp, edit_pic_temp] = useState(null);
+  const [latitude, setlatitude] = useState(null);
+  const [longitude, setlongitude] = useState(null);
   const editted = {};
   var Edit_data = {};
+  const handle_Location = () => {
+    navigator.geolocation.getCurrentPosition(function (position) {
+      console.log("Latitude is :", position.coords.latitude);
+
+      console.log("Longitude is :", position.coords.longitude);
+      setState2({ ...state2, open: true });
+      setlatitude(position.coords.latitude)
+      setlongitude(position.coords.longitude)
+      //token.entity.latitude = position.coords.latitude;
+      //token.entity.longitude = position.coords.longitude;
+      ////// TO REMOVE THE ERROR WHEN CLICKED
+      /* if (issubmit)
+         {
+             //if it already submitted , so if change happen make the validation to remove the error
+            setFormerrors(validate({...FormValues, latitude :  position.coords.latitude}))
+         } */
+    });
+    // Edit_data.entity.latitude = latitude;
+    // token_copy.entity.latitude = latitude;
+    // Edit_data.entity.longitude = longitude;
+    // token_copy.entity.longitude = longitude;
+  };
+  console.log("Madonna  " , latitude);
+  console.log("Yosry " , longitude);
   const setdata = () => {
     editted.username = username;
     editted.phone = phone;
@@ -332,6 +340,8 @@ const Ph_admin = () => {
     editted.address = address;
     editted.ph_name = ph_name;
     editted.file = temp;
+    editted.latitude = latitude;
+    editted.longitude = longitude;
     if (editted.username === null) {
       Edit_data.admin_username = token.username;
     } else {
@@ -355,6 +365,18 @@ const Ph_admin = () => {
     } else {
       Edit_data.admin_email = editted.email;
       token_copy.email = editted.email;
+    }
+    if (editted.latitude === null) {
+      Edit_data.entity.latitude= token.entity.latitude;
+    } else {
+      Edit_data.entity_latitude = editted.latitude;
+      token_copy.entity.latitude = editted.latitude;
+    }
+    if (editted.longitude === null) {
+      Edit_data.entity_longitude = token.entity.longitude;
+    } else {
+      Edit_data.entity_longitude = editted.longitude;
+      token_copy.entity.longitude = editted.longitude;
     }
     if (editted.phone === null) {
       Edit_data.entity_telephone = token.entity.telephone;
@@ -746,6 +768,7 @@ const Ph_admin = () => {
                         style={{ cursor: "pointer" }}
                         onClick={handle_Location}
                         htmlColor="#06a3da"
+                        //onChange={(e) => setlatitude(e.target.value)
                       ></AddLocationAltIcon>
                     </Tooltip>
                     <Snackbar
@@ -779,7 +802,8 @@ const Ph_admin = () => {
                     marginTop: "6px",
                   }}
                 >
-                  {Formerrors.latitude}
+                  {token.entity.latitude}
+                  {token.entity.longitude}
                 </p> */}
               </div>
             </div>
